@@ -1,0 +1,12 @@
+<div class="left-reports">
+    <?php
+        foreach ($entrydata as $field) 	{
+		?>
+    <p>
+        <label><strong><?php echo $field['label']; ?>: </strong></label> <?php	echo (!empty($field['value'])) ? $field['value'] : '';	?>
+    </p>
+    <?php
+		}
+		?>
+
+</div>

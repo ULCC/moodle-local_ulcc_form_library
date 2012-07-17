@@ -1,0 +1,23 @@
+<?php
+echo $OUTPUT->header();
+?>
+<div class="formlibrary">
+    <?php
+echo $OUTPUT->heading(get_string('formfields', 'local_ulcc_form_library'));
+
+    $fieldmform->display();
+    ?>
+
+
+    <fieldset id="ilpreportfieldset" class="clearfix ilpfieldset">
+        <legend class="ftoggler"><?php echo get_string('currentfields','local_ulcc_form_library');?></legend>
+        <?php
+            require_once($CFG->dirroot.'/local/ulcc_form_library/actions/view_formfields_table.php');
+        ?>
+    </fieldset>
+    <div><a href="<?php echo $previewurl; ?>" class="button"><?php echo get_string("viewformpreview","local_ulcc_form_library");?></a></div>
+
+</div>
+<?php
+echo $OUTPUT->footer();
+?>

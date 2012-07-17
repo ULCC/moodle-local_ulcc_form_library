@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- root node for the templates -->
+<forms>
+    <!-- set whether the user has to choose one of these templates options: false,true,optional-->
+    <required></required>
+
+    <!-- create a individual template -->
+    <template>
+    <!-- the name of this template -->
+        <name></name>
+
+        <element>
+            <!-- a label -->
+            <label>Name</label>
+            <!-- the name of the plugin that will be used it must be the name of the -->
+            <plugin></plugin>
+            <!-- is the field required true/false -->
+            <required></required>
+            <!-- can the field be edited true/false -->
+            <edit></edit>
+            <!-- can the field be deleted true/false -->
+            <delete></delete>
+        </element>
+    </template>
+
+</forms>

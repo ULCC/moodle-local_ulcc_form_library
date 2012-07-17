@@ -1,0 +1,17 @@
+<?php
+echo $OUTPUT->header();
+?>
+<div class="ilp yui-skin-sam">
+    <?php
+echo $OUTPUT->heading(get_string('previewform', 'local_ulcc_form_library',$previewform->name));
+    ?>
+    <div class=""><?php echo get_string("previewdescription","local_ulcc_form_library");?></div>
+    <?php
+//render the form
+$mform->display();
+    ?>
+
+</div>
+<?php
+echo $OUTPUT->footer();
+?>

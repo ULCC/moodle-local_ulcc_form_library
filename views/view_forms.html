@@ -1,0 +1,22 @@
+<?php
+echo $OUTPUT->header();
+?>
+<div class="formlibrary">
+    <?php
+echo $OUTPUT->heading($pluginname.' '.get_string('formadmin','local_ulcc_form_library'));
+    ?>
+    <div class="desciptivetext"><?php echo get_string('formadmindesc','local_ulcc_form_library');?></div>
+    <fieldset id="formsfieldset" class="clearfix formsset">
+        <legend class="ftoggler"><?php echo get_string('forms','local_ulcc_form_library');?></legend>
+        <?php
+            require_once($CFG->dirroot.FORM_LIB_ACTIONS_PATH.'/view_forms_table.php');
+        ?>
+    </fieldset>
+    <div class="pagelinks">
+    <span id="leftlinks">
+    	<a class="buttonlink" href="<?php echo $CFG->wwwroot.FORM_LIB_ACTIONS_PATH.'/edit_form.php'; ?>?moodleplugintype=<?php echo $moodleplugintype; ?>&moodlepluginname=<?php echo $moodlepluginname; ?>"><?php echo get_string('createnewform','local_ulcc_form_library');?></a>
+    </span>
+</div>
+<?php
+echo $OUTPUT->footer();
+?>
