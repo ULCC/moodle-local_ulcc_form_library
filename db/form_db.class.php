@@ -249,7 +249,14 @@ class form_db extends form_logging {
      * @return array Result objects
      */
     private function get_form_element_plugins() {
-        return $this->dbc->get_records('ulcc_form_lib_form_element');
+        global $DB;
+
+        //this must be done to prevent errors when the plugin is being installed
+        //as the table will not exist
+        $tableexists    =   in_array('ulcc_form_lib_form_element',$DB->get_tables());
+
+
+        return (!empty($tableexists)) ? $this->dbc->get_records('ulcc_form_lib_form_element') : false;
     }
 
 
