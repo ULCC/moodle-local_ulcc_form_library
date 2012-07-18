@@ -51,7 +51,7 @@ form_element_plugin::install_new_plugins();
 
 $PAGE->set_url(new moodle_url('/local/ulcc_form_library/actions/view_forms.php'));
 
-// Get all forms for this plugin.
+// Get all forms for this plugin. that exist
 $forms      =   $dbc->get_plugin_forms($moodlepluginname, $moodleplugintype);
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/view_forms.html');
