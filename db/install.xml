@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/ulcc_form_library/db" VERSION="20120702" COMMENT="XMLDB file for Moodle local/ulcc_form_library"
+<XMLDB PATH="local/ulcc_form_library/db" VERSION="20120718" COMMENT="XMLDB file for Moodle local/ulcc_form_library"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -45,15 +45,17 @@
         <FIELD NAME="plugin_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="id of the plugin that created this form (from the ulcc_form_lib_plugin table)" PREVIOUS="description" NEXT="creator_id"/>
         <FIELD NAME="creator_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="the user table id of the user who created the form" PREVIOUS="plugin_id" NEXT="status"/>
         <FIELD NAME="status" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="the status of the form 0 = disabled 1 = enabled" PREVIOUS="creator_id" NEXT="type"/>
-        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="freetext field allowing a developer to specify a type for a form this can be then used in a plugin invoking the form library to differenciate forms" PREVIOUS="status" NEXT="timecreated"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="timestamp of the time the record was created" PREVIOUS="type" NEXT="timemodified"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="freetext field allowing a developer to specify a type for a form this can be then used in a plugin invoking the form library to differenciate forms" PREVIOUS="status" NEXT="deleted"/>
+        <FIELD NAME="deleted" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="type" NEXT="position"/>
+        <FIELD NAME="position" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="deleted" NEXT="timecreated"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="timestamp of the time the record was created" PREVIOUS="position" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="timestamp of the time that the record was last modified" PREVIOUS="timecreated"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="ulcc_form_lib_form_field" COMMENT="holds data on all form fields" PREVIOUS="ulcc_form_lib_form" NEXT="ulcc_form_lib_submission">
+    <TABLE NAME="ulcc_form_lib_form_field" COMMENT="holds data on all form fields" PREVIOUS="ulcc_form_lib_form" NEXT="ulcc_form_lib_entry">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="label"/>
         <FIELD NAME="label" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the label that will be displayed next to the form field" PREVIOUS="id" NEXT="description"/>
@@ -61,15 +63,16 @@
         <FIELD NAME="formelement_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="the id of the form element that this field is" PREVIOUS="description" NEXT="position"/>
         <FIELD NAME="position" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="the postion of the field in the form" PREVIOUS="formelement_id" NEXT="required"/>
         <FIELD NAME="required" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="is this field required" PREVIOUS="position" NEXT="form_id"/>
-        <FIELD NAME="form_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="the id of the form that this field is in" PREVIOUS="required" NEXT="timecreated"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="timestamp of the time that the record was created" PREVIOUS="form_id" NEXT="timemodified"/>
+        <FIELD NAME="form_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="the id of the form that this field is in" PREVIOUS="required" NEXT="summary"/>
+        <FIELD NAME="summary" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="form_id" NEXT="timecreated"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="timestamp of the time that the record was created" PREVIOUS="summary" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="timestamp of last time the record was modified" PREVIOUS="timecreated"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="ulcc_form_lib_submission" COMMENT="contains meta data on a form submission" PREVIOUS="ulcc_form_lib_form_field">
+    <TABLE NAME="ulcc_form_lib_entry" COMMENT="contains meta data on a form submission" PREVIOUS="ulcc_form_lib_form_field" NEXT="ulcc_form_lib_temp">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="form_id"/>
         <FIELD NAME="form_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="the id of the form that the submission was created for" PREVIOUS="id" NEXT="creator_id"/>
@@ -80,6 +83,15 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+    </TABLE>
+    <TABLE NAME="ulcc_form_lib_temp" COMMENT="ulcc_form_lib_temp table retrofitted from MySQL" PREVIOUS="ulcc_form_lib_entry">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="misc"/>
+        <FIELD NAME="misc" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="data"/>
+        <FIELD NAME="data" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" PREVIOUS="misc" NEXT="timecreated"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="data" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="timecreated"/>
+      </FIELDS>
     </TABLE>
   </TABLES>
 </XMLDB>

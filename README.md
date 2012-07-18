@@ -24,7 +24,7 @@ This plugin has been written to provide a easy way for developers to include use
 their blocks/mods. The plugin handles form creation and data saving without the module (or block) having
 to see the work that goes on behind the scenes.
 
-form creation is carried out by passing a user to the local/ulcc_form_library/view_forms.php page. The url must
+form creation is carried out by passing a user to the local/ulcc_form_library/actions/view_forms.php page. The url must
 contain url params 'moodleplugintype' (which should equal either local,block or mod) and 'moodlepluginname'
 (which should equal the name of the block, local or mod)
 
