@@ -202,6 +202,7 @@ class form_db extends form_logging {
                      WHERE    p.name    =   :name
                      AND      p.type    =   :type
                      AND      p.id      =   f.plugin_id
+                     AND      f.deleted != 1
                      {$formsql}
                     ";
 
@@ -1121,6 +1122,30 @@ class form_db extends form_logging {
      */
     private function get_form_entry($entry_id)   {
         return  $this->dbc->get_record('ulcc_form_lib_entry',array('id'=>$entry_id));
+    }
+
+
+    /**
+     * Returns the position number a new form should take
+     *
+     * @param string $type the type of the plugin that the forms will be counted for
+     * @param string $name the name of the plugin that the forms will be counted for
+     * @return int the new forms position number
+     */
+
+    function get_new_form_position($type,$name) {
+
+        $from	=	"FROM 		{ulcc_form_lib_form} as f,
+                                {ulcc_form_lib_plugin} as p ";
+
+        $where  =   "WHERE      p.name     =    :pname
+                     AND        p.type     =    :ptype
+                     AND        p.id       =    f.plugin_id";
+
+        // get a count of all the records
+        $position = $this->dbc->count_records_sql('SELECT COUNT(*) '.$from.$where, array('pname'=>$name,'ptype'=>$type));
+
+        return (empty($position)) ? 1 : $position+1;
     }
 }
 

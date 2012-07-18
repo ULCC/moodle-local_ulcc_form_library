@@ -43,7 +43,7 @@ class ulcc_form {
      *
      */
     function get_plugin_forms($formtype=null) {
-        $this->dbc->get_plugin_forms($this->pluginname,$this->plugintype,$formtype);
+        return $this->dbc->get_plugin_forms($this->pluginname,$this->plugintype,$formtype);
     }
 
 

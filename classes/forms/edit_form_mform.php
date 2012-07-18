@@ -81,6 +81,12 @@ class edit_form_mform extends moodleform {
             $mform->addElement('hidden', 'plugin_id', $this->plugin_id);
             $mform->setType('plugin_id', PARAM_INT);
 
+            //the id of the form element creator
+            $mform->addElement('hidden', 'position');
+            $mform->setType('position', PARAM_INT);
+            //set the field position of the field
+            $mform->setDefault('position', $this->dbc->get_new_form_position($this->plugintype,$this->pluginname));
+
         	// NAME element
             $mform->addElement(
                 'text',
