@@ -33,7 +33,7 @@ class form_element_plugin_course extends form_element_plugin_itemlist{
      * @return array
      */
 
-    function get_option_list( $formfield_id,$user_id=false ){
+    function get_option_list( $formfield_id,$field=false,$user_id=false ){
 		$courseoptions = array();
 		
 		$courseoptions['-1']	=	get_string('form_element_plugin_course_personal','local_ulcc_form_library');
@@ -202,7 +202,7 @@ class form_element_plugin_course extends form_element_plugin_itemlist{
     	$fieldname	=	"{$this->formfield_id}_field";
     	
 		//definition for user form
-		$optionlist = $this->get_option_list( $this->formfield_id, $user_id );
+		$optionlist = $this->get_option_list( $this->formfield_id, false, $user_id );
 
     	if (!empty($this->description)) {
     		$mform->addElement('static', "{$fieldname}_desc", $this->label, strip_tags(html_entity_decode($this->description),FORM_STRIP_TAGS_DESCRIPTION));
