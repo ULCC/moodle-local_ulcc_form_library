@@ -330,7 +330,7 @@ class form_db extends form_logging {
      */
 
     private function update_form($form)  {
-        return  $this->update_form('ulcc_form_lib_form',$form);
+        return  $this->update_record('ulcc_form_lib_form',$form);
     }
 
     /**
