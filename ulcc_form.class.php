@@ -25,12 +25,15 @@ class ulcc_form {
 
     private     $dbc;
 
+    private     $formdata;
+
     function __construct($plugintype,$pluginname)   {
         global $CFG;
 
         $this->plugintype   =   $plugintype;
         $this->pluginname   =   $pluginname;
         $this->dbc          =   new form_db();
+        $this->formdata     =   null;
 
     }
 
@@ -90,7 +93,7 @@ class ulcc_form {
                     $currentpage--;
                 }
 
-                $mform   =   new form_entry_mform($form_id, $pageurl, $entry_id, $currentpage);
+                $mform   =   new form_entry_mform($form_id, $this->plugintype, $this->pluginname, $pageurl, $entry_id, $currentpage);
 
                 //set the current page variable inside of the form
 
@@ -115,6 +118,8 @@ class ulcc_form {
 
                         //get the form data submitted
                         $formdata = $mform->get_multipage_data($form_id);;
+
+                        $this->formdata =   $formdata;
 
                         if (isset($formdata->submitbutton))   {
 
@@ -163,6 +168,9 @@ class ulcc_form {
         return (!empty($entrydata)) ? $entrydata  : false  ;
     }
 
+    /**
+     *
+     */
     function display_form_entry($entry_id)   {
         global  $CFG;
 
@@ -192,10 +200,16 @@ class ulcc_form {
         return $formentry;
     }
 
-
-
-
-
-
+    /**
+     *
+     *
+     * @param $fieldname
+     * @return mixed
+     */
+    function get_form_field_value($fieldname) {
+        if (!empty($this->formdata) && isset($this->formdata->$fieldname))  {
+            return  $this->formdata->$fieldname;
+        }
+    }
 
 }

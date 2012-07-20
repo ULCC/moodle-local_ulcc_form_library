@@ -24,6 +24,20 @@ This plugin has been written to provide a easy way for developers to include use
 their blocks/mods. The plugin handles form creation and data saving without the module (or block) having
 to see the work that goes on behind the scenes.
 
+developers can also take advantage of hooks into the form library for the moodle plugin calling it. The hooks give
+the function defined the following params $mform (the actual mform), form_id the id of the form and formfields (the database
+array containing formfield records). To define a hook a function should be created in the lib.php file for your moodle plugin.
+The function name should follow this naming convention:
+
+    {yourpluginname}_ulcc_pre_form for a hook that is called before the form is created.
+    {yourpluginname}_ulcc_post_form for a hook that is called after the form is created.
+
+    the arguments for these functions are ($mform,$form_id,$formfield)
+
+A specific use case for this would be if you wanted to add specific elements to all forms created in a moodle plugin.
+You could add the element to the form inside of the hook and retrieve the data using the get_form_field_value function
+that is inside the ulcc_form class.
+
 form creation is carried out by passing a user to the local/ulcc_form_library/actions/view_forms.php page. The url must
 contain url params 'moodleplugintype' (which should equal either local,block or mod) and 'moodlepluginname'
 (which should equal the name of the block, local or mod)
@@ -48,3 +62,4 @@ $uf->get_form_entry($entry_id);
 to obtain a list of all forms created for a plugin use
 
 $forms  =   $uf->get_plugin_forms($moodleplugintype,$moodlepluginname);
+

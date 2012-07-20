@@ -27,18 +27,22 @@ class form_entry_mform extends form_lib_form {
     public		$form_id;
     public      $entry_id;
     public      $currentpage;
+    public      $plugintype;
+    public      $pluginname;
     public		$dbc;
 
     /**
-     * TODO comment this
+     *
      */
-    function __construct($form_id,$pageurl,$entry_id=null,$page=1) {
+    function __construct($form_id,$type, $name, $pageurl,$entry_id=null,$page=1) {
 
         global $CFG;
 
         $this->form_id	            =	$form_id;
         $this->entry_id             =   $entry_id;
         $this->currentpage          =   $page;
+        $this->pluginname           =   $name;
+        $this->plugintype           =   $type;
 
         $this->dbc			=	new form_db();
 
@@ -83,6 +87,13 @@ class form_entry_mform extends form_lib_form {
             $pagebreakcount =   $count;
         }
 
+        //pre form hook allows any elements to be added to the form by a developer
+        $prehook    =   $this->pluginname."_ulcc_pre_form";
+        if (function_exists($prehook))  {
+            //if a hook function for the current plugin is defined call it
+            call_user_func($prehook,array(&$mform,$this->form_id,$formfields));
+        }
+
         $breaksfound    =   0;
 
         if (!empty($formfields)) {
@@ -119,6 +130,13 @@ class form_entry_mform extends form_lib_form {
                     $formelementclass->entry_form($mform);
                 }
             }
+        }
+
+        //post form hook allows any elements to be added to the form by a developer
+        $posthook    =   $this->pluginname."_ulcc_post_form";
+        if (function_exists($posthook))  {
+            //if a hook function for the current plugin is defined call it
+            call_user_func($posthook,array(&$mform,$this->form_id,$formfields));
         }
 
         //only show previous if this is not the first page
