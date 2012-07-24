@@ -40,7 +40,10 @@ class form_element_plugin_modgrade extends form_element_plugin {
 			if (!empty($pluginrecord)) {
 				$this->label			=	$formfield->label;
 				$this->description		=	$formfield->description;
-				$this->required				=	$formfield->required;
+                $this->required				=	$formfield->required;
+                $this->gradetablename				=	$pluginrecord->tablename;
+                $this->gradetype				=	$pluginrecord->gradetype;
+                $this->gradescale				=	$pluginrecord->gradescale;
 				$this->position			=	$formfield->position;
                 $this->audit_type       =   $this->audit_type();
 				return true;	
@@ -67,6 +70,19 @@ class form_element_plugin_modgrade extends form_element_plugin {
         $table_form = new $this->xmldb_field('formfield_id');
         $table_form->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addField($table_form);
+
+        $table_form = new $this->xmldb_field('gradetype');
+        $table_form->$set_attributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, null);
+        $table->addField($table_form);
+
+        $table_form = new $this->xmldb_field('gradescale');
+        $table_form->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, null);
+        $table->addField($table_form);
+
+        $table_form = new $this->xmldb_field('tablename');
+        $table_form->$set_attributes(XMLDB_TYPE_CHAR, 255,null);
+        $table->addField($table_form);
+
 
         $table_timemodified = new $this->xmldb_field('timemodified');
         $table_timemodified->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
@@ -155,8 +171,17 @@ class form_element_plugin_modgrade extends form_element_plugin {
     */
     function language_strings(&$string) {
         $string['form_element_plugin_modgrade'] 		= 'Module grade selector';
-        $string['form_element_plugin_modgrade_type'] = 'Module grade selector';
+        $string['form_element_plugin_modgrade_type']    = 'Module grade selector';
         $string['form_element_plugin_modgrade_description'] = 'A module grade selector';
+        $string['form_element_plugin_modgrade_dynamicdesc'] =   'The dynamic checkbox below defines whether the grade
+        produced in Module grade selector will be chosen now or will be chosen at run time using the data taken from the given
+        database. If you choose to make the selector dynamic the table given must contain a grade field and you must supply the
+        id of the record that is being used in the form of a query string param called graderecordid otherwise no data will be
+        displayed in the selector.';
+        $string['form_element_plugin_modgrade_gradetype'] =   'Dynamic grade selector';
+        $string['form_element_plugin_modgrade_tablename'] =   'Table name (no prefix)';
+        $string['form_element_plugin_modgrade_gradescale'] =   'Grade scale';
+
 
         return $string;
     }
@@ -180,6 +205,7 @@ class form_element_plugin_modgrade extends form_element_plugin {
 	*
     */
     public	function entry_form( &$mform ) {
+        global  $DB;
     	
     	$fieldname	=	"{$this->formfield_id}_field";
     	if (!empty($this->description)) {
@@ -187,15 +213,34 @@ class form_element_plugin_modgrade extends form_element_plugin {
     		$this->label = '';
     	}
 
-        $grademenu = make_grades_menu($this->_customdata->assignment->grade);
+        if (empty($this->gradetype))    {
+
+            $scale  =   $DB->get_record('scale',array('id'=>$this->gradescale));
+
+            $grademenu   =  make_menu_from_list($scale->scale);
+
+            //$grademenu = make_grades_menu($scaleoptions);
+        } else{
+
+            //the user has selected the dynamic grade type for the grade form element
+            //selecting this comes with the proviso that the user must supply the param
+            //graderecordid in query string of the page calling the form. This param will
+            //be used in conjunction with the tablename provided to get a record that
+            //holds a field called grade which will be used to retrieve the grade scale
+
+            $graderecordid     =    optional_param('graderecordid',0,PARAM_RAW);
+
+            $tablerecord        =   $DB->get_record($this->gradetablename,array('id'=>$graderecordid));
+
+            $grademenu = make_grades_menu($tablerecord->grade);
+
+        }
+
         $mform->addElement('select',
                             $fieldname,
                             "$this->label",
                             $grademenu);
         
-        $mform->setDefault($fieldname, $this->_customdata->submission->grade ); //@fixme some bug when element called 'grade' makes it break
-        $mform->setType($fieldname, PARAM_INT);
-
         if (!empty($this->required)) $mform->addRule($fieldname, null, 'required', null, 'client');
 	 }
 	 
