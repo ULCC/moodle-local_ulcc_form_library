@@ -227,14 +227,14 @@ class ulcc_form {
         $formelement    =   $this->dbc->get_form_element_by_name($elementtype);
 
         if (!empty($entry) && !empty($formelement))   {
-            if ($formfields     =   $this->dbc->element_occurances($entry->report_id,$formelement->tablename)) {
+            if ($formfields     =   $this->dbc->element_occurances($entry->form_id,$formelement->tablename)) {
 
                 $formdata   =   new stdClass();
 
                 //take the name field from the plugin as it will be used to call the instantiate the plugin class
                 $classname = $formelement->name;
 
-                //instantiate the plugin class
+                //instantiate the form element class
                 $formelementclass	=	new $classname();
 
                 // include the class for the plugin
