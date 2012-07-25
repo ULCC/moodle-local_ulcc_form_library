@@ -916,8 +916,28 @@ class form_db extends form_logging {
         return $res->n;
     }
 
-
     /**
+     * Returns all form field records for the occurances of the given element table
+     *
+     * @param int   $form_id the id of the form being checked
+     * @param string $tablename the tablename of the element
+     * @return int
+     */
+    private function element_occurances( $form_id , $tablename )    {
+        $sql = "
+            SELECT frmfd.*
+            FROM {ulcc_form_lib_form} frm
+            JOIN {ulcc_form_lib_form_field} frmfd ON frmfd.form_id = frm.id
+            JOIN {ulcc_form_lib_form_element} pln ON pln.id = frmfd.formelement_id
+            WHERE frm.id = :form_id AND pln.tablename = :tablename
+        ";
+
+        $res = $this->dbc->get_records_sql( $sql , array('tablename'=>$tablename,'form_id'=>$form_id));
+
+        return $res;
+    }
+
+     /**
      * supply a formfield id for a dropdown type element
      * dropdown options are returned
      * @param int $formfield_id the id of the form field whose option list is being returned
@@ -1147,5 +1167,16 @@ class form_db extends form_logging {
 
         return (empty($position)) ? 1 : $position+1;
     }
+
+    /**
+     * Returns the record for the form element plugin that has a name matching the one given
+     *
+     * @param string $elementname
+     * @return mixed object form element record or bool false
+     */
+    private function get_form_element_by_name($elementname) {
+       return $this->dbc->get_record('ulcc_form_lib_form_element',array('name'=>$elementname));
+    }
+
 }
 

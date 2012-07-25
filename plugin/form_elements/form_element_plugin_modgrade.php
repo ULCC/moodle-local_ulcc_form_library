@@ -255,6 +255,16 @@ class form_element_plugin_modgrade extends form_element_plugin {
 		*/
 		return $this->entry_process_data($formfield_id,$entry_id,$data);
 	 }
+
+    /**
+     * Determines whether a user can add a new instance of the mod grade plugin to the form
+     *
+     * @param int $form_id the id of the form that will be checked to see if it has the element
+     * @return bool
+     */
+    function can_add($form_id)  {
+        return !$this->dbc->element_type_exists( $form_id, $this->tablename );
+    }
 	 
 	 
 }

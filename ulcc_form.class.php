@@ -212,4 +212,59 @@ class ulcc_form {
         }
     }
 
+    /**
+     * Returns the value of the form element specified
+     *
+     * @param int    $entry_id      the id of the entry whose value will be returned
+     * @param string $elementtype   the name of the element that will be returned
+     * @param bool   $rawvalue      should the raw value be returned or should the value be passed through
+     *                              the form elements view function
+     */
+    function get_form_element_value($entry_id,$elementtype,$rawvalue)   {
+        global $CFG;
+
+        $entry      =   $this->dbc->get_form_entry($entry_id);
+        $formelement    =   $this->dbc->get_form_element_by_name($elementtype);
+
+        if (!empty($entry) && !empty($formelement))   {
+            if ($formfields     =   $this->dbc->element_occurances($entry->report_id,$formelement->tablename)) {
+
+                $formdata   =   new stdClass();
+
+                //take the name field from the plugin as it will be used to call the instantiate the plugin class
+                $classname = $formelement->name;
+
+                //instantiate the plugin class
+                $formelementclass	=	new $classname();
+
+                // include the class for the plugin
+                include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
+
+                foreach ($formfields as $ff)    {
+
+                    $formelementclass->load($ff->id);
+
+                    //call the plugin class entry data method
+                    if (empty($rawvalue))   {
+                        $formelementclass->view_data($ff->id,$entry_id,$formdata);
+                    } else {
+                        $formelementclass->entry_data($ff->id,$entry_id,$formdata);
+                    }
+
+                }
+
+                $fielddata  =   array();
+
+                foreach ($formdata  as $field)  {
+                    $fielddata[]    =   $field;
+                }
+
+                return $fielddata;
+
+            }
+        }
+
+        return false;
+    }
+
 }

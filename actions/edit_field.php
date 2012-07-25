@@ -90,7 +90,7 @@ $pluginclass	=	new $classname();
 //has the maximum number of this field type in this report been reached?
 if (!$pluginclass->can_add($form_id) && empty($formfield_id))	{
     $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname'));
-    redirect($return_url, get_string("fieldmaximum", 'local_ulcc_form_library',$pluginclass->audit_type()), FORM_REDIRECT_DELAY);
+    redirect($return_url, get_string("fieldmaximum", 'local_ulcc_form_library',$pluginclass->audit_type()));
 }
 
 //call the plugin edit function inside of which the plugin configuration mform
