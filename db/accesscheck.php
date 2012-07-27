@@ -16,21 +16,20 @@ global  $CFG, $USER, $PAGE;
 //the user must be logged in
 require_login(0);
 
-//get the user context of the current user
-$usercontext    =   context_user::instance($USER->id, IGNORE_MISSING);
+//we need to get the current context so we can if the user has the capababilty to use the forms library
+$context_id =   required_param('context_id');
 
-//get the user context of the current user
-$sitecontext    =   context_system::instance(0, IGNORE_MISSING);
+$context =   context::instance_by_id($context_id, IGNORE_MISSING);
 
 //if there is no user context then throw an error
-if (!$usercontext) {
-    print_error("incorrectuserid", '');
+if (empty($context)) {
+    print_error("mustspecifycontext", 'local_ulcc_form_library');
 }
 
 //make sure that the user has the ability to manipulate forms if not throw an error
-if (!has_capability('local/ulcc_form_library:formadmin', $usercontext) ) {
+if (!has_capability('local/ulcc_form_library:formadmin', $context) ) {
     print_error('not_form_admin', 'local_ulcc_form_library');
 }
 
 //TODO: we will should not be in the course context change to another context
-$PAGE->set_context($sitecontext);
+$PAGE->set_context($context);

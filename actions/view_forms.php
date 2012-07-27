@@ -56,8 +56,3 @@ $forms      =   $dbc->get_plugin_forms($moodlepluginname, $moodleplugintype);
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/view_forms.html');
 
-
-
-
-
-
