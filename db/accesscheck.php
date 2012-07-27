@@ -17,7 +17,7 @@ global  $CFG, $USER, $PAGE;
 require_login(0);
 
 //we need to get the current context so we can if the user has the capababilty to use the forms library
-$context_id =   required_param('context_id');
+$context_id =   required_param('context_id',PARAM_INT);
 
 $context =   context::instance_by_id($context_id, IGNORE_MISSING);
 
