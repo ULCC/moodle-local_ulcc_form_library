@@ -173,7 +173,7 @@ class form_element_plugin_date extends form_element_plugin {
    	/**
      * Delete a form element
      */
-    public function delete_form_element($formfield_id, $tablename, $extraparams) {
+    public function delete_form_element($formfield_id, $tablename=null, $extraparams=null) {
     	return parent::delete_form_element( $formfield_id, $this->tablename);
     }
     
@@ -229,7 +229,7 @@ class form_element_plugin_date extends form_element_plugin {
 	 * @param int $entry_id the id of the entry
 	 * @param object $entryobj an object that will add parameters to
 	 */
-	 public function view_data( $formfield_id,$entry_id,&$entryobj ){
+	 public function view_data($formfield_id, $entry_id, &$entryobj,$returnvalue=false){
 	  	$fieldname	=	$formfield_id."_field";
 	 	
 	 	$entry	=	$this->dbc->get_pluginentry($this->tablename,$entry_id,$formfield_id);

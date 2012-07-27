@@ -82,7 +82,7 @@ class form_element_plugin_state extends form_element_plugin_itemlist{
     * @param int $formfield_id
     * @param string $field - the name of a extra field to read from items table: used by form_element_plugin_state
     */
-	protected function get_option_list( $formfield_id, $field=false ){
+	protected function get_option_list($formfield_id, $field=false, $useid=true){
 
 		$outlist        = array();
 		$passlist       = array();

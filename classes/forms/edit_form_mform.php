@@ -136,9 +136,8 @@ class edit_form_mform extends moodleform {
 
 
 
-        function validation( $data ){
+        function validation($data, $files){
             $data   =   (object)    $data;
-
             $this->errors = array();
         }
 

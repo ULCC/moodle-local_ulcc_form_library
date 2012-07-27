@@ -298,7 +298,7 @@ class form_element_plugin_file extends form_element_plugin {
     }
 
 
-    public function view_data( $formfield_id,$entry_id,&$entryobj ){
+    public function view_data($formfield_id, $entry_id, &$entryobj, $returnvalue=false){
         global $CFG;
 
         $fieldname	=	$formfield_id."_field";

@@ -86,16 +86,13 @@ class form_element_plugin_course extends form_element_plugin_itemlist{
 	  * @param int $entry_id the id of the entry
 	  * @param object $entryobj an object that will add parameters to
 	  */
-	  public function view_data( $formfield_id,$entry_id,&$entryobj ){
+	  public function view_data($formfield_id, $entry_id, &$entryobj, $returnvalue=false){
 	  		$fieldname	=	$formfield_id."_field";
-	 		
 	 		$entry	=	$this->dbc->get_pluginentry($this->tablename,$entry_id,$formfield_id,false);
-
 			if (!empty($entry)) {
 		 		$fielddata	=	array();
 		 		$comma	= "";
-		 		
-			 	//loop through all of the data for this entry in the particular entry		 	
+			 	//loop through all of the data for this entry in the particular entry
 			 	foreach($entry as $e) {
 			 		if (!empty($e->value)) {
 			 			$course	=	$this->dbc->get_course($e->value);
@@ -112,7 +109,7 @@ class form_element_plugin_course extends form_element_plugin_itemlist{
 	  * @param int $entry_id the id of the entry
 	  * @param object $entryobj an object that will add parameters to
 	  */
-	 public function entry_data( $formfield_id,$entry_id,&$entryobj ){
+	 public function entry_data($formfield_id, $entry_id, &$entryobj ){
 	 	//this function will suffix for 90% of plugins who only have one value field (named value) i
 	 	//in the _ent table of the plugin. However if your plugin has more fields you should override
 	 	//the function 

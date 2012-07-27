@@ -293,7 +293,7 @@ class form_element_plugin_date_deadline extends form_element_plugin {
 	  * @param int $entry_id the id of the entry
 	  * @param object $entryobj an object that will add parameters to
 	  */
-	  public function view_data( $formfield_id,$entry_id,&$entryobj ){
+	  public function view_data($formfield_id, $entry_id, &$entryobj, $returnvalue=false){
 	  	global $CFG;
 
 	  	$fieldname	=	$formfield_id."_field";
@@ -327,7 +327,7 @@ class form_element_plugin_date_deadline extends form_element_plugin {
      *
      * @param int $formfield_id
      */
-    public function delete_form_element($formfield_id, $tablename, $extraparams) {
+    public function delete_form_element($formfield_id, $tablename=null, $extraparams=null) {
     	return parent::delete_form_element($formfield_id, $this->tablename);
     }
 	 

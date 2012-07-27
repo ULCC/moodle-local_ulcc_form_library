@@ -477,7 +477,7 @@ class   form_element_plugin {
      * @param int $entry_id the id of the entry
      * @param object $entryobj an object that will add parameters to
      */
-    public function view_data( $formfield_id,$entry_id,&$entryobj ){
+    public function view_data($formfield_id, $entry_id, &$entryobj, $returnvalue=false){
         $this->entry_data( $formfield_id,$entry_id, $entryobj );
     }
 

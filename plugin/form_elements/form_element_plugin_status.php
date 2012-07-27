@@ -273,7 +273,7 @@ class form_element_plugin_status extends form_element_plugin_itemlist{
 	  * @param int $entry_id the id of the entry
 	  * @param object $entryobj an object that will add parameters to
 	  */
-	  public function view_data( $formfield_id,$entry_id,&$entryobj ){
+	  public function view_data($formfield_id, $entry_id, &$entryobj, $returnvalue=false){
 	  		$fieldname	=	$formfield_id."_field";
 	  		
 	 		$entry	=	$this->dbc->get_entrystatus($entry_id,$formfield_id);
@@ -535,7 +535,7 @@ class form_element_plugin_status extends form_element_plugin_itemlist{
     * @param int $formfield_id
     * @param string $field - the name of a extra field to read from items table: used by form_element_plugin_state
     */
-	public function get_option_list( $formfield_id, $field=false ){
+	public function get_option_list( $formfield_id, $field=false, $useid=true){
 		//return $this->optlist2Array( $this->get_optionlist() );   	
 		$outlist = array();
 		$passlist = array();

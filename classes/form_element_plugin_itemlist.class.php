@@ -124,7 +124,7 @@ class form_element_plugin_itemlist extends form_element_plugin{
      * @param object $entryobj an object that will add parameters to
      * @param bool returnvalue should a label or value be returned
      */
-    public function view_data( $formfield_id,$entry_id,&$entryobj, $returnvalue=false ){
+    public function view_data($formfield_id, $entry_id, &$entryobj, $returnvalue=false){
         $fieldname	=	$formfield_id."_field";
         $entry	=	$this->dbc->get_pluginentry($this->tablename,$entry_id,$formfield_id,true);
         if (!empty($returnvalue)) $entryobj->$fieldname = array();
@@ -202,7 +202,7 @@ class form_element_plugin_itemlist extends form_element_plugin{
      * @param bool	$useid	should ids be returned as the value or should the actual value
      *
      */
-    protected function get_option_list( $formfield_id, $field=false, $useid=true ){
+    protected function get_option_list($formfield_id, $field=false, $useid=true){
         $outlist = array();
         if( $formfield_id )	{
             $objlist = $this->dbc->get_optionlist($formfield_id , $this->tablename, $field );
