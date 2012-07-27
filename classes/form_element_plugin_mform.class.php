@@ -161,7 +161,7 @@ abstract class form_element_plugin_mform extends moodleform {
      *
      * @param object $data The data to be saved
      */
-    function validation($data, , $files) {
+    function validation($data, $files) {
         $this->errors = array();
 
        // var_dump($data);
