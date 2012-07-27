@@ -189,7 +189,7 @@ class form_element_plugin_modgrade extends form_element_plugin {
    	/**
      * Delete a form element
      */
-    public function delete_form_element($formfield_id) {
+    public function delete_form_element($formfield_id, $tablename=null, $extraparams=null) {
 		$formfield		=	$this->dbc->get_form_field_data($formfield_id);
         $extraparams = array(
             'audit_type' => $this->audit_type(),
@@ -197,7 +197,7 @@ class form_element_plugin_modgrade extends form_element_plugin {
             'description' => $formfield->description,
             'id' => $formfield_id
         );
-    	return parent::delete_form_element( $this->tablename, $formfield_id, $extraparams );
+    	return parent::delete_form_element($formfield_id, $this->tablename, $extraparams);
     }
     
     /**

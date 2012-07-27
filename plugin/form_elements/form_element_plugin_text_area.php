@@ -179,12 +179,12 @@ class form_element_plugin_text_area extends form_element_plugin {
    	/**
      * Delete a form element
      */
-    public function delete_form_element($formfield_id) {
-    	return parent::delete_form_element($this->tablename, $formfield_id);
+    public function delete_form_element($formfield_id, $tablename=null, $extraparams=null) {
+    	return parent::delete_form_element($formfield_id, $this->tablename);
     }
     
     /**
-    * this function returns the mform elements taht will be added to a form form
+    * this function returns the mform elements that will be added to a form form
 	*
     */
     public	function entry_form( &$mform ) {

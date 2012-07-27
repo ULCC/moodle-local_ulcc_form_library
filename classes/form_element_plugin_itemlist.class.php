@@ -294,7 +294,7 @@ class form_element_plugin_itemlist extends form_element_plugin{
      *
      *  @param int $formfield_id the id of the formfield
      */
-    public function delete_form_element($formfield_id) {
+    public function delete_form_element($formfield_id,$tablename=null,$extraparams=null) {
         //get the record for the field
         $pluginrecord			=	$this->dbc->get_form_element_by_formfield($this->tablename,$formfield_id);
 
@@ -308,13 +308,14 @@ class form_element_plugin_itemlist extends form_element_plugin{
         $this->dbc->delete_items($this->data_entry_tablename,$pluginrecord->id);
 
         $formfield		=	$this->dbc->get_form_field_data($formfield_id);
+
         $extraparams = array(
             'audit_type' => $this->audit_type(),
             'label' => $formfield->label,
             'description' => $formfield->description,
             'id' => $formfield_id
         );
-        return parent::delete_form_element($this->tablename,$formfield_id,$extraparams);
+        return parent::delete_form_element($formfield_id,$this->tablename,$extraparams);
     }
 
     public function uninstall() {

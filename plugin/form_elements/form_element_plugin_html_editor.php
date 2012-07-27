@@ -179,8 +179,8 @@ class form_element_plugin_html_editor extends form_element_plugin {
    	/**
      * Delete a form element
      */
-    public function delete_form_element($formfield_id) {
-    	return parent::delete_form_element($this->tablename, $formfield_id);
+    public function delete_form_element($formfield_id, $tablename=null, $extraparams=null) {
+    	return parent::delete_form_element($formfield_id, $this->tablename);
     }
     
     /**

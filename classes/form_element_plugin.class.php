@@ -283,7 +283,7 @@ class   form_element_plugin {
     /**
      * Delete a form element
      */
-    public function delete_form_element( $tablename,$formfield_id,$extraparams=array() ) {
+    public function delete_form_element( $formfield_id,$tablename,$extraparams=array() ) {
         $formfield	=	$this->dbc->get_form_element_record($tablename,$formfield_id);
 
         if ($this->dbc->delete_form_element_by_formfield($tablename,$formfield_id, $extraparams )) {

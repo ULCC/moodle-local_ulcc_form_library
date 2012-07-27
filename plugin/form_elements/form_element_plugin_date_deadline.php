@@ -327,8 +327,8 @@ class form_element_plugin_date_deadline extends form_element_plugin {
      *
      * @param int $formfield_id
      */
-    public function delete_form_element($formfield_id) {
-    	return parent::delete_form_element($this->tablename, $formfield_id);
+    public function delete_form_element($formfield_id, $tablename, $extraparams) {
+    	return parent::delete_form_element($formfield_id, $this->tablename);
     }
 	 
 }

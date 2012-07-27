@@ -46,7 +46,7 @@ class form_element_plugin_free_html extends form_element_plugin {
      * @param $formfield_id
      * @return bool
      */
-    public function delete_form_element($formfield_id) {
+    public function delete_form_element($formfield_id, $tablename=null, $extraparams=null) {
 
 		$formfield		=	$this->dbc->get_form_field_data($formfield_id);
         $extraparams = array(
@@ -55,7 +55,7 @@ class form_element_plugin_free_html extends form_element_plugin {
             'description' => $formfield->description,
             'id' => $formfield_id
         );
-    	return parent::delete_form_element( $this->tablename, $formfield_id, $extraparams );
+    	return parent::delete_form_element($formfield_id, $this->tablename, $extraparams);
     }
     /**
     * this function returns the mform elements that will be added to a form form
