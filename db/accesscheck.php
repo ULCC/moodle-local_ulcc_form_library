@@ -21,6 +21,8 @@ $context_id =   required_param('context_id',PARAM_INT);
 
 $context =   context::instance_by_id($context_id, IGNORE_MISSING);
 
+$sitecontext    =   context_system::instance();
+
 //if there is no user context then throw an error
 if (empty($context)) {
     print_error("mustspecifycontext", 'local_ulcc_form_library');
@@ -32,4 +34,4 @@ if (!has_capability('local/ulcc_form_library:formadmin', $context) ) {
 }
 
 //TODO: we will should not be in the course context change to another context
-$PAGE->set_context($context);
+$PAGE->set_context($sitecontext);
