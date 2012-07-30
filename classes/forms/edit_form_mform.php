@@ -20,6 +20,7 @@ class edit_form_mform extends moodleform {
         public		$form_id;
         public      $pluginname;
         public      $plugintype;
+        public      $context_id;
 		public		$dbc;
         public      $templates;
 
@@ -27,13 +28,14 @@ class edit_form_mform extends moodleform {
 		/**
      	 * TODO comment this
      	 */
-		function __construct($pluginname,$plugintype,$form_id=null) {
+		function __construct($pluginname,$plugintype,$context_id,$form_id=null) {
 
 			global $CFG;
 
 			$this->form_id	    =	$form_id;
             $this->pluginname   =   $pluginname;
             $this->plugintype   =   $plugintype;
+            $this->context_id   =   $context_id;
 
 			$this->dbc			=	new form_db();
 
@@ -47,7 +49,7 @@ class edit_form_mform extends moodleform {
 
 
             // call the parent constructor
-            parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$this->form_id}");
+            parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$this->form_id}&moodleplugintype={$this->plugintype}&moodlepluginname={$this->pluginname}&context_id={$this->context_id}");
 		}
 		
 		/**
@@ -77,6 +79,9 @@ class edit_form_mform extends moodleform {
 
             $mform->addElement('hidden', 'moodleplugintype', $this->plugintype);
             $mform->setType('moodleplugintype', PARAM_TEXT);
+
+            $mform->addElement('hidden', 'context_id', $this->plugintype);
+            $mform->setType('context_id', PARAM_INT);
 
             $mform->addElement('hidden', 'plugin_id', $this->plugin_id);
             $mform->setType('plugin_id', PARAM_INT);

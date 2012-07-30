@@ -18,9 +18,11 @@ global  $CFG;
 
 require_once($CFG->libdir.'/tablelib.php');
 
-$moodleplugintype    =   optional_param('moodleplugintype', false, PARAM_RAW);
+$moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
 
-$moodlepluginname   =   optional_param('moodlepluginname', false, PARAM_RAW);
+$moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
+
+$context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
 
 // Create the filed table.
 
@@ -71,6 +73,8 @@ $flextable->column_class('label', 'leftalign');
 // Setup the table - now we can use it.
 $flextable->setup();
 
+$querystr   =   $PARSER->get_params_url();
+
 // Get the data on fields to be used in the table.
 $forms		=	$dbc->get_forms_table($flextable, $moodlepluginname, $moodleplugintype);
 $totalformfields	=	count($forms);
@@ -87,7 +91,8 @@ if (!empty($forms))   {
             $icon	=	$OUTPUT->pix_url("/t/up");
             $movetype	=	"up";
 
-            $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_form.php?form_id={$row->id}&move=".FORM_MOVE_UP."&position={$row->position}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}'>
+            $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_form.php?form_id={$row->id}&move=".FORM_MOVE_UP."&position={$row->position}&{$querystr}
+            '>
                                         <img class='move' src='{$icon}' alt='{$title}' title='{$title}' />
                                     </a>";
         } else {
@@ -100,7 +105,7 @@ if (!empty($forms))   {
             $icon	=	$OUTPUT->pix_url("/t/down");
             $movetype	=	"down";
 
-            $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_form.php?form_id={$row->id}&move=".FORM_MOVE_DOWN."&position={$row->position}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}'>
+            $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_form.php?form_id={$row->id}&move=".FORM_MOVE_DOWN."&position={$row->position}&{$querystr}'>
                                     <img class='move' src='{$icon}' alt='{$title}' title='{$title}' />
                                     </a>";
         } else {
@@ -108,12 +113,12 @@ if (!empty($forms))   {
         }
 
         // Set the edit form link.
-        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$row->id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}'>
+        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$row->id}&{$querystr}'>
                                     <img class='edit' src='".$OUTPUT->pix_url("/i/edit")."' alt='".get_string('edit')."' title='".get_string('edit')."' />
                                  </a>";
 
         // Set the edit form fields link.
-        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_formfields.php?form_id={$row->id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}'>
+        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_formfields.php?form_id={$row->id}&{$querystr}'>
                                     <img class='prompt' src='".$OUTPUT->pix_url('i/questions')."' alt='".get_string('editfields','local_ulcc_form_library')."' title='".get_string('editfields','local_ulcc_form_library')."' />
                                  </a>";
 
@@ -122,13 +127,13 @@ if (!empty($forms))   {
 
         $icon	= 	(!empty($row->status)) ? "hide" : "show";
 
-        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form_status.php?form_id={$row->id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}'>
+        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form_status.php?form_id={$row->id}&{$querystr}'>
                                     <img class='status' src=".$OUTPUT->pix_url("/i/".$icon)." alt='".$title."' title='".$title."' />
                             </a>";
 
 
         // Set the delete field this is not enabled at the moment.
-        $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_form.php?form_id={$row->id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}'>
+        $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_form.php?form_id={$row->id}&{$querystr}'>
                                     <img class='delete' src='".$OUTPUT->pix_url("/t/delete")."' alt='".get_string('delete')."' title='".get_string('delete')."' />
                                  </a>";
 

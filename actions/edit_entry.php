@@ -27,6 +27,8 @@ $moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RA
 
 $moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
 
+$context_id       =   $PARSER->required_param('context_id', PARAM_RAW);
+
 // instantiate the db
 $dbc = new form_db();
 

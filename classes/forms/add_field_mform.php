@@ -25,15 +25,16 @@ class add_field_mform extends moodleform {
     /**
      * TODO comment this
      */
-    function __construct($pluginname,$plugintype,$form_id) {
+    function __construct($pluginname,$plugintype,$context_id,$form_id) {
         global  $CFG;
 
         $this->form_id      =   $form_id;
         $this->pluginname   =   $pluginname;
         $this->plugintype   =   $plugintype;
+        $this->context_id   =   $context_id;
 
         // call the parent constructor
-        parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_formfields.php?form_id={$this->form_id}&moodlepluginname={$this->pluginname}&moodleplugintype={$this->plugintype}");
+        parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_formfields.php?form_id={$this->form_id}&moodlepluginname={$this->pluginname}&moodleplugintype={$this->plugintype}&context_id={$context_id}");
 
     }
 
@@ -72,6 +73,15 @@ class add_field_mform extends moodleform {
 
         $mform->addElement('hidden', 'form_id',$this->form_id);
         $mform->setType('form_id', PARAM_INT);
+
+        $mform->addElement('hidden', 'moodlepluginname', $this->pluginname);
+        $mform->setType('moodlepluginname', PARAM_TEXT);
+
+        $mform->addElement('hidden', 'moodleplugintype', $this->plugintype);
+        $mform->setType('moodleplugintype', PARAM_TEXT);
+
+        $mform->addElement('hidden', 'context_id', $this->plugintype);
+        $mform->setType('context_id', PARAM_INT);
 
         $mform->addElement('select', 'formelement_id', get_string('addfield', 'local_ulcc_form_library'), $frmplugins);
         $mform->addRule('formelement_id', null, 'required', null, 'client');

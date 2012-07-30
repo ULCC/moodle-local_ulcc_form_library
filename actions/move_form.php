@@ -32,6 +32,8 @@ $moodleplugintype    =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
 
 $moodlepluginname    =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
 
+$context_id         =   $PARSER->required_param('context_id', PARAM_RAW);
+
 // instantiate the db
 $dbc = new form_db();
 
@@ -64,7 +66,7 @@ if (!empty($forms)) {
 
 $resulttext = (!empty($movesuc)) ? get_string("formmovesuc", 'local_ulcc_form_library') : get_string("formmoveerror", 'local_ulcc_form_library');
 
-$return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?' .$PARSER->get_params_url(array('moodlepluginname','moodleplugintype'));
+$return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?' .$PARSER->get_params_url(array('moodlepluginname','moodleplugintype','context_id'));
 redirect($return_url, $resulttext, FORM_REDIRECT_DELAY);
 
 ?>

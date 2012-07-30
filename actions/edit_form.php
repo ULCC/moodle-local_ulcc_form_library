@@ -14,7 +14,9 @@ require_once('../../../config.php');
 
 global  $CFG, $USER, $SESSION, $OUTPUT, $PARSER;
 
-//
+// Perform access checks.
+require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
+
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/edit_form_mform.php');
@@ -26,10 +28,12 @@ $moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RA
 
 $moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
 
+$context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
+
 $dbc        =   new form_db();
 
 //instantiate the edit_report_mform class
-$mform	=	new edit_form_mform($moodlepluginname,$moodleplugintype,$form_id);
+$mform	=	new edit_form_mform($moodlepluginname,$moodleplugintype,$context_id,$form_id);
 
 
 //was the form cancelled?

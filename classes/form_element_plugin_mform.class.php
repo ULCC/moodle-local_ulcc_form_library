@@ -24,7 +24,7 @@ abstract class form_element_plugin_mform extends moodleform {
     public 		$dbc;
 
 
-    function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$formfield_id=null) {
+    function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id=null) {
         global $CFG;
 
         $this->form_id		    =	$form_id;

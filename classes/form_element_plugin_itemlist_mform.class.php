@@ -18,8 +18,8 @@ class form_element_plugin_itemlist_mform extends form_element_plugin_mform {
     public $tablename;
     public $items_tablename;
 
-    function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$formfield_id=null) {
-        parent::__construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$formfield_id);
+    function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id=null) {
+        parent::__construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id);
         //remember to define $this->tablename and $this->items_tablename in the child class
     }
 

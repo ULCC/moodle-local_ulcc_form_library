@@ -28,6 +28,8 @@ $moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RA
 
 $moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
 
+$context_id       =   $PARSER->required_param('context_id', PARAM_INT);
+
 //the id of the formfield used when editing
 $formfield_id         = $PARSER->required_param('formfield_id' ,PARAM_INT);
 
@@ -71,7 +73,7 @@ if (!empty($formfields)) {
 
 $resulttext = (!empty($movesuc)) ? get_string("changesuccess", 'local_ulcc_form_library') : get_string("changeerror", 'local_ulcc_form_library');
 
-$return_url = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?".$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname'));
+$return_url = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?".$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname','context_id'));
 redirect($return_url, $resulttext, FORM_REDIRECT_DELAY);
 
 ?>

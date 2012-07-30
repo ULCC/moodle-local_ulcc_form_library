@@ -17,6 +17,9 @@ global $USER, $CFG, $SESSION, $PARSER;
 
 //include any neccessary files
 
+// Perform access checks.
+require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
+
 // Meta includes
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 
@@ -30,6 +33,8 @@ $formfield_id = $PARSER->required_param('formfield_id' ,PARAM_INT);
 $moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
 
 $moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
+
+$context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
 
 // instantiate the db
 $dbc = new form_db();

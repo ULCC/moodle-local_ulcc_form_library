@@ -14,7 +14,7 @@ echo $OUTPUT->heading($pluginname.' '.get_string('formadmin','local_ulcc_form_li
     </fieldset>
     <div class="pagelinks">
     <span id="leftlinks">
-    	<a class="buttonlink" href="<?php echo $CFG->wwwroot.FORM_LIB_ACTIONS_PATH.'/edit_form.php'; ?>?moodleplugintype=<?php echo $moodleplugintype; ?>&moodlepluginname=<?php echo $moodlepluginname; ?>"><?php echo get_string('createnewform','local_ulcc_form_library');?></a>
+    	<a class="buttonlink" href="<?php echo $CFG->wwwroot.FORM_LIB_ACTIONS_PATH.'/edit_form.php'; ?>?moodleplugintype=<?php echo $moodleplugintype; ?>&moodlepluginname=<?php echo $moodlepluginname; ?>&context_id=<?php echo $context_id; ?>"><?php echo get_string('createnewform','local_ulcc_form_library');?></a>
     </span>
 </div>
 <?php

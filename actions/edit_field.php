@@ -18,6 +18,9 @@ global $USER, $CFG, $SESSION, $PARSER;
 
 //include any neccessary files
 
+// Perform access checks.
+require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
+
 // Meta includes
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 
@@ -35,6 +38,8 @@ $formfield_id = $PARSER->optional_param('formfield_id',null ,PARAM_INT);
 $moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
 
 $moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
+
+$context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
 
 // instantiate the db
 $dbc = new form_db();
@@ -89,12 +94,12 @@ $pluginclass	=	new $classname();
 
 //has the maximum number of this field type in this report been reached?
 if (!$pluginclass->can_add($form_id) && empty($formfield_id))	{
-    $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname'));
+    $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname','context_id'));
     redirect($return_url, get_string("fieldmaximum", 'local_ulcc_form_library',$pluginclass->audit_type()));
 }
 
 //call the plugin edit function inside of which the plugin configuration mform
-$pluginclass->edit($form_id,$formelement_id,$formfield_id,$moodleplugintype,$moodlepluginname);
+$pluginclass->edit($form_id,$formelement_id,$formfield_id,$moodleplugintype,$moodlepluginname,$context_id);
 
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/edit_field.html');

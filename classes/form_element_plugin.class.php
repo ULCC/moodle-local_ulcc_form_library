@@ -137,7 +137,7 @@ class   form_element_plugin {
      *
      * @param object $plugin
      */
-    public final function edit($form_id,$formelement_id,$formfield_id,$moodleplugintype,$moodlepluginname) {
+    public final function edit($form_id,$formelement_id,$formfield_id,$moodleplugintype,$moodlepluginname,$context_id) {
         global $CFG, $USER;
 
         //get the form field record
@@ -187,14 +187,14 @@ class   form_element_plugin {
         }
 
         // instantiate the form and load the data
-        $this->mform = new $classname($form_id,$formelement_id,$USER->id,$moodleplugintype,$moodlepluginname);
+        $this->mform = new $classname($form_id,$formelement_id,$USER->id,$moodleplugintype,$moodlepluginname,$context_id);
 
         if ($this->is_configurable())   {
             $this->mform->set_data($formfield);
 
 
             //enter a back url
-            $backurl = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_field.php?form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}";
+            $backurl = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_field.php?form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
 
 
             //was the form cancelled?
@@ -226,7 +226,7 @@ class   form_element_plugin {
 
                     if ($this->mform->is_submitted()) {
                         //return the user to the
-                        $return_url = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}";
+                        $return_url = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
                         redirect($return_url, get_string("fieldcreationsuc", 'local_ulcc_form_library'), FORM_REDIRECT_DELAY);
                     }
                 }
@@ -246,7 +246,7 @@ class   form_element_plugin {
                 print_error(get_string("fieldcreationerror", 'local_ulcc_form_library'), 'local_ulcc_form_library');
             } else {
                 //return the user to the
-                $return_url = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}";
+                $return_url = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
                 redirect($return_url, get_string("fieldcreationsuc", 'local_ulcc_form_library'), FORM_REDIRECT_DELAY);
             }
         }

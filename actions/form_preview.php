@@ -31,6 +31,8 @@ $moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RA
 
 $moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
 
+$context_id             =   $PARSER->required_param('context_id', PARAM_INT);
+
 // instantiate the db
 $dbc = new form_db();
 
@@ -64,7 +66,7 @@ $PAGE->set_pagetype('form-configuration');
 $PAGE->set_pagelayout('form');
 $PAGE->set_url('/local/ulcc_form_library/actions/edit_field.php', $PARSER->get_params());
 
-$mform	= new	form_preview_mform($form_id,$moodleplugintype,$moodlepluginname);
+$mform	= new	form_preview_mform($form_id,$moodleplugintype,$moodlepluginname,$context_id);
 
 $previewform    =   $dbc->get_form_by_id($form_id);
 

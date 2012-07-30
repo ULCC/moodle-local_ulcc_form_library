@@ -26,6 +26,8 @@ $moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RA
 
 $moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
 
+$context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
+
 
 //instantiate the flextable table class
 $flextable = new flexible_table("form_id{$form_id}user_id".$USER->id);
@@ -97,7 +99,7 @@ if (!empty($formfields)) {
             $icon	=	$OUTPUT->pix_url("/t/up");
             $movetype	=	"up";
 
-            $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_field.php?formfield_id={$row->id}&form_id={$form_id}&move=".FORM_MOVE_UP."&position={$row->position}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}'>
+            $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_field.php?formfield_id={$row->id}&form_id={$form_id}&move=".FORM_MOVE_UP."&position={$row->position}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}'>
 									<img class='move' src='{$icon}' alt='{$title}' title='{$title}' />
 								 	</a>";
         } else {

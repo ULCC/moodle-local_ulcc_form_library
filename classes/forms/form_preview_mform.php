@@ -29,7 +29,7 @@ class form_preview_mform extends moodleform {
     /**
      * TODO comment this
      */
-    function __construct($form_id,$moodleplugintype,$moodlepluginname) {
+    function __construct($form_id,$moodleplugintype,$moodlepluginname,$context_id) {
 
         global $CFG;
 
@@ -37,6 +37,7 @@ class form_preview_mform extends moodleform {
         $this->form_id	            =	$form_id;
         $this->moodlepluginname     =   $moodlepluginname;
         $this->moodleplugintype     =   $moodleplugintype;
+        $this->context_id           =   $context_id;
 
         $this->dbc			=	new form_db();
 
