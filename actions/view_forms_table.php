@@ -14,7 +14,7 @@ if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.');
 }
 
-global  $CFG;
+global  $CFG, $USER, $DB, $PARSER;
 
 require_once($CFG->libdir.'/tablelib.php');
 
