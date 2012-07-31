@@ -80,7 +80,7 @@ class add_field_mform extends moodleform {
         $mform->addElement('hidden', 'moodleplugintype', $this->plugintype);
         $mform->setType('moodleplugintype', PARAM_TEXT);
 
-        $mform->addElement('hidden', 'context_id', $this->plugintype);
+        $mform->addElement('hidden', 'context_id', $this->context_id);
         $mform->setType('context_id', PARAM_INT);
 
         $mform->addElement('select', 'formelement_id', get_string('addfield', 'local_ulcc_form_library'), $frmplugins);
