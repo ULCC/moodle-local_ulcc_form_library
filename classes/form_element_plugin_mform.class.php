@@ -147,7 +147,7 @@ abstract class form_element_plugin_mform extends moodleform {
             array('class' => 'form_input','rows'=> '10', 'cols'=>'65')
         );
 
-        $mform->addRule('description', null, 'maxlength', 1000, 'client');
+        $mform->addRule('description', null, 'maxlength', 10000, 'client');
         $mform->setType('description', PARAM_RAW);
 
 
