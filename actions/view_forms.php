@@ -13,7 +13,7 @@
 
 require_once('../../../config.php');
 
-global  $CFG, $USER, $DB;
+global  $CFG, $USER, $DB, $PARSER;
 
 // Perform access checks.
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');

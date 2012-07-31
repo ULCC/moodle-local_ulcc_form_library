@@ -316,7 +316,6 @@ class form_element_plugin_file extends form_element_plugin {
 
             $list = array();
 
-
             foreach ($files as $file) {
                 if ($file->get_filename() !== '.')   {
                     $url = "{$CFG->wwwroot}/local/ulcc_form_library/filedownloads.php/{$file->get_contextid()}/ulcc_form_library/form_element_plugin_file";
