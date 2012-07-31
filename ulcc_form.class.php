@@ -45,8 +45,8 @@ class ulcc_form {
      * @return array of objects or false
      *
      */
-    function get_plugin_forms($formtype=null) {
-        return $this->dbc->get_plugin_forms($this->pluginname,$this->plugintype,$formtype);
+    function get_plugin_forms($formtype=null,$disabled=false) {
+        return $this->dbc->get_plugin_forms($this->pluginname,$this->plugintype,$formtype,$disabled);
     }
 
 

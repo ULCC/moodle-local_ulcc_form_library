@@ -185,7 +185,7 @@ class form_db extends form_logging {
      *
      * @return mixed array containing form objects or bool false
      */
-    private function get_plugin_forms($name, $type, $formtype=null)  {
+    private function get_plugin_forms($name, $type, $formtype=null,$disabled)  {
 
         $sqlparams  =   array('name'=>$name,'type'=>$type);
 
@@ -194,6 +194,10 @@ class form_db extends form_logging {
         if ((!empty($formtype)))   {
             $formsql    =   " AND f.type =   :ftype ";
             $sqlparams['ftype'] =   $formtype;
+        }
+
+        if (empty($disabled))   {
+            $formsql    .=   " AND f.status = 1 ";
         }
 
         $sql    =   "SELECT   f.*
