@@ -22,6 +22,8 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin.class.php');
 
+require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_parser.class.php');
+
 //check the plugin
 require_once($CFG->dirroot.'/local/ulcc_form_library/actions/plugincheck.php');
 
