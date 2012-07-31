@@ -20,7 +20,7 @@ require_login(0);
 $context_id =   required_param('context_id',PARAM_INT);
 
 $context =   context::instance_by_id($context_id, IGNORE_MISSING);
-
+  
 $sitecontext    =   context_system::instance();
 
 //if there is no user context then throw an error
