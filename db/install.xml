@@ -59,7 +59,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="label"/>
         <FIELD NAME="label" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="the label that will be displayed next to the form field" PREVIOUS="id" NEXT="description"/>
-        <FIELD NAME="description" TYPE="char" LENGTH="1333" NOTNULL="false" SEQUENCE="false" COMMENT="information on the form element to be displayed with the form element" PREVIOUS="label" NEXT="formelement_id"/>
+        <FIELD NAME="description" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" COMMENT="information on the form element to be displayed with the form element" PREVIOUS="label" NEXT="formelement_id"/>
         <FIELD NAME="formelement_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="the id of the form element that this field is" PREVIOUS="description" NEXT="position"/>
         <FIELD NAME="position" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" COMMENT="the postion of the field in the form" PREVIOUS="formelement_id" NEXT="required"/>
         <FIELD NAME="required" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="is this field required" PREVIOUS="position" NEXT="form_id"/>
