@@ -52,7 +52,7 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin
 form_element_plugin::install_new_plugins();
 
 $PAGE->set_url(new moodle_url('/local/ulcc_form_library/actions/view_forms.php'));
-
+$PAGE->set_pagelayout('admin');
 // Get all forms for this plugin. that exist
 $forms      =   $dbc->get_plugin_forms($moodlepluginname, $moodleplugintype);
 

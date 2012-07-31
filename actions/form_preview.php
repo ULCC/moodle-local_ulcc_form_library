@@ -63,7 +63,7 @@ $SITE	=	$dbc->get_course_by_id(SITEID);
 $PAGE->set_title($SITE->fullname." : ".$pluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');
-$PAGE->set_pagelayout('form');
+$PAGE->set_pagelayout('admin');
 $PAGE->set_url('/local/ulcc_form_library/actions/edit_field.php', $PARSER->get_params());
 
 $mform	= new	form_preview_mform($form_id,$moodleplugintype,$moodlepluginname,$context_id);
