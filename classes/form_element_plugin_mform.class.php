@@ -111,6 +111,12 @@ abstract class form_element_plugin_mform extends moodleform {
         $mform->setType('moodlepluginname', PARAM_RAW);
         $mform->setDefault('moodlepluginname', $this->moodlepluginname);
 
+        //the moodle context_id
+        $mform->addElement('hidden', 'context_id');
+        $mform->setType('context_id', PARAM_RAW);
+        $mform->setDefault('context_id', $this->context_id);
+
+
         //the id of the form element creator
         $mform->addElement('hidden', 'position');
         $mform->setType('position', PARAM_INT);
