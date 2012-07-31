@@ -33,6 +33,7 @@ abstract class form_element_plugin_mform extends moodleform {
         $this->formfield_id	    =	$formfield_id;
         $this->moodleplugintype =   $moodleplugintype;
         $this->moodlepluginname =   $moodlepluginname;
+        $this->context_id       =   $context_id;
         $this->dbc				=	new form_db();
 
         parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_field.php?formelement_id={$formelement_id}&form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}");
