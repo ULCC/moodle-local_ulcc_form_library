@@ -252,7 +252,7 @@ class form_element_plugin_file extends form_element_plugin {
          //get the value for this element in the data returned. The value is the id of the files save location
          $draftid = $data->$fieldname;
 
-         if (!empty($draftid) && !empty($_FILES))  {
+         if (!empty($draftid))  {
 
              //instantiate file storage
              $fs = get_file_storage();
@@ -261,16 +261,16 @@ class form_element_plugin_file extends form_element_plugin {
              $context = get_context_instance(CONTEXT_USER, $USER->id);
 
              //check if the file exists
-             if (!$files = $fs->get_area_files($context->id, 'user', 'draft', $draftid, 'id DESC', false)) {
-                 print_error('filenotfound');
+             if ($files = $fs->get_area_files($context->id, 'user', 'draft', $draftid, 'id DESC', false)) {
+                 //get system context as this is the area of file storage we will be saving the file into
+                 $sitecontext   =   context_system::instance();
+
+                 file_save_draft_area_files($draftid,$sitecontext->id,'ulcc_form_library','form_element_plugin_file',$draftid);
+
+                 return parent::entry_process_data($formfield_id,$entry_id,$data);
              }
 
-             //get system context as this is the area of file storage we will be saving the file into
-             $sitecontext   =   context_system::instance();
-
-             $test = file_save_draft_area_files($draftid,$sitecontext->id,'ulcc_form_library','form_element_plugin_file',$draftid);
-
-  		    return parent::entry_process_data($formfield_id,$entry_id,$data);
+             return true;
          } else {
              return true;
          }
@@ -309,25 +309,27 @@ class form_element_plugin_file extends form_element_plugin {
 
         $entry	=	$this->dbc->get_form_element_entry($this->tablename,$entry_id,$formfield_id);
 
-        $entryobj->$fieldname	=	html_entity_decode($entry->value, ENT_QUOTES, 'UTF-8');
+        if (!empty($entry)) {
+            $entryobj->$fieldname	=	html_entity_decode($entry->value, ENT_QUOTES, 'UTF-8');
 
-        $files = $fs->get_area_files($sitecontext->id, 'ulcc_form_library', 'form_element_plugin_file',$entryobj->$fieldname);
+            $files = $fs->get_area_files($sitecontext->id, 'ulcc_form_library', 'form_element_plugin_file',$entryobj->$fieldname);
 
-        $list = array();
+            $list = array();
 
 
-        foreach ($files as $file) {
-            if ($file->get_filename() !== '.')   {
-                $url = "{$CFG->wwwroot}/local/ulcc_form_library/filedownloads.php/{$file->get_contextid()}/ulcc_form_library/form_element_plugin_file}";
-                $filename = $file->get_filename();
-                $fileurl = $url.$file->get_filepath().$file->get_itemid().'/'.$filename;
-                $out[] = html_writer::link($fileurl, $filename);
+            foreach ($files as $file) {
+                if ($file->get_filename() !== '.')   {
+                    $url = "{$CFG->wwwroot}/local/ulcc_form_library/filedownloads.php/{$file->get_contextid()}/ulcc_form_library/form_element_plugin_file";
+                    $filename = $file->get_filename();
+                    $fileurl = $url.$file->get_filepath().$file->get_itemid().'/'.$filename;
+                    $out[] = html_writer::link($fileurl, $filename);
+                }
             }
+
+            $br = html_writer::empty_tag('br');
+
+            $entryobj->$fieldname   =   implode($br, $out);
         }
-
-        $br = html_writer::empty_tag('br');
-
-        $entryobj->$fieldname   =   implode($br, $out);
     }
 
 
