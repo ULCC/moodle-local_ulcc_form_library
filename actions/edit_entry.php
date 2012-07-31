@@ -41,7 +41,7 @@ $PAGE->navbar->add(get_string('administrationsite'), null, 'title');
 
 $PAGE->navbar->add(get_string('plugins', 'admin'), null, 'title');
 
-$plugintype     =   ($moodleplugintype  ==  'block')    ? get_string('blocks')  :  get_string('modules') ;
+$plugintype     =   ($moodleplugintype  ==  'block')    ? get_string('blocks')  :  get_string('activitymodule') ;
 
 $PAGE->navbar->add($plugintype, null, 'title');
 
