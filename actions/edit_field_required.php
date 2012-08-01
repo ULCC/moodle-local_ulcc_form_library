@@ -50,7 +50,7 @@ $formfield->required	=	(empty($formfield->required)) ? 1 : 0;
 
 $resulttext = ($dbc->update_form_field($formfield)) ? get_string("fieldreqsuc", 'block_ilp') : get_string("fieldreqerror", 'block_ilp');
 
-$return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname'));
+$return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname','context_id'));
 redirect($return_url, $resulttext, FORM_REDIRECT_DELAY);
 
 ?>
