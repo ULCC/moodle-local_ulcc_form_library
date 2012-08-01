@@ -56,6 +56,7 @@ $string['fieldcreationsuc']		=	'The field was successfully created';
 $string['fieldcreationerror']		=	'An error has occurred the field was not created';
 $string['fielddeletesuc']		=	'The field was successfully deleted';
 $string['fielddeleteerror']		=	'An error has occurred the field was not deleted';
+$string['fieldreqsuc']		    =	'The change to the field has been successfully applied';
 
 
 
