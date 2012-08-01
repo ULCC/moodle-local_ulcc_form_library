@@ -185,7 +185,7 @@ class form_db extends form_logging {
      *
      * @return mixed array containing form objects or bool false
      */
-    private function get_plugin_forms($name, $type, $formtype=null,$disabled)  {
+    private function get_plugin_forms($name, $type, $formtype=null,$disabled=false)  {
 
         $sqlparams  =   array('name'=>$name,'type'=>$type);
 
