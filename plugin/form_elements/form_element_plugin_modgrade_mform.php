@@ -10,9 +10,9 @@ class form_element_plugin_modgrade_mform  extends form_element_plugin_mform {
 
         global  $DB;
 
-        $mform->addElement('html','<div>'.get_string('form_element_plugin_modgrade_dynamicdesc', 'ulcc_form_library').'</div>');
+        $mform->addElement('html','<div>'.get_string('form_element_plugin_modgrade_dynamicdesc', 'local_ulcc_form_library').'</div>');
 
-        $mform->addElement('advcheckbox', 'gradetype', get_string('form_element_plugin_modgrade_gradetype', 'ulcc_form_library'), '', array('group' => 1), array(0, 1));
+        $mform->addElement('advcheckbox', 'gradetype', get_string('form_element_plugin_modgrade_gradetype', 'local_ulcc_form_library'), '', array('group' => 1), array(0, 1));
 
         $mform->addElement('text',
             'tablename',
@@ -27,7 +27,7 @@ class form_element_plugin_modgrade_mform  extends form_element_plugin_mform {
             $options[$s->id]    =   $s->name;
         }
 
-        $mform->addElement('select', 'gradescale', get_string('form_element_plugin_modgrade_gradescale', 'ulcc_form_library'), $options);
+        $mform->addElement('select', 'gradescale', get_string('form_element_plugin_modgrade_gradescale', 'local_ulcc_form_library'), $options);
 
         $mform->disabledIf('gradescale','gradetype','checked');
 
