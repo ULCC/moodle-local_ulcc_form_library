@@ -46,6 +46,8 @@ class add_field_mform extends moodleform {
 
         global $USER, $CFG;
 
+        require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
+
         $dbc = new form_db;
 
         $mform =& $this->_form;
