@@ -43,7 +43,14 @@ function form_records_to_menu($records, $field1, $field2, $callback = null, $cal
     return $menu;
 }
 
-
+/**
+ * returns
+ *
+ * @param $context
+ * @param $filearea
+ * @param $args
+ * @param $forcedownload
+ */
 function ulcc_form_library_pluginfile($context, $filearea, $args, $forcedownload) {
 
     if ($context->contextlevel != CONTEXT_SYSTEM) {
@@ -68,4 +75,37 @@ function ulcc_form_library_pluginfile($context, $filearea, $args, $forcedownload
 
     session_get_instance()->write_close();
     send_stored_file($file, 60*60, 0, $forcedownload);
+}
+
+/**
+ * Returns plugin config options for the module with the details provided
+ *
+ * @param $type
+ * @param $name
+ */
+function get_plugin_config($type,$name)    {
+    global  $CFG;
+
+    $path   =   '';
+
+    switch ($type)   {
+        case    'mod':
+            $path   =  $CFG->dirroot.'/mod/'.$name.'/config_uflib.xml';
+            break;
+
+        case    'block':
+            $path   .=  $CFG->dirroot.'/blocks/'.$name.'/config_uflib.xml';
+            break;
+    }
+
+
+
+    if (!empty($path))  {
+        //get the xml file if it exists
+        if (file_exists($path)) {
+            $xmlfile    =   file_get_contents($path);
+            $configopt  =   simplexml_load_string($xmlfile);
+            return (isset($configopt->elements))    ? $configopt->elements  : false  ;
+        }
+    }
 }

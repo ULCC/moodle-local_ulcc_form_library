@@ -60,9 +60,19 @@ class add_field_mform extends moodleform {
             $formelementplugins = array();
         }
 
+        $elements   =   get_plugin_config($this->plugintype,$this->pluginname);
+
+
+
         //append _description to the name field so there description can be picked up from lang file
         foreach ($formelementplugins as $plg) {
-            $frmplugins[$plg->id] = get_string($plg->name.'_description','local_ulcc_form_library');
+            if (empty($elements))   {
+                $frmplugins[$plg->id] = get_string($plg->name.'_description','local_ulcc_form_library');
+            } else {
+                if (in_array($plg->name,$elements))   {
+                    $frmplugins[$plg->id] = get_string($plg->name.'_description','local_ulcc_form_library');
+                }
+            }
         }
 
         $fieldsettitle = get_string('addfield', 'local_ulcc_form_library');
