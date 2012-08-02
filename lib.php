@@ -107,7 +107,7 @@ function get_plugin_config($type,$name)    {
             $configopt  =   simplexml_load_string($xmlfile);
             $elements   =   array();
             foreach ($configopt->element as $e) {
-                $elements[]   =     $e;
+                   $elements[]   =     (string) $e;
             }
             return (isset($elements))    ? $elements  : false  ;
         }
