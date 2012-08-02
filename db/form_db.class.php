@@ -719,6 +719,16 @@ class form_db extends form_logging {
     }
 
     /**
+     * This function sets the delete field of a reportd
+     *
+     * @return	mixed  object containing the record or bool false
+     */
+    private function delete_form($form_id,$deleted)	{
+        return $this->dbc->set_field('ulcc_form_lib_form','deleted', $deleted, array('id'=>$form_id));
+    }
+
+
+    /**
      * Get the form element instance record that has the formfield_id given
      *
      * @param string $tablename the name of the table that will be updated

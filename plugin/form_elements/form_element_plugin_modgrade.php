@@ -179,7 +179,7 @@ class form_element_plugin_modgrade extends form_element_plugin {
         id of the record that is being used in the form of a query string param called graderecordid otherwise no data will be
         displayed in the selector.';
         $string['form_element_plugin_modgrade_gradetype'] =   'Dynamic grade selector';
-        $string['form_element_plugin_modgrade_tablename'] =   'Table name (no prefix)';
+        $string['form_element_plugin_modgrade_module'] =   'Module: ';
         $string['form_element_plugin_modgrade_gradescale'] =   'Grade scale';
 
 

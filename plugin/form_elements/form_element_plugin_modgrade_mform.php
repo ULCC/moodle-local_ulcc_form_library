@@ -14,9 +14,15 @@ class form_element_plugin_modgrade_mform  extends form_element_plugin_mform {
 
         $mform->addElement('advcheckbox', 'gradetype', get_string('form_element_plugin_modgrade_gradetype', 'local_ulcc_form_library'), '', array('group' => 1), array(0, 1));
 
-        $mform->addElement('text',
-            'tablename',
-            get_string('form_element_plugin_modgrade_tablename', 'local_ulcc_form_library'));
+        $modules     =   $DB->get_records('modules',array('visible'=>1));
+
+        $options    =   array();
+
+        foreach($modules as $m)   {
+            $options[$m->name]    =   $m->name;
+        }
+
+        $mform->addElement('select', 'tablename', get_string('form_element_plugin_modgrade_module', 'local_ulcc_form_library'), $options);
 
         $mform->disabledIf('tablename','gradetype','unchecked');
 

@@ -57,15 +57,8 @@ $string['fieldcreationerror']		=	'An error has occurred the field was not create
 $string['fielddeletesuc']		=	'The field was successfully deleted';
 $string['fielddeleteerror']		=	'An error has occurred the field was not deleted';
 $string['fieldreqsuc']		    =	'The change to the field has been successfully applied';
-
-
-
-
-
-
-
-
-
+$string['formdeletesuc']		=	'The form was successfully deleted';
+$string['formdeleteerror']		=	'An error has occurred the form was not deleted';
 
 
 // I
