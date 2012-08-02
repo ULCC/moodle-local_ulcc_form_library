@@ -105,7 +105,11 @@ function get_plugin_config($type,$name)    {
         if (file_exists($path)) {
             $xmlfile    =   file_get_contents($path);
             $configopt  =   simplexml_load_string($xmlfile);
-            return (isset($configopt->elements))    ? $configopt->elements  : false  ;
+            $elements   =   array();
+            foreach ($configopt->element as $e) {
+                $elements[]   =     $e;
+            }
+            return (isset($elements))    ? $elements  : false  ;
         }
     }
 }
