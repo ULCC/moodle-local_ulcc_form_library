@@ -175,9 +175,7 @@ class form_element_plugin_modgrade extends form_element_plugin {
         $string['form_element_plugin_modgrade_description'] = 'A module grade selector';
         $string['form_element_plugin_modgrade_dynamicdesc'] =   'The dynamic checkbox below defines whether the grade
         produced in Module grade selector will be chosen now or will be chosen at run time using the data taken from the given
-        database. If you choose to make the selector dynamic the table given must contain a grade field and you must supply the
-        id of the record that is being used in the form of a query string param called graderecordid otherwise no data will be
-        displayed in the selector.';
+        database. If you choose to make the selector dynamic then choose the module that you are working with.';
         $string['form_element_plugin_modgrade_gradetype'] =   'Dynamic grade selector';
         $string['form_element_plugin_modgrade_module'] =   'Module: ';
         $string['form_element_plugin_modgrade_gradescale'] =   'Grade scale';
