@@ -10,7 +10,7 @@
  * @version
  */
 
-global $DB, $PARSER, $CFG, $PAGE;
+global $DB, $PARSER, $CFG, $PAGE, $OUTPUT;
 
 $cm_id  =   $PARSER->optional_param('cm_id',null,PARAM_INT);
 

@@ -66,7 +66,7 @@ abstract class form_element_plugin_mform extends moodleform {
 
         //button to state whether the element is required
         $mform->addElement('checkbox',
-            'req',
+            'required',
             get_string('required', 'local_ulcc_form_library')
         );
 
