@@ -24,6 +24,9 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
 // Meta includes
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 
+//add the breadcrumbs
+require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
+
 
 //the id of the report  that the field will be in
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
@@ -49,21 +52,6 @@ $dbc = new form_db();
 //siteadmin or modules
 
 //  Add section name to nav bar.
-$PAGE->navbar->add(get_string('administrationsite'), null, 'title');
-
-$PAGE->navbar->add(get_string('plugins', 'admin'), null, 'title');
-
-$plugintype     =   ($moodleplugintype  ==  'block')    ? get_string('blocks')  :  get_string('activitymodule') ;
-
-$PAGE->navbar->add($plugintype, null, 'title');
-
-$pluginname     =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
-
-$PAGE->navbar->add($pluginname, null, 'title');
-
-$PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?'.$PARSER->get_params_url(), 'title');
-
-
 $title  =   (empty($formfield_id))  ? get_string('addfield','local_ulcc_form_library')   :   get_string('editfield','local_ulcc_form_library');
 
 $PAGE->navbar->add($title, null, 'title');

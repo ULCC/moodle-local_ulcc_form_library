@@ -21,6 +21,9 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/edit_form_mform.php');
 
+//add the breadcrumbs
+require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
+
 $form_id    =   optional_param('form_id',null,PARAM_INT);
 
 // Get the type of the plugin that is currently invoking the form library.
@@ -89,21 +92,7 @@ if (!empty($form_id)) {
     $mform->set_data($formrecord);
 }
 
-//  Add section name to nav bar.
-$PAGE->navbar->add(get_string('administrationsite'), null, 'title');
-
-$PAGE->navbar->add(get_string('plugins', 'admin'), null, 'title');
-
-$plugintype     =   ($moodleplugintype  ==  'block')    ? get_string('blocks')  :  get_string('activitymodule') ;
-
-$PAGE->navbar->add($plugintype, null, 'title');
-
-$pluginname     =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
-
-$PAGE->navbar->add($pluginname, null, 'title');
-
-$PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?'.$PARSER->get_params_url(), 'title');
-
+//add create form title to nav
 $PAGE->navbar->add(get_string('createform', 'local_ulcc_form_library'), null, 'title');
 
 

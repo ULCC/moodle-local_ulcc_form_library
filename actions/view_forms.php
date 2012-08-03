@@ -27,23 +27,13 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_parser.class.p
 //check the plugin
 require_once($CFG->dirroot.'/local/ulcc_form_library/actions/plugincheck.php');
 
+//add the breadcrumbs
+require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
+
 // Instantiate the db class.
 $dbc =   new form_db();
 
-//  Add section name to nav bar.
-$PAGE->navbar->add(get_string('administrationsite'), null, 'title');
 
-$PAGE->navbar->add(get_string('plugins', 'admin'), null, 'title');
-
-$plugintype     =   ($moodleplugintype  ==  'block')    ? get_string('blocks')  :  get_string('activitymodule') ;
-
-$PAGE->navbar->add($plugintype, null, 'title');
-
-$pluginname     =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
-
-$PAGE->navbar->add($pluginname, null, 'title');
-
-$PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), null, 'title');
 
 // Require form element plugin class so any new form elements can be installed
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin.class.php');
