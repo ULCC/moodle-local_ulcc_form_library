@@ -29,7 +29,10 @@ $moodleplugintype    =   optional_param('moodleplugintype', false, PARAM_RAW);
 
 $moodlepluginname   =   optional_param('moodlepluginname', false, PARAM_RAW);
 
-$pluginname     =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
+$pluginname         =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
+
+$formpagelink       = new moodle_url('/local/ulcc_form_library/actions/view_forms.php',
+                      array('moodleplugintype' => $moodleplugintype, 'moodlepluginname' => $moodlepluginname));
 
 if (isset($cm_id))    {
     //set the nav bar -> courses -> course -> coursemodule -> form lib
@@ -52,10 +55,8 @@ if (isset($cm_id))    {
     //  Add course name to the nav bar
     $PAGE->navbar->add($coursemodule->name, $cmlink, 'title');
 
-    $PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), null, 'title');
-
+    $PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), $formpagelink, 'title');
 } else {
-
     //  Add section name to nav bar.
     $PAGE->navbar->add(get_string('administrationsite'), null, 'title');
 
@@ -67,7 +68,6 @@ if (isset($cm_id))    {
 
     $PAGE->navbar->add($pluginname, null, 'title');
 
-    $PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), null, 'title');
-
+    $PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), $formpagelink, 'title');
 }
 
