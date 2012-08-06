@@ -15,6 +15,22 @@ global $DB, $PARSER, $CFG, $PAGE, $OUTPUT;
 $cm_id  =   $PARSER->optional_param('cm_id',null,PARAM_INT);
 
 
+//if the cm_id is empty check the global cfg to see if it has been saved into it
+if (empty($cm_id))  {
+    $cm_id  =   (isset($CFG->ulcc_form_lib['cm_id']))  ? $CFG->ulcc_form_lib['cm_id']  : null ;
+} else {
+    if (!isset($CFG->ulcc_form_lib))    $CFG->ulcc_form_lib     =   array();
+    $CFG->ulcc_form_lib['cm_id']    =   $cm_id;
+}
+
+
+// Get the type of the plugin that is currently invoking the form library.
+$moodleplugintype    =   optional_param('moodleplugintype', false, PARAM_RAW);
+
+$moodlepluginname   =   optional_param('moodlepluginname', false, PARAM_RAW);
+
+$pluginname     =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
+
 if (isset($cm_id))    {
     //set the nav bar -> courses -> course -> coursemodule -> form lib
 
@@ -48,8 +64,6 @@ if (isset($cm_id))    {
     $plugintype     =   ($moodleplugintype  ==  'block')    ? get_string('blocks')  :  get_string('activitymodule') ;
 
     $PAGE->navbar->add($plugintype, null, 'title');
-
-    $pluginname     =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
 
     $PAGE->navbar->add($pluginname, null, 'title');
 
