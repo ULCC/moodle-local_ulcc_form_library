@@ -45,7 +45,9 @@ class form_element_plugin_dd_mform  extends form_element_plugin_itemlist_mform {
 			$typelist,
 			array('class' => 'form_input')
 		);
-		
+
+        $mform->disabledIf('selecttype', 'reportfield_id', 'neq', '');
+
 		$mform->addElement(
 			'static',
 			'existing_options',
