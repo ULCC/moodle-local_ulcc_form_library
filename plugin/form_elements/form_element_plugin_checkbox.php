@@ -12,12 +12,12 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
     /**
      * Constructor
      */
-    function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id=null) {
+    function __construct() {
         $this->tablename = "ulcc_form_plg_chb";
         $this->data_entry_tablename = "ulcc_form_plg_chb_ent";
         $this->items_tablename = "ulcc_form_plg_chb_items";
         $this->selecttype = ILP_OPTIONMULTI; //2
-        parent::__construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id);
+        parent::__construct();
     }
 
 
