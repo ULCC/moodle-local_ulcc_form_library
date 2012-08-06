@@ -29,10 +29,13 @@ $moodleplugintype    =   optional_param('moodleplugintype', false, PARAM_RAW);
 
 $moodlepluginname   =   optional_param('moodlepluginname', false, PARAM_RAW);
 
+$context_id         =   required_param('context_id', PARAM_INT);
+
 $pluginname         =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
 
 $formpagelink       = new moodle_url('/local/ulcc_form_library/actions/view_forms.php',
-                      array('moodleplugintype' => $moodleplugintype, 'moodlepluginname' => $moodlepluginname));
+                      array('moodleplugintype' => $moodleplugintype, 'moodlepluginname' => $moodlepluginname,
+                            'context_id' => $context_id));
 
 if (isset($cm_id))    {
     //set the nav bar -> courses -> course -> coursemodule -> form lib
