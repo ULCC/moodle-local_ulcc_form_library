@@ -24,7 +24,7 @@ class form_element_plugin_modgrade_mform  extends form_element_plugin_mform {
 
         $mform->addElement('select', 'tablename', get_string('form_element_plugin_modgrade_module', 'local_ulcc_form_library'), $options);
 
-        $mform->setDefault(tablename, $this->moodlepluginname);
+        $mform->setDefault('tablename', $this->moodlepluginname);
 
         $mform->disabledIf('tablename','gradetype','unchecked');
 

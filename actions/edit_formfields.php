@@ -39,6 +39,19 @@ $context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
 $dbc = new form_db();
 
 //  Add section name to nav bar.
+$PAGE->navbar->add(get_string('administrationsite'), null, 'title');
+
+$PAGE->navbar->add(get_string('plugins', 'admin'), null, 'title');
+
+$plugintype     =   ($moodleplugintype  ==  'block')    ? get_string('blocks')  :  get_string('activitymodule') ;
+
+$PAGE->navbar->add($plugintype, null, 'title');
+
+$pluginname     =   get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
+
+$PAGE->navbar->add($pluginname, null, 'title');
+
+$PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?'.$PARSER->get_params_url(), 'title');
 
 $PAGE->navbar->add(get_string('formfields', 'local_ulcc_form_library'), null, 'title');
 
