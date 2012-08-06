@@ -72,5 +72,7 @@ if (isset($cm_id))    {
     $PAGE->navbar->add($pluginname, null, 'title');
 
     $PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), $formpagelink, 'title');
+
+    $PAGE->set_pagelayout('admin');
 }
 

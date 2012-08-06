@@ -36,10 +36,11 @@ $string['disableform']          = 'Disable form';
 
 
 // E
-$string['enableform']            = 'Enable form';
-$string['editfields']            = 'Edit fields';
-$string['editfield']             = 'Edit field';
-$string['entrynotfound']         = 'Entry not found';
+$string['enableform']               = 'Enable form';
+$string['editfields']               = 'Edit fields';
+$string['editfield']                = 'Edit field';
+$string['editform']                 = 'Edit form';
+$string['entrynotfound']            = 'Entry not found';
 
 
 
