@@ -1,6 +1,6 @@
 <?php
 
-require_once( $CFG->dirroot . '/local/ulcc_form_library/classes/form_element_plugin_mform.class.php' );
+require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin_itemlist_mform.class.php');
 
 class form_element_plugin_checkbox_mform  extends form_element_plugin_itemlist_mform {
 

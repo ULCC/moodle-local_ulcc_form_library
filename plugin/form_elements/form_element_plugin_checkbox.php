@@ -16,7 +16,7 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
         $this->tablename = "ulcc_form_plg_chb";
         $this->data_entry_tablename = "ulcc_form_plg_chb_ent";
         $this->items_tablename = "ulcc_form_plg_chb_items";
-        $this->selecttype = ILP_OPTIONMULTI; //2
+        $this->selecttype = FORM_OPTIONMULTI;
         parent::__construct();
     }
 
@@ -24,7 +24,7 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
 
 
     public function audit_type() {
-        return get_string('form_element_plugin_checkbox_type','block_ilp');
+        return get_string('form_element_plugin_checkbox_type','local_ulcc_form_library');
     }
 
 
