@@ -10,17 +10,17 @@
  * @version
  */
 
-global $DB, $PARSER, $CFG, $PAGE, $OUTPUT;
+global $DB, $PARSER, $CFG, $PAGE, $OUTPUT, $SESSION;
 
 $cm_id  =   $PARSER->optional_param('cm_id',null,PARAM_INT);
 
 
 //if the cm_id is empty check the global cfg to see if it has been saved into it
 if (empty($cm_id))  {
-    $cm_id  =   (isset($CFG->ulcc_form_lib['cm_id']))  ? $CFG->ulcc_form_lib['cm_id']  : null ;
+    $cm_id  =   (isset($SESSION->ulcc_form_lib['cm_id']))  ? $SESSION->ulcc_form_lib['cm_id']  : null ;
 } else {
-    if (!isset($CFG->ulcc_form_lib))    $CFG->ulcc_form_lib     =   array();
-    $CFG->ulcc_form_lib['cm_id']    =   $cm_id;
+    if (!isset($SESSION->ulcc_form_lib))    $SESSION->ulcc_form_lib     =   array();
+    $SESSION->ulcc_form_lib['cm_id']    =   $cm_id;
 }
 
 
