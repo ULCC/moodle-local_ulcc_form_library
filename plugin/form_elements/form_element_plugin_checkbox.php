@@ -54,7 +54,7 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
         $chbarray = array();
         //checkboxes
         foreach( $optionlist as $key => $value ){
-          $chbarray[] = &MoodleQuickForm::createElement( 'checkbox', $fieldname."[$key]", '', $value);
+            $chbarray[] = $mform->createElement( 'checkbox', $fieldname."[$key]", '', $value);
         }
 
         $mform->addGroup(
