@@ -6,8 +6,8 @@ class form_element_plugin_checkbox_mform  extends form_element_plugin_itemlist_m
 
 
 
-    function __construct() {
-        parent::__construct();
+    function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id=null) {
+        parent::__construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id=null);
         $this->tablename = "ulcc_form_plg_chb";
         $this->data_entry_tablename = "ulcc_form_plg_chb_ent";
         $this->items_tablename = "ulcc_form_plg_chb_items";
