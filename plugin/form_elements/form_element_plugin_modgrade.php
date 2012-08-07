@@ -217,7 +217,6 @@ class form_element_plugin_modgrade extends form_element_plugin {
 
             $grademenu   =  make_menu_from_list($scale->scale);
 
-            //$grademenu = make_grades_menu($scaleoptions);
         } else{
 
             //the user has selected the dynamic grade type for the grade form element
@@ -230,8 +229,8 @@ class form_element_plugin_modgrade extends form_element_plugin {
 
             $tablerecord        =   $DB->get_record($this->gradetablename,array('id'=>$graderecordid));
 
-            $grademenu = make_grades_menu($tablerecord->grade);
-
+            //if a record with a grade has been found then populate gradesmenu with this
+            $grademenu = (!empty($tablerecord)) ? make_grades_menu($tablerecord->grade) : array();
         }
 
         $mform->addElement('select',
