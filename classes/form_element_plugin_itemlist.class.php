@@ -58,7 +58,7 @@ class form_element_plugin_itemlist extends form_element_plugin{
             //delete all of the entries
             $extraparams = array( 'audit_type' => $this->audit_type() );
             foreach ($entrydata as $e)	{
-                $this->dbc->delete_form_element_by_formfield( $this->data_entry_tablename, $e->id, $extraparams );
+                $this->dbc->delete_element_record_by_id( $this->data_entry_tablename, $e->id, $extraparams );
             }
         }
 

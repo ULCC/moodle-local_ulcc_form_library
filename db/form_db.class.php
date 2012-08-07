@@ -1192,5 +1192,19 @@ class form_db extends form_logging {
        return $this->dbc->get_record('ulcc_form_lib_form_element',array('name'=>$elementname));
     }
 
+
+    /**
+     * Deletes a record in the given table matching its id field
+     *
+     * @param   string $tablename the name of the table that the record
+     * will be deleted form
+     * @param	int $id the id of the record you will be deleting
+     *
+     * @return mixed true or false
+     */
+    function delete_element_record_by_id ( $tablename,$id, $extraparams=array() ) {
+        return $this->delete_records( $tablename, array('id'=>$id), $extraparams );
+    }
+
 }
 
