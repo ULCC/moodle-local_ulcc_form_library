@@ -43,14 +43,14 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
 
 
     /**
-     * this function returns the mform elements that will be added to a report form
+     * this function returns the mform elements that will be added to a  form
      *
      */
     public	function entry_form( &$mform ) {
 
-        $fieldname	=	"{$this->reportfield_id}_field";
+        $fieldname	=	"{$this->formfield_id}_field";
 
-        $optionlist = $this->get_option_list( $this->reportfield_id );
+        $optionlist = $this->get_option_list( $this->formfield_id );
         $chbarray = array();
         //checkboxes
         foreach( $optionlist as $key => $value ){
@@ -81,7 +81,7 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
         //create the fieldname
         $fieldname =	$formfield_id."_field";
 
-        //get the plugin table record that has the reportfield_id
+        //get the plugin table record that has the formfield_id
         $pluginrecord	=	$this->dbc->get_plugin_record($this->tablename,$formfield_id);
         if (empty($pluginrecord)) {
             print_error('pluginrecordnotfound');
@@ -91,7 +91,7 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
         $multiple = !empty( $this->items_tablename );
         $entrydata 	=	$this->dbc->get_pluginentry($this->tablename, $entry_id,$formfield_id,$multiple);
 
-        //if there are records connected to this entry in this reportfield_id
+        //if there are records connected to this entry in this formfield_id
         if (!empty($entrydata)) {
             //delete all of the entries
             $extraparams = array( 'audit_type' => $this->audit_type() );
@@ -124,11 +124,11 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
     /**
      * places entry data for the report field given into the entryobj given by the user
      *
-     * @param int $reportfield_id the id of the reportfield that the entry is attached to
+     * @param int $formfield_id the id of the reportfield that the entry is attached to
      * @param int $entry_id the id of the entry
      * @param object $entryobj an object that will add parameters to
      */
-    public function entry_data( $reportfield_id,$entry_id,&$entryobj ){
+    public function entry_data( $formfield_id,$entry_id,&$entryobj ){
         //this function will suffice for 90% of plugins who only have one value field (named value) i
         //in the _ent table of the plugin. However if your plugin has more fields you should override
         //the function
