@@ -244,7 +244,7 @@ abstract class form_lib_form extends moodleform  {
     }
 
 
-    function return_entry($entry_id=false,$labels=false)    {
+    function return_entry($entry_id=false,$labels=false,$dontreturn=array())    {
 
         global $CFG;
 
@@ -269,36 +269,37 @@ abstract class form_lib_form extends moodleform  {
 
                     //get the plugin record that for the plugin
                     $pluginrecord	=	$this->dbc->get_form_element_plugin($field->formelement_id);
+                    if (!in_array($pluginrecord->name,$dontreturn)) {
+                        //take the name field from the plugin as it will be used to call the instantiate the plugin class
+                        $classname = $pluginrecord->name;
 
-                    //take the name field from the plugin as it will be used to call the instantiate the plugin class
-                    $classname = $pluginrecord->name;
+                        // include the class for the plugin
+                        include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
-                    // include the class for the plugin
-                    include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
-
-                    if(!class_exists($classname)) {
-                        print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
-                    }
-
-                    //instantiate the plugin class
-                    $pluginclass	=	new $classname();
-
-                    //create the fieldname
-                    $fieldname	=	$field->id."_field";
-
-
-                    if ($pluginclass->is_viewable() != false)	{
-                        $pluginclass->load($field->id);
-
-                        //call the plugin class entry data method
-                        $pluginclass->view_data($field->id,$entry->id,$entry_data);
-
-                        if (!empty($labels))   {
-                            $fielddata  =   $entry_data->$fieldname;
-                            $entry_data->$fieldname     =   array('label'=>$field->label,'value'=>$fielddata);
+                        if(!class_exists($classname)) {
+                            print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
                         }
-                    } else	{
-                        $dontdisplay[]	=	$field->id;
+
+                        //instantiate the plugin class
+                        $pluginclass	=	new $classname();
+
+                        //create the fieldname
+                        $fieldname	=	$field->id."_field";
+
+
+                        if ($pluginclass->is_viewable() != false)	{
+                            $pluginclass->load($field->id);
+
+                            //call the plugin class entry data method
+                            $pluginclass->view_data($field->id,$entry->id,$entry_data);
+
+                            if (!empty($labels))   {
+                                $fielddata  =   $entry_data->$fieldname;
+                                $entry_data->$fieldname     =   array('label'=>$field->label,'value'=>$fielddata);
+                            }
+                        } else	{
+                            $dontdisplay[]	=	$field->id;
+                        }
                     }
                 }
 

@@ -171,7 +171,7 @@ class ulcc_form {
     /**
      *
      */
-    function display_form_entry($entry_id)   {
+    function display_form_entry($entry_id,$removeelement = array())   {
         global  $CFG;
 
         $entrydata		=	false;
@@ -183,7 +183,7 @@ class ulcc_form {
 
         if (!empty($entry)) 	{
             $mform      =   new form_entry_mform($entry->form_id, false, false, false);
-            $entrydata  =   $mform->return_entry($entry_id,true);
+            $entrydata  =   $mform->return_entry($entry_id,true,$removeelement);
 
             if (!empty($entrydata)) {
                 ob_start();
