@@ -267,4 +267,138 @@ class ulcc_form {
         return false;
     }
 
+    /**
+     * Returns true or false based on whether the form with the id given has a element of the type specified
+     *
+     * @param int       $form_id   the id of the form that we will check for the element
+     * @param string    $elementtype the element type that will be looked for.
+     */
+    function has_element_type($form_id,$elementtype)  {
+        $formelement    =   $this->dbc->get_form_element_by_name($elementtype);
+        $formfields     =   $this->dbc->element_occurances($form_id,$formelement->tablename)
+        return  (!empty($formfields))  ? true  : false;
+    }
+
+
+    function create_form_entry($form_id,$creator_id)    {
+        global $CFG;
+
+        $entry					=	new stdClass();
+        $entry->form_id		    =	$form_id;
+        $entry->creator_id		=	$creator_id;
+
+        $entry_id	=	$this->dbc->create_entry($entry);
+
+        //get all of the fields in the current report, they will be returned in order as
+        //no position has been specified
+        $formfields		=	$this->dbc->get_form_fields_by_position($form_id);
+
+        $data   =   new stdClass();
+
+        foreach ($formfields as $field) {
+
+            //get the plugin record that for the plugin
+            $formelementrecord	=	$this->dbc->get_form_element_plugin($field->formelement_id);
+
+            //take the name field from the plugin as it will be used to call the instantiate the plugin class
+            $classname = $formelementrecord->name;
+
+            // include the class for the plugin
+            include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
+
+            if(!class_exists($classname)) {
+                print_error('noclassforplugin', 'block_ilp', '', $formelementrecord->name);
+            }
+
+            //instantiate the plugin class
+            $pluginclass	=	new $classname();
+
+            $pluginclass->load($field->id);
+
+
+            $formfield      =       $field->id.'_fieldname';
+
+            if (get_parent_class($pluginclass) != 'form_element_plugin_itemlist')   {
+                $data->$formfield   =   "";
+            }   else    {
+                //get items for this instance of the form element
+                $items  =   $this->dbc->get_optionlist($field->id , $formelementrecord->tablename, $field );
+                if (!empty($items)) {
+                    $item   =   array_pop($items);
+                    $data->$formfield   =  $item->id;
+                }
+            }
+
+
+            //call the plugins entry_form function which will add an instance of the plugin
+            //to the form
+            if ($pluginclass->is_processable())	{
+                if (!$pluginclass->entry_process_data($field->id,$entry_id,$data)) $result = false;
+            }
+        }
+
+    }
+
+    /**
+     * Sets the value of a particular form element within the given entry
+     *
+     * @param $entry_id     int     the id of the entry whose value will be set
+     * @param $elementtype  string  the name of the element that will be set
+     * @param $value        mixed   the value to be set
+     * @param int $occurance int    the occurance to set e.g 1 = first 2 = 2nd etc
+     */
+    function set_form_element_entry_value($entry_id,$elementtype,$value,$occurance=1)   {
+
+        global  $CFG;
+
+        $entry      =   $this->dbc->get_form_entry($entry_id);
+        $formelement    =   $this->dbc->get_form_element_by_name($elementtype);
+
+        if (!empty($entry) && !empty($formelement))   {
+            if ($formfields     =   $this->dbc->element_occurances($entry->form_id,$formelement->tablename)) {
+
+                $formdata   =   new stdClass();
+
+                //take the name field from the plugin as it will be used to call the instantiate the plugin class
+                $classname = $formelement->name;
+
+                //instantiate the form element class
+                $formelementclass	=	new $classname();
+
+                // include the class for the plugin
+                include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
+
+                $i          =   0;
+                $data       =   new stdClass();
+
+                if (!empty($formfields))   {
+                    foreach ($formfields as $ff)    {
+
+                        $formelementclass->load($ff->id);
+
+                        $formfield      =       $ff->id.'_fieldname';
+
+                        $data->$formfield   =   $value;
+
+                        //call the plugins entry_form function which will add an instance of the plugin
+                        //to the form
+                        if ($formelementclass->is_processable() && $i = $occurance-1)	{
+                            if (!$formelementclass->entry_process_data($ff->id,$entry_id,$data)) $result = false;
+                        }
+
+                        $i++;
+                    }
+
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
+
+
+
+    }
+
 }
