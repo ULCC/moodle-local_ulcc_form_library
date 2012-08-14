@@ -250,7 +250,6 @@ class ulcc_form {
                     } else {
                         $formelementclass->entry_data($ff->id,$entry_id,$formdata);
                     }
-
                 }
 
                 $fielddata  =   array();
