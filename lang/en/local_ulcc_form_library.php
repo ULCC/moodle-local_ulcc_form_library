@@ -69,6 +69,7 @@ $string['insummary']        = 'In summary';
 // L
 
 $string['label']            = 'Label';
+$string['labelexistserror']				=	"a field with this label already exists in this form";
 
 //M
 $string['moveup']            = 'Move up';

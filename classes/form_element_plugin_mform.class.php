@@ -176,7 +176,7 @@ abstract class form_element_plugin_mform extends moodleform {
 
         //check that the field label does not already exist in this form
         if ($this->dbc->label_exists($data['label'],$data['form_id'],$data['id']))	{
-            $this->errors['label']	=	get_string('labelexistserror','block_form',$data);
+            $this->errors['label']	=	get_string('labelexistserror','local_ulcc_form_library',$data);
         }
 
         // now add fields specific to this type of evidence
