@@ -48,7 +48,7 @@ $formfield =	$dbc->get_form_field_data($formfield_id);
 //if the report field is currently required set it to 0 not required and vice versa
 $formfield->required	=	(empty($formfield->required)) ? 1 : 0;
 
-$resulttext = ($dbc->update_form_field($formfield)) ? get_string("fieldreqsuc", 'block_ilp') : get_string("fieldreqerror", 'block_ilp');
+$resulttext = ($dbc->update_form_field($formfield)) ? get_string("fieldreqsuc", 'local_ulcc_form_library') : get_string("fieldreqerror", 'local_ulcc_form_library');
 
 $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname','context_id'));
 redirect($return_url, $resulttext, FORM_REDIRECT_DELAY);

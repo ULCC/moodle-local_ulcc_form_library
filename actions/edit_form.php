@@ -69,7 +69,7 @@ if($mform->is_submitted()) {
         //if saving the data was not successful
         if(!$success) {
             //print an error message
-            print_error(get_string("formcreationerror", 'local_ulcc_form_library'), 'ulcc_form_library');
+            print_error(get_string("formcreationerror", 'local_ulcc_form_library'), 'local_ulcc_form_library');
         }
 
         //if the report_id has not already been set
