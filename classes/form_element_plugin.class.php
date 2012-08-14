@@ -427,7 +427,7 @@ class   form_element_plugin {
         //get the _entry table record that has the formelementrecord id
         $formelemententry 	=	$this->dbc->get_form_element_entry($this->tablename,$entry_id,$formfield_id);
 
-
+var_dump($formelemententry);
         //if no record has been created create the entry record
         if (empty($formelemententry)) {
             $formelemententry	=	new stdClass();

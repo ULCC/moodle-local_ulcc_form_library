@@ -16,6 +16,8 @@ global $CFG, $PAGE, $OUTPUT;
 
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/ulcc_form.class.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
+
 
 $sitecontext	=	context_system::instance();
 $PAGE->set_context($sitecontext);
@@ -42,11 +44,25 @@ echo $OUTPUT->header();
 
 
 
-//$test   =   $uf->display_form(3,$pageurl,$cancelurl,$processurl);
+$test = get_plugin_config('block','tags');
+$entry_id   =   $uf->create_form_entry(3,2);
+
+$test   = $uf->display_form_entry($entry_id);
+
+
+$uf->set_form_element_entry_value($entry_id,'form_element_plugin_text','test data');
+
+$test   = $uf->display_form_entry($entry_id);
+
+/*
+ *
+ *
+ *
+$test   =   $uf->display_form(4,$pageurl,$cancelurl,$processurl);
 //var_dump($test);
 //$test   =   $uf->display_form_entry(29);
 
-
+*/
 
 
 echo $OUTPUT->footer();
