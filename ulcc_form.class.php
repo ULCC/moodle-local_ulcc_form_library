@@ -274,7 +274,7 @@ class ulcc_form {
      */
     function has_element_type($form_id,$elementtype)  {
         $formelement    =   $this->dbc->get_form_element_by_name($elementtype);
-        $formfields     =   $this->dbc->element_occurances($form_id,$formelement->tablename)
+        $formfields     =   $this->dbc->element_occurances($form_id,$formelement->tablename);
         return  (!empty($formfields))  ? true  : false;
     }
 
