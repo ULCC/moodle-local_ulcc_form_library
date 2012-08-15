@@ -57,6 +57,11 @@ class   form_element_plugin {
     var $formelement_id;
 
     /**
+     * @var int
+     */
+    public $formfield_id;
+
+    /**
      * The label used by the instance of the plugin
      *
      * @var string
@@ -69,6 +74,10 @@ class   form_element_plugin {
      * @var string
      */
     var	$description;
+
+    /**
+     * @var string
+     */
     var $xmldb_table;
 
     var $xmldb_field;

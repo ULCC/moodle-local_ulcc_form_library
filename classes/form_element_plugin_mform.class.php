@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Abstract class providing the template form in which the configuration of a element can be entered
@@ -23,6 +37,10 @@ abstract class form_element_plugin_mform extends moodleform {
     public      $moodlepluginname;
     public 		$dbc;
 
+    /**
+     * @var array Holds validation errors.
+     */
+    protected $errors;
 
     function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id=null) {
         global $CFG;
@@ -160,8 +178,11 @@ abstract class form_element_plugin_mform extends moodleform {
 
     /**
      * Force extending class to add its own form fields
+     *
+     * @param MoodleQuickForm $mform
+     * @return
      */
-    abstract protected function specific_definition($mform);
+    abstract protected function specific_definition(MoodleQuickForm $mform);
 
     /**
      * Performs server-side validation of the unique constraints.

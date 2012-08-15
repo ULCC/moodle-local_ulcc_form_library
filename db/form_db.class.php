@@ -1,24 +1,35 @@
 <?php
-    /**
-     *
-     *
-     *
-     *
-     * @copyright &copy; 2012 University of London Computer Centre
-     * @author http://www.ulcc.ac.uk, http://moodle.ulcc.ac.uk
-     * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
-     * @package form
-     * @version
-     */
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * @copyright &copy; 2012 University of London Computer Centre
+ * @author http://www.ulcc.ac.uk, http://moodle.ulcc.ac.uk
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @package form
+ * @version
+ */
 
 global $CFG;
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_logging.class.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/constants.php');
 
-
-
-
+/**
+ * Provides database access functions for the forms library.
+ */
 class form_db extends form_logging {
 
     /**
@@ -35,22 +46,21 @@ class form_db extends form_logging {
 
     }
 
-
     /**
      * A PHP magic method that intercepts all calls to the database class and
      * encodes all the data being input.
      *
      * @param string $method The name of the method being called.
      * @param array $params The array of parameters passed to the method.
+     * @throws Exception
      * @return mixed The result of the query.
      */
-    function __call($method, $params) {
+    public function __call($method, $params) {
 
-
-        // sanatise everything coming into the database here
+        // Sanitise everything coming into the database here.
         $params = $this->encode($params);
 
-        if (method_exists($this,$method))   {
+        if (method_exists($this, $method)) {
             $classname  =   get_class($this);
 
             return call_user_func_array(array($classname, $method), $params);
