@@ -1,7 +1,6 @@
 <?php
 
 /**
- *
  * An abstract class that holds methods and attributes common to all element form plugin
  * classes.
  *
@@ -13,8 +12,7 @@
  * @package form
  * @version 1.0
  */
-
-class   form_element_plugin {
+class form_element_plugin {
 
     /**
      * table to store the properties of the element
@@ -76,7 +74,7 @@ class   form_element_plugin {
     var	$description;
 
     /**
-     * @var string
+     * @var string the classname of the XMLDB table, which varies between 1.9 and 2.x
      */
     var $xmldb_table;
 
@@ -90,6 +88,11 @@ class   form_element_plugin {
 
     var $req;
 
+    /**
+     * @var int 1 or 0 to indicate whether this field is required.
+     */
+    public $required;
+
     /*
      * local file for pre-populating particular types
      * filename is classname . '_pre_items.config'
@@ -101,12 +104,10 @@ class   form_element_plugin {
     /**
      * Constructor
      */
-    function __construct() {
-        global $CFG,$DB;
-
+    public function __construct() {
+        global $CFG, $DB;
 
         require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
-
 
         $this->dbc = new form_db();
 
