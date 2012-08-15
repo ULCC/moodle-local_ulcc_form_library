@@ -253,6 +253,11 @@ class form_element_plugin_modgrade extends form_element_plugin {
             $this->label = '';
         }
 
+        // Must be a coursemodule!
+        if ($PAGE->context->contextlevel != CONTEXT_MODULE) {
+            throw new coding_exception('Trying to use a form with a modgrade element in a non-module context');
+        }
+
         // Get the module table record. We assume that this element has only been allowed in a module context.
         $coursemodule = $PAGE->cm;
         $modulename = $DB->get_field('modules', 'name', array('id' => $coursemodule->module));
