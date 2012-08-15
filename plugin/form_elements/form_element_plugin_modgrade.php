@@ -314,7 +314,7 @@ class form_element_plugin_modgrade extends form_element_plugin {
      * @param int $form_id the id of the form that will be checked to see if it has the element
      * @return bool
      */
-    function can_add($form_id) {
+    public function can_add($form_id) {
         return !$this->dbc->element_type_exists($form_id, $this->tablename);
     }
 }
