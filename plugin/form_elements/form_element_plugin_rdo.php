@@ -107,14 +107,11 @@ class form_element_plugin_rdo extends form_element_plugin_itemlist {
         // Default entry_data.
         $fieldname = $formfield_id."_field";
 
-        $entry = $this->dbc->get_pluginentry($this->tablename, $entry_id, $formfield_id, true);
+        $entry = $this->dbc->get_pluginentry($this->tablename, $entry_id, $formfield_id, false);
         if (!empty($entry)) {
             $entryobj->$fieldname = html_entity_decode($entry->value);
-        }
 
-        // Loop through all of the data for this entry in the particular entry.
-        foreach ($entry as $e) {
-            $entryobj->$fieldname = $e->parent_id;
+            $entryobj->$fieldname = $entry->parent_id;
         }
     }
 }
