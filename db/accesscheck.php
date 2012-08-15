@@ -31,4 +31,4 @@ if (!has_capability('local/ulcc_form_library:formadmin', $context) ) {
     print_error('not_form_admin', 'local_ulcc_form_library');
 }
 //this needs to be done but it is causing errors so I am commenting out for meanwhile ND
-//$PAGE->set_context($context);
+$PAGE->set_context($context);

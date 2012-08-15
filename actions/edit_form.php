@@ -69,7 +69,7 @@ if($mform->is_submitted()) {
         //if saving the data was not successful
         if(!$success) {
             //print an error message
-            print_error(get_string("formcreationerror", 'ulcc_form_library'), 'ulcc_form_library');
+            print_error(get_string("formcreationerror", 'local_ulcc_form_library'), 'local_ulcc_form_library');
         }
 
         //if the report_id has not already been set
@@ -78,7 +78,7 @@ if($mform->is_submitted()) {
         //decide whether the user has chosen to save and exit or save or display
         if (isset($formdata->saveanddisplaybutton)) {
             $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?form_id='.$form_id.'&'.$PARSER->get_params_url();
-            redirect($return_url, get_string("formcreation", 'ulcc_form_library'), FORM_REDIRECT_DELAY);
+            redirect($return_url, get_string("formcreation", 'local_ulcc_form_library'), FORM_REDIRECT_DELAY);
         }
     }
 }

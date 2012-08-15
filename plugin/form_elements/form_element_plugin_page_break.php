@@ -102,7 +102,7 @@ class form_element_plugin_page_break extends form_element_plugin {
      *
      */
     public function audit_type() {
-        return get_string('form_element_plugin_pagebreak_type','local_ulcc_form_library');
+        return get_string('form_element_plugin_page_break_type','local_ulcc_form_library');
     }
     
     /**

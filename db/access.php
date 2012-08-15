@@ -23,7 +23,7 @@ $capabilities    =   array(
         'captype'       =>  'write',
         'contextlevel'  =>  CONTEXT_SYSTEM,
         'legacy'        =>  array(
-             'admin'    =>  CAP_ALLOW
+             'manager'    =>  CAP_ALLOW
         )
     ),
 );

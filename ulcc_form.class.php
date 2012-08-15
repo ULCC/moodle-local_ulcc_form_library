@@ -250,7 +250,6 @@ class ulcc_form {
                     } else {
                         $formelementclass->entry_data($ff->id,$entry_id,$formdata);
                     }
-
                 }
 
                 $fielddata  =   array();
@@ -275,7 +274,7 @@ class ulcc_form {
      */
     function has_element_type($form_id,$elementtype)  {
         $formelement    =   $this->dbc->get_form_element_by_name($elementtype);
-        $formfields     =   $this->dbc->element_occurances($form_id,$formelement->tablename)
+        $formfields     =   $this->dbc->element_occurances($form_id,$formelement->tablename);
         return  (!empty($formfields))  ? true  : false;
     }
 
@@ -315,27 +314,28 @@ class ulcc_form {
 
             $pluginclass->load($field->id);
 
-
-            $formfield      =       $field->id.'_fieldname';
+            $formfield      =       $field->id.'_field';
 
             if (get_parent_class($pluginclass) != 'form_element_plugin_itemlist')   {
                 $data->$formfield   =   "";
             }   else    {
                 //get items for this instance of the form element
-                $items  =   $this->dbc->get_optionlist($field->id , $formelementrecord->tablename, $field );
+                $items  =   $this->dbc->get_optionlist($field->id , $formelementrecord->tablename);
                 if (!empty($items)) {
                     $item   =   array_pop($items);
                     $data->$formfield   =  $item->id;
                 }
             }
 
-
             //call the plugins entry_form function which will add an instance of the plugin
             //to the form
             if ($pluginclass->is_processable())	{
                 if (!$pluginclass->entry_process_data($field->id,$entry_id,$data)) $result = false;
             }
+
+
         }
+        return $entry_id;
 
     }
 
@@ -376,13 +376,13 @@ class ulcc_form {
 
                         $formelementclass->load($ff->id);
 
-                        $formfield      =       $ff->id.'_fieldname';
+                        $formfield      =       $ff->id.'_field';
 
                         $data->$formfield   =   $value;
 
                         //call the plugins entry_form function which will add an instance of the plugin
                         //to the form
-                        if ($formelementclass->is_processable() && $i = $occurance-1)	{
+                        if ($formelementclass->is_processable() && $i == $occurance-1)	{
                             if (!$formelementclass->entry_process_data($ff->id,$entry_id,$data)) $result = false;
                         }
 
