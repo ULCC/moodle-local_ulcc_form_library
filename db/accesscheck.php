@@ -38,6 +38,13 @@ if ($context && $context->contextlevel == CONTEXT_MODULE) {
     $coursemodule = $DB->get_record('course_modules', array('id' => $context->instanceid));
     $course = $DB->get_record('course', array('id' => $coursemodule->course));
     require_login($course, false, $coursemodule);
+
+} else if ($context && $context->contextlevel == CONTEXT_BLOCK) {
+    $blockinstance = $DB->get_record('block_instances', array('id', $context->instanceid));
+    $coursecontext = context_course::instance($blockinstance->parentcontextid);
+    $course = $DB->get_record('course', array('id' => $coursecontext->instanceid));
+    require_login($course, false);
+
 } else {
     // The user must be logged in.
     require_login(0);
