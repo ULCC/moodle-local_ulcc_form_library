@@ -241,6 +241,8 @@ class form_element_plugin_modgrade extends form_element_plugin {
      * This function returns the mform elements that will be added to a form form
      *
      * @param MoodleQuickForm $mform
+     * @throws coding_exception
+     * @return void
      */
     public function entry_form(MoodleQuickForm &$mform) {
 
