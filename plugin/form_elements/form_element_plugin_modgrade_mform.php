@@ -28,53 +28,14 @@ class form_element_plugin_modgrade_mform extends form_element_plugin_mform {
      * @param MoodleQuickForm $mform
      */
     protected function specific_definition(MoodleQuickForm $mform) {
-
-        global $DB;
-
-        $mform->addElement('html',
-                           '<div>'.get_string('form_element_plugin_modgrade_dynamicdesc', 'local_ulcc_form_library').'</div>');
-
-        $mform->addElement('advcheckbox', 'gradetype',
-                           get_string('form_element_plugin_modgrade_gradetype', 'local_ulcc_form_library'), '', array('group' => 1),
-                           array(0,
-                                 1));
-
-        $modules = $DB->get_records('modules', array('visible' => 1));
-
-        $options = array();
-
-        foreach ($modules as $m) {
-            $options[$m->name] = $m->name;
-        }
-
-        $mform->addElement('select', 'tablename', get_string('form_element_plugin_modgrade_module', 'local_ulcc_form_library'),
-                           $options);
-
-        $mform->setDefault('tablename', $this->moodlepluginname);
-
-        $mform->disabledIf('tablename', 'gradetype', 'unchecked');
-
-        $scales = $DB->get_records('scale');
-        $options = array();
-
-        foreach ($scales as $s) {
-            $options[$s->id] = $s->name;
-        }
-
-        $mform->addElement('select', 'gradescale', get_string('form_element_plugin_modgrade_gradescale', 'local_ulcc_form_library'),
-                           $options);
-
-        $mform->disabledIf('gradescale', 'gradetype', 'checked');
+        // Grade options will be read from the module this is attached to.
     }
 
     /**
      * @param $data
-     * @return mixed
+     * @return array
      */
     protected function specific_validation($data) {
-
-        $data = (object)$data;
-
         return $this->errors;
     }
 
