@@ -64,7 +64,15 @@ abstract class form_lib_form extends moodleform  {
                     //we will find anything with a name beginning with the code name of a field
                     //e.g 9_field 9_field_test will both be found and returned
                    if (preg_match("/\b{$en}/i",$key))  {
-                           $data[$key]    =   $sd;
+                            if (is_array($sd) && count($sd) > 3)    {
+                                if (array_key_exists('day', $sd) && array_key_exists('month', $sd) && array_key_exists('year', $sd)) {
+                                    $sd =   make_timestamp($sd['year'],
+                                                           $sd['month'],
+                                                           $sd['day'],
+                                                           0,0,0,99,true);
+                                }
+                            }
+                            $data[$key]    =   $sd;
                     }
                 }
             }
