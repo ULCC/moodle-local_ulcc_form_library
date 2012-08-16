@@ -46,7 +46,7 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
      * this function returns the mform elements that will be added to a  form
      *
      */
-    public	function entry_form( &$mform ) {
+    public	function entry_form(MoodleQuickForm &$mform ) {
 
         $fieldname	=	"{$this->formfield_id}_field";
 

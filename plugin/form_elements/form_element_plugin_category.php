@@ -7,7 +7,7 @@ class form_element_plugin_category extends form_element_plugin_itemlist{
 	public $data_entry_tablename;
 	public $items_tablename;
 	public $selecttype;
-	
+
     /**
      * Constructor
      */
@@ -18,7 +18,7 @@ class form_element_plugin_category extends form_element_plugin_itemlist{
 		$this->selecttype = FORM_OPTIONSINGLE;
 		parent::__construct();
     }
-    
+
     /*
     * should not be able to add a category selector if there is already one one the form
     */
@@ -37,16 +37,16 @@ class form_element_plugin_category extends form_element_plugin_itemlist{
     /**
      * this function returns the mform elements that will be added to a form form
      */
-	public function entry_form( &$mform ) {
-		
+	public function entry_form(MoodleQuickForm &$mform ) {
+
 		//create the fieldname
     	$fieldname	=	"{$this->formfield_id}_field";
 
     	if (!empty($this->description)) {
     		$mform->addElement('static', "{$fieldname}_desc", $this->label, strip_tags(html_entity_decode($this->description),FORM_STRIP_TAGS_DESCRIPTION));
     		$this->label = '';
-    	} 
-    	
+    	}
+
 		//definition for user form
 		$optionlist = $this->get_option_list( $this->formfield_id );
        	$select = $mform->addElement(
