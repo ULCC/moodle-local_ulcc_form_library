@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Provides a interface that can be used to access form data and display forms
  *
@@ -9,25 +24,47 @@
  * @version 1.0
  */
 
-//require the form db class
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+
+// Require the form db class.
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/form_entry_mform.php');
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_parser.class.php');
 
+/**
+ * Main class for the custom form.
+ */
 class ulcc_form {
 
+    /**
+     * @var
+     */
     private $plugintype;
 
+    /**
+     * @var
+     */
     private $pluginname;
 
+    /**
+     * @var form_db
+     */
     private $dbc;
 
+    /**
+     * @var null
+     */
     private $formdata;
 
-    function __construct($plugintype, $pluginname) {
-        global $CFG;
+    /**
+     * @param $plugintype
+     * @param $pluginname
+     */
+    public function __construct($plugintype, $pluginname) {
 
         $this->plugintype = $plugintype;
         $this->pluginname = $pluginname;
@@ -40,17 +77,24 @@ class ulcc_form {
      *
      * @param  string $formtype filter on form type
      *
+     * @param bool $disabled
      * @return array of objects or false
-     *
      */
-    function get_plugin_forms($formtype = null, $disabled = false) {
+    public function get_plugin_forms($formtype = null, $disabled = false) {
         return $this->dbc->get_plugin_forms($this->pluginname, $this->plugintype, $formtype, $disabled);
     }
 
-    function display_form($form_id, $pageurl, $cancelurl, $entry_id = null) {
-        global $PARSER, $SESSION;
+    /**
+     * @param $form_id
+     * @param $pageurl
+     * @param $cancelurl
+     * @param int|null $entry_id
+     * @return mixed
+     */
+    public function display_form($form_id, $pageurl, $cancelurl, $entry_id = null) {
+        global $SESSION;
 
-        //check if the form is part of the current plugin
+        // Check if the form is part of the current plugin.
 
         if ($this->dbc->is_plugin_form($this->pluginname, $this->plugintype, $form_id)) {
 
@@ -58,20 +102,20 @@ class ulcc_form {
 
             if (!empty($f->status) && empty($f->deleted)) {
 
-                //check if the form is multipaged
+                // Check if the form is multipaged.
                 $is_multipaged = $this->dbc->element_type_exists($form_id, 'ulcc_form_plg_pb');
 
-                //get the current page variable if it exists
+                // Get the current page variable if it exists.
                 $currentpage = optional_param('current_page', 1, PARAM_INT);
 
-                //unset the current page variable otherwise moodleform will take it and use it in the
-                //in the current form (which will overwrite any changes we make to the current page element)
+                // Unset the current page variable otherwise moodleform will take it and use it in the
+                // in the current form (which will overwrite any changes we make to the current page element).
                 unset($_POST['current_page']);
 
                 $page_data = optional_param('page_data', 0, PARAM_RAW);
 
-                //The page_data element is part of all forms if it is not found and there is a session var for this form
-                //then it must be for all data unset it
+                // The page_data element is part of all forms if it is not found and there is a session var for this form
+                // then it must be for all data unset it.
                 if (empty($page_data) && isset($SESSION->pagedata[$form_id])) {
                     unset($SESSION->pagedata[$form_id]);
                 }
@@ -81,27 +125,27 @@ class ulcc_form {
                     $previouspressed = optional_param('previousbutton', 0, PARAM_RAW);
                 }
 
-                //if the next button has been pressed increment the page number by 1
+                // If the next button has been pressed increment the page number by 1.
                 if (!empty($nextpressed)) {
                     $currentpage++;
                 }
 
-                //if the previous button has been pressed decrease the page number by 1
+                // If the previous button has been pressed decrease the page number by 1.
                 if (!empty($previouspressed)) {
                     $currentpage--;
                 }
 
                 $mform = new form_entry_mform($form_id, $this->plugintype, $this->pluginname, $pageurl, $entry_id, $currentpage);
 
-                //set the current page variable inside of the form
+                // Set the current page variable inside of the form.
 
-                //check if the form has already been submitted if not display the form.
+                // Check if the form has already been submitted if not display the form.
                 if ($mform->is_cancelled()) {
-                    //send the user back to dashboard
+                    // Send the user back to dashboard.
                     redirect($cancelurl, '', FORM_REDIRECT_DELAY);
                 }
 
-                //was the form submitted?
+                // Was the form submitted?
                 // has the form been submitted?
                 if ($mform->is_submitted()) {
 
@@ -113,23 +157,22 @@ class ulcc_form {
                     $temp->currentpage = $currentpage;
                     $mform->set_data($temp);
 
-                    //get the form data submitted
+                    // Get the form data submitted.
                     $formdata = $mform->get_multipage_data($form_id);
-                    ;
 
                     $this->formdata = $formdata;
 
                     if (isset($formdata->submitbutton)) {
 
-                        //contains process_data
+                        // Contains process_data.
                         $success = $mform->submit($form_id);
 
-                        //we no longer need the form information for this page
+                        // We no longer need the form information for this page.
                         unset($SESSION->pagedata[$form_id]);
 
-                        //if saving the data was not successful
+                        // If saving the data was not successful.
                         if (!$success) {
-                            //print an error message
+                            // Print an error message.
                             print_error(get_string("entrycreationerror", 'block_ilp'), 'block_ilp');
                         }
 
@@ -137,7 +180,7 @@ class ulcc_form {
                     }
                 }
 
-                //loads the data into the form
+                // Loads the data into the form.
                 $mform->load_entry($entry_id);
 
                 $mform->display();
@@ -149,12 +192,13 @@ class ulcc_form {
      * returns the data for the specified entry
      *
      * @param $entry_id
+     * @return bool|\stdClass
      */
-    function get_form_entry($entry_id) {
+    public function get_form_entry($entry_id) {
 
         $entrydata = false;
 
-        //get the main entry record
+        // Get the main entry record.
         $entry = $this->dbc->get_form_entry($entry_id);
 
         if (!empty($entry)) {
@@ -166,14 +210,16 @@ class ulcc_form {
     }
 
     /**
-     *
+     * @param int $entry_id
+     * @param array $removeelement
+     * @return string
      */
-    function display_form_entry($entry_id, $removeelement = array()) {
+    public function display_form_entry($entry_id, $removeelement = array()) {
         global $CFG;
 
         $entrydata = false;
 
-        //get the main entry record
+        // Get the main entry record.
         $entry = $this->dbc->get_form_entry($entry_id);
 
         $formentry = get_string('entrynotfound', 'local_ulcc_form_library');
@@ -196,15 +242,14 @@ class ulcc_form {
     }
 
     /**
-     *
-     *
-     * @param $fieldname
+     * @param string $fieldname
      * @return mixed
      */
-    function get_form_field_value($fieldname) {
+    public function get_form_field_value($fieldname) {
         if (!empty($this->formdata) && isset($this->formdata->$fieldname)) {
             return $this->formdata->$fieldname;
         }
+        return null;
     }
 
     /**
@@ -214,8 +259,9 @@ class ulcc_form {
      * @param string $elementtype   the name of the element that will be returned
      * @param bool   $rawvalue      should the raw value be returned or should the value be passed through
      *                              the form elements view function
+     * @return array|bool
      */
-    function get_form_element_value($entry_id, $elementtype, $rawvalue) {
+    public function get_form_element_value($entry_id, $elementtype, $rawvalue) {
         global $CFG;
 
         $entry = $this->dbc->get_form_entry($entry_id);
@@ -226,20 +272,21 @@ class ulcc_form {
 
                 $formdata = new stdClass();
 
-                //take the name field from the plugin as it will be used to call the instantiate the plugin class
+                // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
                 $classname = $formelement->name;
 
-                //instantiate the form element class
+                // Instantiate the form element class.
+                /* @var form_element_plugin_itemlist $formelementclass */
                 $formelementclass = new $classname();
 
-                // include the class for the plugin
+                // Include the class for the plugin.
                 include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
                 foreach ($formfields as $ff) {
 
                     $formelementclass->load($ff->id);
 
-                    //call the plugin class entry data method
+                    // Call the plugin class entry data method.
                     if (empty($rawvalue)) {
                         $formelementclass->view_data($ff->id, $entry_id, $formdata);
                     } else {
@@ -265,14 +312,20 @@ class ulcc_form {
      *
      * @param int       $form_id   the id of the form that we will check for the element
      * @param string    $elementtype the element type that will be looked for.
+     * @return bool
      */
-    function has_element_type($form_id, $elementtype) {
+    public function has_element_type($form_id, $elementtype) {
         $formelement = $this->dbc->get_form_element_by_name($elementtype);
         $formfields = $this->dbc->element_occurances($form_id, $formelement->tablename);
         return (!empty($formfields)) ? true : false;
     }
 
-    function create_form_entry($form_id, $creator_id) {
+    /**
+     * @param $form_id
+     * @param $creator_id
+     * @return mixed
+     */
+    public function create_form_entry($form_id, $creator_id) {
         global $CFG;
 
         $entry = new stdClass();
@@ -281,28 +334,29 @@ class ulcc_form {
 
         $entry_id = $this->dbc->create_entry($entry);
 
-        //get all of the fields in the current report, they will be returned in order as
-        //no position has been specified
+        // Get all of the fields in the current report, they will be returned in order as
+        // no position has been specified.
         $formfields = $this->dbc->get_form_fields_by_position($form_id);
 
         $data = new stdClass();
 
         foreach ($formfields as $field) {
 
-            //get the plugin record that for the plugin
+            // Get the plugin record that for the plugin.
             $formelementrecord = $this->dbc->get_form_element_plugin($field->formelement_id);
 
-            //take the name field from the plugin as it will be used to call the instantiate the plugin class
+            // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
             $classname = $formelementrecord->name;
 
-            // include the class for the plugin
+            // Include the class for the plugin.
             include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
             if (!class_exists($classname)) {
                 print_error('noclassforplugin', 'block_ilp', '', $formelementrecord->name);
             }
 
-            //instantiate the plugin class
+            // Instantiate the plugin class.
+            /* @var form_element_plugin_itemlist $pluginclass */
             $pluginclass = new $classname();
 
             $pluginclass->load($field->id);
@@ -312,7 +366,7 @@ class ulcc_form {
             if (get_parent_class($pluginclass) != 'form_element_plugin_itemlist') {
                 $data->$formfield = "";
             } else {
-                //get items for this instance of the form element
+                // Get items for this instance of the form element.
                 $items = $this->dbc->get_optionlist($field->id, $formelementrecord->tablename);
                 if (!empty($items)) {
                     $item = array_pop($items);
@@ -320,8 +374,8 @@ class ulcc_form {
                 }
             }
 
-            //call the plugins entry_form function which will add an instance of the plugin
-            //to the form
+            // Call the plugins entry_form function which will add an instance of the plugin
+            // to the form.
             if ($pluginclass->is_processable()) {
                 if (!$pluginclass->entry_process_data($field->id, $entry_id, $data)) {
                     $result = false;
@@ -338,8 +392,9 @@ class ulcc_form {
      * @param $elementtype  string  the name of the element that will be set
      * @param $value        mixed   the value to be set
      * @param int $occurance int    the occurance to set e.g 1 = first 2 = 2nd etc
+     * @return bool
      */
-    function set_form_element_entry_value($entry_id, $elementtype, $value, $occurance = 1) {
+    public function set_form_element_entry_value($entry_id, $elementtype, $value, $occurance = 1) {
 
         global $CFG;
 
@@ -351,13 +406,14 @@ class ulcc_form {
 
                 $formdata = new stdClass();
 
-                //take the name field from the plugin as it will be used to call the instantiate the plugin class
+                // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
                 $classname = $formelement->name;
 
-                //instantiate the form element class
+                // Instantiate the form element class.
+                /* @var form_element_plugin_itemlist $formelementclass */
                 $formelementclass = new $classname();
 
-                // include the class for the plugin
+                // Include the class for the plugin.
                 include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
                 $i = 0;
@@ -372,8 +428,8 @@ class ulcc_form {
 
                         $data->$formfield = $value;
 
-                        //call the plugins entry_form function which will add an instance of the plugin
-                        //to the form
+                        // Call the plugins entry_form function which will add an instance of the plugin
+                        // to the form.
                         if ($formelementclass->is_processable() && $i == $occurance - 1) {
                             if (!$formelementclass->entry_process_data($ff->id, $entry_id, $data)) {
                                 $result = false;
