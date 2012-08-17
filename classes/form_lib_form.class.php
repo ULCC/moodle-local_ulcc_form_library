@@ -23,6 +23,9 @@ abstract class form_lib_form extends moodleform {
 
     public $form_id;
 
+    /**
+     * @var form_db
+     */
     public $dbc;
 
     public $formdata;
@@ -111,22 +114,22 @@ abstract class form_lib_form extends moodleform {
                 $SESSION->pagedata = array();
             }
 
-            //create a array to hold the page temp_data
+            // Create a array to hold the page temp_data.
             if (!isset($SESSION->pagedata[$form_id])) {
                 $SESSION->pagedata[$form_id] = array();
             }
 
             if (!isset($SESSION->pagedata[$form_id][$currentpage - 1])) {
-                //if no data has been saved for the current page save the data to the dd
-                //and save the key
+                // If no data has been saved for the current page save the data to the dd
+                // and save the key.
                 $SESSION->pagedata[$form_id][$currentpage - 1] = $this->dbc->save_temp_data($cformdata);
             } else {
-                //if data for this page has already been saved get the key and update the record
+                // If data for this page has already been saved get the key and update the record.
                 $tempid = $SESSION->pagedata[$form_id][$currentpage - 1];
                 $this->dbc->update_temp_data($tempid, $cformdata);
             }
 
-            //set the data in the page to what it equaled before
+            // Set the data in the page to what it equaled before.
             if (isset($SESSION->pagedata[$form_id][$currentpage])) {
                 $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$form_id][$currentpage]);
 
@@ -138,7 +141,7 @@ abstract class form_lib_form extends moodleform {
     /**
      * Carrys out operations necessary if the form is a multipage form and the previous button has been pressed
      */
-    function previous($form_id, $currentpage) {
+    public function previous($form_id, $currentpage) {
         global $SESSION;
 
         $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
@@ -147,7 +150,7 @@ abstract class form_lib_form extends moodleform {
 
             $cformdata = $this->formdata;
 
-            //we do not want any of the following data to be saved as it stop the pagination features from working
+            // We do not want any of the following data to be saved as it stop the pagination features from working.
             if (isset($cformdata->current_page)) {
                 unset($cformdata->current_page);
             }
@@ -159,16 +162,16 @@ abstract class form_lib_form extends moodleform {
             }
 
             if (!isset($SESSION->pagedata[$form_id][$currentpage + 1])) {
-                //if no data has been saved for the current page save the data to the dd
-                //and save the key
+                // If no data has been saved for the current page save the data to the dd
+                // and save the key..
                 $SESSION->pagedata[$form_id][$currentpage + 1] = $this->dbc->save_temp_data($cformdata);
             } else {
-                //if data for this page has already been saved get the key and update the record
+                // If data for this page has already been saved get the key and update the record.
                 $tempid = $SESSION->pagedata[$form_id][$currentpage + 1];
                 $this->dbc->update_temp_data($tempid, $cformdata);
             }
 
-            //set the data in the page to what it equaled before
+            // Set the data in the page to what it equaled before.
             if (isset($SESSION->pagedata[$form_id][$currentpage])) {
                 $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$form_id][$currentpage]);
                 $this->set_data($tempdata);
@@ -203,46 +206,49 @@ abstract class form_lib_form extends moodleform {
         return $this->process_data($formdata);
     }
 
-    function load_entry($entry_id = false) {
+    /**
+     * @param int|bool $entry_id
+     */
+    public function load_entry($entry_id = false) {
 
         global $CFG;
 
         if (!empty($entry_id)) {
 
-            //create a entry_data object this will hold the data that will be passed to the form
+            //create a entry_data object this will hold the data that will be passed to the form.
             $entry_data = new stdClass();
 
             //get the main entry record
             $entry = $this->dbc->get_form_entry($entry_id);
 
             if (!empty($entry)) {
-                //check if the maximum edit field has been set for this report
+                //check if the maximum edit field has been set for this report.
 
-                //get all of the fields in the current report, they will be returned in order as
+                //get all of the fields in the current report, they will be returned in order as.
                 //no position has been specified
                 $formfields = $this->dbc->get_form_fields_by_position($entry->form_id);
 
                 foreach ($formfields as $field) {
 
-                    //get the plugin record that for the plugin
+                    //get the plugin record that for the plugin.
                     $pluginrecord = $this->dbc->get_form_element_plugin($field->formelement_id);
 
-                    //take the name field from the plugin as it will be used to call the instantiate the plugin class
+                    //take the name field from the plugin as it will be used to call the instantiate the plugin class.
                     $classname = $pluginrecord->name;
 
-                    // include the class for the plugin
+                    // include the class for the plugin.
                     include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
                     if (!class_exists($classname)) {
                         print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
                     }
 
-                    //instantiate the plugin class
+                    //instantiate the plugin class.
                     $pluginclass = new $classname();
 
                     $pluginclass->load($field->id);
 
-                    //create the fieldname
+                    //create the fieldname.
                     $fieldname = $field->id."_field";
 
                     $pluginclass->load($field->id);
@@ -263,7 +269,7 @@ abstract class form_lib_form extends moodleform {
 
         if (!empty($entry_id)) {
 
-            //create a entry_data object this will hold the data that will be passed to the form
+            // Create a entry_data object this will hold the data that will be passed to the form.
             $entry_data = new stdClass();
 
             //get the main entry record
@@ -293,16 +299,16 @@ abstract class form_lib_form extends moodleform {
                             print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
                         }
 
-                        //instantiate the plugin class
+                        // Instantiate the plugin class.
                         $pluginclass = new $classname();
 
-                        //create the fieldname
+                        // Create the fieldname.
                         $fieldname = $field->id."_field";
 
                         if ($pluginclass->is_viewable() != false) {
                             $pluginclass->load($field->id);
 
-                            //call the plugin class entry data method
+                            // Call the plugin class entry data method.
                             $pluginclass->view_data($field->id, $entry->id, $entry_data);
 
                             if (!empty($labels)) {
@@ -322,4 +328,11 @@ abstract class form_lib_form extends moodleform {
 
         return false;
     }
+
+    /**
+     * @abstract
+     * @param $data
+     * @return mixed
+     */
+    abstract protected function process_data($data);
 }
