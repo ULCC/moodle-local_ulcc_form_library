@@ -6,7 +6,7 @@ class form_element_plugin_comment_editor_mform  extends form_element_plugin_mfor
 	
 	  	
 	
-	  protected function specific_definition($mform) {
+	  protected function specific_definition(MoodleQuickForm $mform) {
 
 	  	//set the maximum length of the field default to 255
         $mform->addElement(

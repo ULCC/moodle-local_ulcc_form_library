@@ -934,7 +934,7 @@ class form_db extends form_logging {
      *
      * @param int   $form_id the id of the form being checked
      * @param string $tablename the tablename of the element
-     * @return int
+     * @return array
      */
     private function element_occurances($form_id, $tablename) {
         $sql = "

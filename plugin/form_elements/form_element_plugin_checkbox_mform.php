@@ -14,7 +14,7 @@ class form_element_plugin_checkbox_mform  extends form_element_plugin_itemlist_m
     }
 
 
-    protected function specific_definition($mform) {
+    protected function specific_definition(MoodleQuickForm $mform) {
 
         /**
         textarea element to contain the options the admin wishes to add to the user form
