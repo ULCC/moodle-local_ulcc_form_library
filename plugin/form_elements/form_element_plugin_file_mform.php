@@ -3,10 +3,10 @@
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin_mform.class.php');
 
 class form_element_plugin_file_mform  extends form_element_plugin_mform {
-	
-	  	
-	
-	protected function specific_definition($mform) {
+
+
+
+	protected function specific_definition(MoodleQuickForm $mform) {
 
 
         $mbsize =   1048576;
@@ -32,7 +32,7 @@ class form_element_plugin_file_mform  extends form_element_plugin_mform {
             get_string('form_element_plugin_file_maxfiles', 'local_ulcc_form_library'),
             array('class' => 'form_input')
         );
-        
+
         $mform->addRule('maxfiles', null, 'maxlength', 2, 'client');
         $mform->setType('maxfiles', PARAM_INT);
 
@@ -65,16 +65,16 @@ class form_element_plugin_file_mform  extends form_element_plugin_mform {
         $select->setMultiple(true);
 
     }
-	
+
 	protected function specific_validation($data) {
- 	
+
 	 	$data = (object) $data;
 
 	 	return $this->errors;
 	 }
-	 
+
 	 protected function specific_process_data($data) {
-	  	
+
 	 	$plgrec = (!empty($data->formfield_id)) ? $this->dbc->get_form_element_record("ulcc_form_plg_file",$data->formfield_id) : false;
 
          $data->acceptedtypes    =   base64_encode(serialize($data->acceptedtypes));
@@ -82,7 +82,7 @@ class form_element_plugin_file_mform  extends form_element_plugin_mform {
 	 	if (empty($plgrec)) {
 	 		return $this->dbc->create_form_element_record("ulcc_form_plg_file",$data);
 	 	} else {
-	 		//get the old record from the elements plugins table 
+	 		//get the old record from the elements plugins table
 	 		$oldrecord				=	$this->dbc->get_form_element_by_formfield("ulcc_form_plg_file",$data->formfield_id);
              $pluginrecord 					=	new stdClass();
              $pluginrecord->id				=	$oldrecord->id;
@@ -94,9 +94,9 @@ class form_element_plugin_file_mform  extends form_element_plugin_mform {
 	 		return $this->dbc->update_form_element_record("ulcc_form_plg_file",$pluginrecord);
 	 	}
 	 }
-	 
+
 	 function definition_after_data() {
-	 	
+
 	 }
-	
+
 }

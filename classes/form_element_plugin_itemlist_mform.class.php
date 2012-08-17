@@ -63,7 +63,7 @@ class form_element_plugin_itemlist_mform extends form_element_plugin_mform {
         return $this->errors;
     }
 
-    protected function specific_definition($mform) {
+    protected function specific_definition(MoodleQuickForm $mform) {
 
         /**
         textarea element to contain the options the admin wishes to add to the user form
@@ -112,7 +112,7 @@ class form_element_plugin_itemlist_mform extends form_element_plugin_mform {
                 $this->dbc->create_form_element_record($this->items_tablename,$itemrecord);
             }
         } else {
-            //get the old record from the elements plugins table 
+            //get the old record from the elements plugins table
             $oldrecord				=	$this->dbc->get_form_element_by_formfield($this->tablename,$data->formfield_id);
             $data_exists = $this->dbc->form_element_data_item_exists( $this->tablename, $data->formfield_id );
             $element_id = $this->dbc->get_element_id_from_formfield_id( $this->tablename, $data->formfield_id );

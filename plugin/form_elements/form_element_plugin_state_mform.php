@@ -8,7 +8,7 @@ class form_element_plugin_state_mform  extends form_element_plugin_itemlist_mfor
 
 	public $tablename;
 	public $items_tablename;
-	
+
 	function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id=null) {
 		parent::__construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id);
 		$this->tablename = "ulcc_form_plg_ste";
@@ -17,7 +17,7 @@ class form_element_plugin_state_mform  extends form_element_plugin_itemlist_mfor
 
     /*
     * the admin has entered the states in the fail and pass textareas on the mform
-    * the values in those textareas have been made into arrays and sent to this function, to be categorised as fail, pass or unset 
+    * the values in those textareas have been made into arrays and sent to this function, to be categorised as fail, pass or unset
     * @param array $statelist - list of values - should be a key and value from the state selector, so that if either of them matches, we can return a pass or fail value
     * @param array $fail_list - list of values to be classified as fail
     * @param array $pass_list - list of values to be classified as pass
@@ -42,14 +42,14 @@ class form_element_plugin_state_mform  extends form_element_plugin_itemlist_mfor
         }
         return FORM_STATE_UNSET;
     }
-	
+
 		/**
 		textarea element to contain the options the admin wishes to add to the user form
 		admin will be instructed to insert value/label pairs in the following plaintext format:
 		value1:label1\nvalue2:label2\nvalue3:label3
 		or some such
 		*/
-	protected function specific_definition($mform) {
+	protected function specific_definition(MoodleQuickForm $mform) {
 
 		$mform->addElement(
 			'textarea',
@@ -95,8 +95,8 @@ class form_element_plugin_state_mform  extends form_element_plugin_itemlist_mfor
         $mform->addRule('optionlist', null, 'minlength', 1, 'client');
 
 	}
-	
-	
+
+
     protected function is_valid_item( $item, $item_list, $keysep=":" ){
         $item = trim( $item );
         $itemparts = explode( $keysep, $item );
@@ -177,9 +177,9 @@ class form_element_plugin_state_mform  extends form_element_plugin_itemlist_mfor
 			//options for this dropdown need to be written to the items table
 			//each option is one row
 	 		$element_id = $this->dbc->create_form_element_record($this->tablename,$data);
-		
+
 			//$itemrecord is a container for item data
-			$itemrecord = new stdClass();	
+			$itemrecord = new stdClass();
 			$itemrecord->parent_id = $element_id;
 			foreach( $optionlist as $key=>$itemname ){
 				//one item row inserted here
@@ -189,12 +189,12 @@ class form_element_plugin_state_mform  extends form_element_plugin_itemlist_mfor
 	 			$this->dbc->create_form_element_record($this->items_tablename,$itemrecord);
 			}
 	 	} else {
-	 		//get the old record from the elements plugins table 
+	 		//get the old record from the elements plugins table
 	 		$oldrecord				=	$this->dbc->get_form_element_by_formfield($this->tablename,$data->formfield_id);
 			$data_exists = $this->dbc->plugin_data_item_exists( $this->tablename, $data->formfield_id );
 			$element_id = $this->dbc->get_element_id_from_formfield_id( $this->tablename, $data->formfield_id );
 			//$itemrecord is a container for item data
-			$itemrecord = new stdClass();	
+			$itemrecord = new stdClass();
 			$itemrecord->parent_id = $element_id;
 
 			if( empty( $data_exists ) ){
@@ -221,13 +221,13 @@ class form_element_plugin_state_mform  extends form_element_plugin_itemlist_mfor
                 $itemrecord->passfail = $this->deduceItemState( array( $itemname, $key ), $fail_list, $pass_list, $notcounted_list );
 		 		$this->dbc->create_form_element_record($this->items_tablename,$itemrecord);
 			}
-	
+
 	 		//create a new object to hold the updated data
 	 		$pluginrecord 			=	new stdClass();
 	 		$pluginrecord->id		=	$oldrecord->id;
 	 		$pluginrecord->optionlist	=	$data->optionlist;
 			$pluginrecord->selecttype 	= 	FORM_OPTIONSINGLE;
-	 			
+
 	 		//update the plugin with the new data
 	 		//return $this->dbc->update_plugin_record($this->tablename,$pluginrecord);
 	 	}
