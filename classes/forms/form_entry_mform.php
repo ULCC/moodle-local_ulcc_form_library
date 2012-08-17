@@ -163,23 +163,24 @@ class form_entry_mform extends form_lib_form {
     }
 
     /**
-     * TODO comment this
+     * @param $data
+     * @return bool|int
      */
-    function process_data($data) {
+    protected function process_data($data) {
 
         global $CFG, $USER;
 
         $data = (!is_object($data)) ? (object)$data : $data;
 
-        //get the id of the report
+        // Get the id of the report.
         $form_id = $data->form_id;
 
-        //get the id of the entry  if known
+        // Get the id of the entry  if known.
         $entry_id = $data->entry_id;
         $result = false;
 
         if (empty($entry_id)) {
-            //create the entry
+            // Create the entry.
             $entry = new stdClass();
             $entry->form_id = $form_id;
             $entry->creator_id = $USER->id;

@@ -89,10 +89,13 @@ class ulcc_form {
      * @param $pageurl
      * @param $cancelurl
      * @param int|null $entry_id
-     * @return mixed
+     * @return int|bool entry id if it was submitted, false otherwise.
      */
     public function display_form($form_id, $pageurl, $cancelurl, $entry_id = null) {
+
         global $SESSION;
+
+        $success = false;
 
         // Check if the form is part of the current plugin.
 
@@ -186,6 +189,8 @@ class ulcc_form {
                 $mform->display();
             }
         }
+
+        return $success;
     }
 
     /**
