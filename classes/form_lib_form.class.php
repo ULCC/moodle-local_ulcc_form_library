@@ -59,8 +59,6 @@ abstract class form_lib_form extends moodleform  {
 
             foreach($submiteddata as $key => $sd)   {
                 foreach ($elementnames as $en)  {
-
-
                     //we will find anything with a name beginning with the code name of a field
                     //e.g 9_field 9_field_test will both be found and returned
                    if (preg_match("/\b{$en}/i",$key))  {
