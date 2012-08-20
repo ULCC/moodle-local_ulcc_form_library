@@ -186,7 +186,7 @@ class form_element_plugin_date extends form_element_plugin {
     	$fieldname	=	"{$this->formfield_id}_field";
 
     	if (!empty($this->description)) {
-    		$mform->addElement('static', "{$fieldname}_desc", $this->label, strip_tags(html_entity_decode($this->description),form_STRIP_TAGS_DESCRIPTION));
+    		$mform->addElement('static', "{$fieldname}_desc", $this->label, strip_tags(html_entity_decode($this->description),FORM_STRIP_TAGS_DESCRIPTION));
     		$this->label = '';
     	} 
     	

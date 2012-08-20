@@ -227,7 +227,7 @@ class form_element_plugin_file extends form_element_plugin {
                                 $this->label,
                                 null,
                                 array('subdirs' => 0,
-                                      'maxbytes' => $this->maxbytes, '
+                                      'maxbytes' => $this->maxsize, '
                                        maxfiles' => $this->maxfiles,
                                        'accepted_types' => $this->acceptedtypes )
                               );
