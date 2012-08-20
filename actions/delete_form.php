@@ -48,9 +48,9 @@ $res = $dbc->delete_form($form_id,1);
 
 //save the changes to the report
 if (!empty($res)) {
-    $resulttext	=	get_string('formdeleted','block_ilp');
+    $resulttext	=	get_string('formdeletesuc','local_ulcc_form_library');
 } else {
-    $resulttext	=	get_string('formdeleteerror','block_ilp');
+    $resulttext	=	get_string('formdeleteerror','local_ulcc_form_library');
 }
 
 $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_forms.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname','context_id'));
