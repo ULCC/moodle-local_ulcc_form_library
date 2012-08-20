@@ -37,6 +37,7 @@ class form_element_plugin_file_mform  extends form_element_plugin_mform {
         $mform->setType('maxfiles', PARAM_INT);
 
         $optionlist     =   array(
+                                  '*'   =>  'All files',
                                   'web_image'=>'Web image',
                                   'non_web_image'=>'Non web image',
                                   'audio'=>'Audio',
