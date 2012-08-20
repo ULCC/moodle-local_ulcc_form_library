@@ -48,4 +48,3 @@ class form_element_plugin_checkbox_mform  extends form_element_plugin_itemlist_m
 
     }
 }
-	

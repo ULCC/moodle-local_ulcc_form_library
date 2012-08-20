@@ -4,17 +4,17 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin_itemlist.class.php');
 
 class form_element_plugin_rdo_mform  extends form_element_plugin_itemlist_mform {
-	
-	  	
+
+
 	function __construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id=null) {
 		parent::__construct($form_id,$formelement_id,$creator_id,$moodleplugintype,$moodlepluginname,$context_id,$formfield_id);
    		$this->tablename = "ulcc_form_plg_rdo";
     	$this->data_entry_tablename = "ulcc_form_plg_rdo_ent";
 		$this->items_tablename = "ulcc_form_plg_rdo_items";
 	}
-	
-	protected function specific_definition($mform) {
-		
+
+	protected function specific_definition(MoodleQuickForm $mform) {
+
 		/**
 		textarea element to contain the options the admin wishes to add to the user form
 		admin will be instructed to insert value/label pairs in the following plaintext format:
@@ -22,7 +22,7 @@ class form_element_plugin_rdo_mform  extends form_element_plugin_itemlist_mform 
 		or some such
 		default option could be identified with '[default]' in the same line
 		*/
-		
+
 		$mform->addElement(
 			'textarea',
 			'optionlist',
@@ -42,9 +42,9 @@ class form_element_plugin_rdo_mform  extends form_element_plugin_itemlist_mform 
               ''
         );
 	}
-	 
+
 	 function definition_after_data() {
-	 	
+
 	 }
-	
+
 }
