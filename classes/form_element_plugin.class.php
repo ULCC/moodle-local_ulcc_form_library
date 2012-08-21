@@ -204,7 +204,7 @@ class form_element_plugin {
 
 
             //enter a back url
-            $backurl = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_field.php?form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
+            $backurl = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
 
 
             //was the form cancelled?

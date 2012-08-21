@@ -97,7 +97,7 @@ $string['reportconfiguration']    = 'Form Configuration';
 $string['required']               = 'Required';
 $string['req']                  = 'Required';
 $string['reportcreationsuc']    = 'Report successfully created';
-
+$string['returnformprompt']     = 'Field change cancelled';
 
 
 // S
