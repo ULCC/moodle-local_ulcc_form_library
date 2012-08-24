@@ -215,22 +215,25 @@ class form_element_plugin_file extends form_element_plugin {
 
         if (empty($this->multiple))    {
 
-            $mform->addElement('filepicker',
-                                $fieldname,
-                                $this->label,
-                                null
-
-                               );
+            $mform->addElement('filemanager',
+                $fieldname,
+                $this->label,
+                null,
+                array('subdirs' => 0,
+                    'maxsize' => $this->maxsize,
+                    'maxfiles' => 1,
+                    'accepted_types' => $this->acceptedtypes )
+            );
         }   else    {
             $mform->addElement('filemanager',
-                                $fieldname,
-                                $this->label,
-                                null,
-                                array('subdirs' => 0,
-                                      'maxbytes' => $this->maxsize, '
-                                       maxfiles' => $this->maxfiles,
-                                       'accepted_types' => $this->acceptedtypes )
-                              );
+                $fieldname,
+                $this->label,
+                null,
+                array('subdirs' => 0,
+                      'maxbytes' => $this->maxsize,
+                       'maxfiles' => $this->maxfiles,
+                       'accepted_types' => $this->acceptedtypes )
+              );
         }
 
         if (!empty($this->required)) $mform->addRule($fieldname, null, 'required', null, 'client');
