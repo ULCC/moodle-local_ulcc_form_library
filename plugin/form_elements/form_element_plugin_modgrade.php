@@ -286,6 +286,8 @@ class form_element_plugin_modgrade extends form_element_plugin {
             $grademenu = make_grades_menu($grade);
         }
 
+        $grademenu['-1'] = get_string('nograde');
+
         $mform->addElement('select',
                            $fieldname,
                            "$this->label",
