@@ -164,7 +164,7 @@ class form_entry_mform extends form_lib_form {
 
     /**
      * @param $data
-     * @return bool|int
+     * @return bool|int Record id or false if there's a problem.
      */
     protected function process_data($data) {
 
@@ -189,14 +189,16 @@ class form_entry_mform extends form_lib_form {
 
             $result = $entry_id;
         } else {
-            //update the entry
-            //as there is nothing to update but we want the entries timemodifed
-            //to be updated we will just re-add the form_id
+            // Update the entry.
+            // As there is nothing to update but we want the entries timemodifed
+            // to be updated we will just re-add the form_id.
             $entry = new stdClass();
             $entry->id = $entry_id;
             $entry->form_id = $form_id;
 
-            $result = $this->dbc->update_entry($entry);
+            if ($this->dbc->update_entry($entry)) {
+                $result = $entry->id; // For consistency - always return the record id or false.
+            }
         }
 
         //get all of the fields in the current report, they will be returned in order as
