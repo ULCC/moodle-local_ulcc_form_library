@@ -159,7 +159,7 @@ abstract class form_element_plugin_mform extends moodleform {
 
         //text field for element description
         $mform->addElement(
-            'htmleditor',
+            'editor',
             'description',
             get_string('description', 'local_ulcc_form_library'),
             array('class' => 'form_input','rows'=> '10', 'cols'=>'65')

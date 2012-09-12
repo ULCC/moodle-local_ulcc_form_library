@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * PPlugin file for the class that makes a comment editor for the gradebook
+ * Plugin file for the class that makes a comment editor for the gradebook
  *
  * @package    local
  * @subpackage ulcc_form_library
- * @copyright  2011 University of London Computer Centre {@link ulcc.ac.uk}
+ * @copyright  2012 University of London Computer Centre {@link ulcc.ac.uk}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

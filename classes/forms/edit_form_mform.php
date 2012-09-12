@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * This class makes the form that is used to create forms
@@ -24,7 +24,7 @@ class edit_form_mform extends moodleform {
 		public		$dbc;
         public      $templates;
 
-	
+
 		/**
      	 * TODO comment this
      	 */
@@ -51,23 +51,23 @@ class edit_form_mform extends moodleform {
             // call the parent constructor
             parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$this->form_id}&moodleplugintype={$this->plugintype}&moodlepluginname={$this->pluginname}&context_id={$this->context_id}");
 		}
-		
+
 		/**
      	 * TODO comment this
-     	 */		
+     	 */
 		function definition() {
 			 global $USER, $CFG;
 
         	$dbc = new form_db;
 
         	$mform =& $this->_form;
-        	
+
         	$fieldsettitle = (!empty($this->form_id)) ? get_string('editform', 'local_ulcc_form_library') : get_string('createform', 'local_ulcc_form_library');
-        	
+
         	//create a new fieldset
         	$mform->addElement('html', '<fieldset id="reportfieldset" class="clearfix ilpfieldset">');
            $mform->addElement('html', '<legend >'.$fieldsettitle.'</legend>');
-        	
+
         	$mform->addElement('hidden', 'id');
         	$mform->setType('id', PARAM_INT);
 
@@ -105,7 +105,7 @@ class edit_form_mform extends moodleform {
 
             // DESCRIPTION element
             $mform->addElement(
-                'htmleditor',
+                'editor',
                 'description',
                 get_string('description', 'local_ulcc_form_library'),
                 array('class' => 'form_input', 'rows'=> '10', 'cols'=>'65')
@@ -132,9 +132,9 @@ class edit_form_mform extends moodleform {
 
             $buttonarray[] = $mform->createElement('submit', 'saveanddisplaybutton', get_string('submit'));
 	        $buttonarray[] = &$mform->createElement('cancel');
-	        
+
 	        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
-	        
+
 	        //close the fieldset
 	        $mform->addElement('html', '</fieldset>');
 		}
@@ -146,38 +146,38 @@ class edit_form_mform extends moodleform {
             $this->errors = array();
         }
 
-		
+
 		/**
      	 * TODO comment this
-     	 */		
+     	 */
 		function process_data($data) {
 			global $CFG;
-			
+
 			if (empty($data->id)) {
 
             	$data->id = $this->dbc->create_form($data);
 
         	} else {
-			
+
 				//check to stop report icons from being overwritten
-				//if the binary_icon param is empty unset it that will stop 
+				//if the binary_icon param is empty unset it that will stop
 				//any data that is currently present from being overwritten
-				if (empty($data->binary_icon)) unset($data->binary_icon); 
+				if (empty($data->binary_icon)) unset($data->binary_icon);
 
             	$this->dbc->update_form($data);
         	}
-	
+
     	    return $data->id;
 		}
-		
+
 		/**
      	 * TODO comment this
      	 */
     	function definition_after_data() {
-    		
+
     	}
-	
+
 }
 
-	
+
 ?>

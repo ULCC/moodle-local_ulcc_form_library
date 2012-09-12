@@ -8,18 +8,18 @@ class form_element_plugin_comment_editor extends form_element_plugin {
 	public $data_entry_tablename;
 	public $minimumlength;		//defined by the form creator to validate user input
 	public $maximumlength;		//defined by the form creator to validate user input
-	
+
 	    /**
      * Constructor
      */
     function __construct() {
     	$this->tablename = "ulcc_form_plg_cedt";
     	$this->data_entry_tablename = "ulcc_form_plg_cedt_ent";
-    	
+
     	parent::__construct();
     }
-	
-	
+
+
 	/**
      * TODO comment this
      *
@@ -29,15 +29,15 @@ class form_element_plugin_comment_editor extends form_element_plugin {
 		if (!empty($formfield)) {
 			//set the formfield_id var
 			$this->formfield_id	=	$formfield_id;
-			
-			//get the record of the plugin used for the field 
+
+			//get the record of the plugin used for the field
 			$plugin		=	$this->dbc->get_form_element_plugin($formfield->formelement_id);
-						
+
 			$this->formelement_id	=	$formfield->formelement_id;
-			
+
 			//get the form element record for the formfield
 			$pluginrecord	=	$this->dbc->get_form_element_by_formfield($this->tablename,$formfield->id);
-			
+
 			if (!empty($pluginrecord)) {
 				$this->label			=	$formfield->label;
 				$this->description		=	$formfield->description;
@@ -45,13 +45,13 @@ class form_element_plugin_comment_editor extends form_element_plugin {
 				$this->maximumlength	=	$pluginrecord->maximumlength;
 				$this->minimumlength	=	$pluginrecord->minimumlength;
 				$this->position			=	$formfield->position;
-				return true;	
+				return true;
 			}
 		}
-		return false;	
-    }	
+		return false;
+    }
 
-	
+
 	/**
      *
      */
@@ -65,19 +65,19 @@ class form_element_plugin_comment_editor extends form_element_plugin {
         $table_id = new $this->xmldb_field('id');
         $table_id->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addField($table_id);
-        
+
         $table_form = new $this->xmldb_field('formfield_id');
         $table_form->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addField($table_form);
-        
+
         $table_minlength = new $this->xmldb_field('minimumlength');
         $table_minlength->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addField($table_minlength);
-        
+
         $table_maxlength = new $this->xmldb_field('maximumlength');
         $table_maxlength->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addField($table_maxlength);
-        
+
         $table_timemodified = new $this->xmldb_field('timemodified');
         $table_timemodified->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addField($table_timemodified);
@@ -93,13 +93,13 @@ class form_element_plugin_comment_editor extends form_element_plugin {
         $table_key = new $this->xmldb_key('commenteditorplugin_unique_formfield');
         $table_key->$set_attributes(XMLDB_KEY_FOREIGN_UNIQUE, array('formfield_id'),'ulcc_form_lib_form_field','id');
         $table->addKey($table_key);
-        
-        
+
+
 
         if(!$this->dbman->table_exists($table)) {
             $this->dbman->create_table($table);
         }
-        
+
 	    // create the new table to store responses to fields
         $table = new $this->xmldb_table( $this->data_entry_tablename );
         $set_attributes = method_exists($this->xmldb_key, 'set_attributes') ? 'set_attributes' : 'setAttributes';
@@ -107,7 +107,7 @@ class form_element_plugin_comment_editor extends form_element_plugin {
         $table_id = new $this->xmldb_field('id');
         $table_id->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addField($table_id);
-        
+
         $table_title = new $this->xmldb_field('value');
         $table_title->$set_attributes(XMLDB_TYPE_TEXT);
         $table->addField($table_title);
@@ -115,11 +115,11 @@ class form_element_plugin_comment_editor extends form_element_plugin {
         $table_form = new $this->xmldb_field('entry_id');
         $table_form->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addField($table_form);
-        
+
         $table_maxlength = new $this->xmldb_field('parent_id');
         $table_maxlength->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addField($table_maxlength);
-        
+
         $table_timemodified = new $this->xmldb_field('timemodified');
         $table_timemodified->$set_attributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->addField($table_timemodified);
@@ -131,16 +131,16 @@ class form_element_plugin_comment_editor extends form_element_plugin {
         $table_key = new $this->xmldb_key('primary');
         $table_key->$set_attributes(XMLDB_KEY_PRIMARY, array('id'));
         $table->addKey($table_key);
-        
+
        	$table_key = new $this->xmldb_key($this->tablename.'_foreign_key');
         $table_key->$set_attributes(XMLDB_KEY_FOREIGN, array('parent_id'), $this->tablename ,'id');
         $table->addKey($table_key);
-        
+
         if(!$this->dbman->table_exists($table)) {
             $this->dbman->create_table($table);
         }
-        
-        
+
+
     }
 
     /**
@@ -149,18 +149,18 @@ class form_element_plugin_comment_editor extends form_element_plugin {
     public function uninstall() {
         $table = new $this->xmldb_table( $this->tablename );
         drop_table($table);
-        
+
         $table = new $this->xmldb_table( $this->data_entry_tablename );
         drop_table($table);
     }
-	
+
      /**
      *
      */
     public function audit_type() {
         return get_string('form_element_plugin_comment_editor_type','local_ulcc_form_library');
     }
-    
+
     /**
     * function used to return the language strings for the plugin
     */
@@ -172,7 +172,7 @@ class form_element_plugin_comment_editor extends form_element_plugin {
         $string['form_element_plugin_comment_editor_maximumlength'] = 'Maximum Length';
         $string['form_element_plugin_comment_editor_maxlengthrange'] = 'The maximum length field must have a value between 0 and 255';
         $string['form_element_plugin_comment_editor_maxlessthanmin'] = 'The maximum length field must have a greater value than the minimum length';
-        
+
         return $string;
     }
 
@@ -182,28 +182,28 @@ class form_element_plugin_comment_editor extends form_element_plugin {
     public function delete_form_element($formfield_id, $tablename=null, $extraparams=null) {
     	return parent::delete_form_element($formfield_id, $this->tablename);
     }
-    
+
     /**
     * this function returns the mform elements that will be added to a form form
 	*
     */
     public	function entry_form( &$mform ) {
-    	
+
     	//create the fieldname
     	$fieldname	=	"{$this->formfield_id}_field";
-    	
+
     	if (!empty($this->description)) {
     		$mform->addElement('static', "{$fieldname}_desc", $this->label, strip_tags(html_entity_decode($this->description),FORM_STRIP_TAGS_DESCRIPTION));
     		$this->label = '';
-    	} 
+    	}
     	//text field for element label
    		$mform->addElement(
-	           'htmleditor',
+	           'editor',
 	            $fieldname,
 	            "$this->label",
 	            array('class' => 'form_input', 'canUseHtmlEditor'=>'detect', 'rows'=> '20', 'cols'=>'65')
 	    );
-    	
+
 
         if (!empty($this->minimumlength)) $mform->addRule($fieldname, null, 'minlength', $this->minimumlength, 'client');
         if (!empty($this->maximumlength)) $mform->addRule($fieldname, null, 'maxlength', $this->maximumlength, 'client');

@@ -42,7 +42,7 @@ class dummy_mform extends moodleform {
 
         // DESCRIPTION element
         $mform->addElement(
-            'htmleditor',
+            'editor',
             'description',
             get_string('description', 'local_ulcc_form_library'),
             array('class' => 'form_input', 'rows'=> '10', 'cols'=>'65')
