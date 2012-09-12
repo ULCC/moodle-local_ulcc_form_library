@@ -107,7 +107,7 @@ class form_element_plugin_rdo extends form_element_plugin_itemlist {
         // Default entry_data.
         $fieldname = $formfield_id."_field";
 
-        $entry = $this->dbc->get_pluginentry($this->tablename, $entry_id, $formfield_id, false);
+        $entry = $this->dbc->get_pluginentry($this->tablename, $entry_id, $formfield_id, true);
         if (!empty($entry)) {
             $entryobj->$fieldname = html_entity_decode($entry->value);
         }
