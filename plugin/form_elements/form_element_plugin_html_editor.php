@@ -244,5 +244,28 @@ class form_element_plugin_html_editor extends form_element_plugin {
           */
         return $this->entry_process_data($formfield_id, $entry_id, $data);
     }
+
+    /**
+     * We need a different array key for this element.
+     *
+     * @param int $fieldid
+     * @param int $entry_id
+     * @param object $entry_data
+     */
+    public function entry_data($fieldid, $entry_id, &$entry_data) {
+        parent::entry_data($fieldid, $entry_id, $entry_data);
+
+        $fieldname = $fieldid."_field";
+
+        if (empty($entry_data->$fieldname)) {
+            return;
+        }
+
+        $newfieldname = $fieldname."['text']";
+
+        $data = $entry_data->$fieldname;
+        $entry_data->$newfieldname = $data;
+
+    }
 }
 
