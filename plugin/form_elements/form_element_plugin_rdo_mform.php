@@ -23,7 +23,16 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin
 
 class form_element_plugin_rdo_mform extends form_element_plugin_itemlist_mform {
 
-    function __construct($form_id, $formelement_id, $creator_id, $moodleplugintype, $moodlepluginname, $context_id,
+    /**
+     * @param $form_id
+     * @param $formelement_id
+     * @param $creator_id
+     * @param $moodleplugintype
+     * @param $moodlepluginname
+     * @param $context_id
+     * @param null $formfield_id
+     */
+    public function __construct($form_id, $formelement_id, $creator_id, $moodleplugintype, $moodlepluginname, $context_id,
                          $formfield_id = null) {
         parent::__construct($form_id, $formelement_id, $creator_id, $moodleplugintype, $moodlepluginname, $context_id,
                             $formfield_id);
@@ -32,15 +41,15 @@ class form_element_plugin_rdo_mform extends form_element_plugin_itemlist_mform {
         $this->items_tablename = "ulcc_form_plg_rdo_items";
     }
 
+    /**
+     * @param MoodleQuickForm $mform
+     */
     protected function specific_definition(MoodleQuickForm $mform) {
 
-        /**
-        textarea element to contain the options the admin wishes to add to the user form
-        admin will be instructed to insert value/label pairs in the following plaintext format:
-        value1:label1\nvalue2:label2\nvalue3:label3
-        or some such
-        default option could be identified with '[default]' in the same line
-         */
+        // Textarea element to contain the options the admin wishes to add to the user form
+        // admin will be instructed to insert value/label pairs in the following plaintext format:
+        // value1:label1\nvalue2:label2\nvalue3:label3
+        // or some such default option could be identified with '[default]' in the same line.
 
         $mform->addElement(
             'textarea',
@@ -49,11 +58,11 @@ class form_element_plugin_rdo_mform extends form_element_plugin_itemlist_mform {
             array('class' => 'form_input')
         );
 
-        //admin must specify at least 1 option, with at least 1 character
+        // Admin must specify at least 1 option, with at least 1 character.
         $mform->addRule('optionlist', null, 'minlength', 1, 'client');
-        //@todo should we insist on a default option being chosen ?
+        // TODO should we insist on a default option being chosen?
 
-        //added the below so that exisiting options can be seen
+        // Added the below so that existing options can be seen.
         $mform->addElement(
             'static',
             'existing_options',
@@ -62,6 +71,4 @@ class form_element_plugin_rdo_mform extends form_element_plugin_itemlist_mform {
         );
     }
 
-    function definition_after_data() {
-    }
 }
