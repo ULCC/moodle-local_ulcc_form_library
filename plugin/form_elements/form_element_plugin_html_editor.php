@@ -1,18 +1,39 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin.class.php');
 
+/**
+ * Plugin that adds a normal editor.
+ */
 class form_element_plugin_html_editor extends form_element_plugin {
 
     public $tablename;
     public $data_entry_tablename;
-    public $minimumlength; //defined by the form creator to validate user input
-    public $maximumlength; //defined by the form creator to validate user input
+    public $minimumlength; // Defined by the form creator to validate user input.
+    public $maximumlength; // Defined by the form creator to validate user input.
 
     /**
      * Constructor
      */
-    function __construct() {
+    public function __construct() {
         $this->tablename = "ulcc_form_plg_hte";
         $this->data_entry_tablename = "ulcc_form_plg_hte_ent";
 
@@ -26,15 +47,15 @@ class form_element_plugin_html_editor extends form_element_plugin {
     public function load($formfield_id) {
         $formfield = $this->dbc->get_form_field_data($formfield_id);
         if (!empty($formfield)) {
-            //set the formfield_id var
+            // Set the formfield_id var.
             $this->formfield_id = $formfield_id;
 
-            //get the record of the plugin used for the field
+            // Get the record of the plugin used for the field.
             $plugin = $this->dbc->get_form_element_plugin($formfield->formelement_id);
 
             $this->formelement_id = $formfield->formelement_id;
 
-            //get the form element record for the formfield
+            // Get the form element record for the formfield.
             $pluginrecord = $this->dbc->get_form_element_by_formfield($this->tablename, $formfield->id);
 
             if (!empty($pluginrecord)) {
@@ -54,9 +75,8 @@ class form_element_plugin_html_editor extends form_element_plugin {
      *
      */
     public function install() {
-        global $CFG, $DB;
 
-        // create the table to store form fields
+        // Create the table to store form fields.
         $table = new $this->xmldb_table($this->tablename);
         $set_attributes = method_exists($this->xmldb_key, 'set_attributes') ? 'set_attributes' : 'setAttributes';
 
@@ -96,7 +116,7 @@ class form_element_plugin_html_editor extends form_element_plugin {
             $this->dbman->create_table($table);
         }
 
-        // create the new table to store responses to fields
+        // Create the new table to store responses to fields.
         $table = new $this->xmldb_table($this->data_entry_tablename);
         $set_attributes = method_exists($this->xmldb_key, 'set_attributes') ? 'set_attributes' : 'setAttributes';
 
@@ -158,7 +178,7 @@ class form_element_plugin_html_editor extends form_element_plugin {
     /**
      * function used to return the language strings for the plugin
      */
-    function language_strings(&$string) {
+    public function language_strings(&$string) {
         $string['form_element_plugin_html_editor'] = 'Htmleditor';
         $string['form_element_plugin_html_editor_type'] = 'Html editor';
         $string['form_element_plugin_html_editor_description'] = 'A html editor';
@@ -181,10 +201,11 @@ class form_element_plugin_html_editor extends form_element_plugin {
     /**
      * this function returns the mform elements taht will be added to a form form
      *
+     * @param MoodleQuickForm $mform
      */
     public function entry_form(&$mform) {
 
-        //create the fieldname
+        // Create the fieldname.
         $fieldname = "{$this->formfield_id}_field";
 
         if (!empty($this->description)) {
