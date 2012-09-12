@@ -72,7 +72,7 @@ class form_element_plugin_itemlist extends form_element_plugin {
                 $state_item =
                     $this->dbc->get_state_item_id($this->tablename, $pluginrecord->id, $ev, $this->external_items_keyfield,
                                                   $this->external_items_table);
-                $pluginentry->parent_id = $state_item->id;
+                $pluginentry->parent_id = $state_item->parent_id;
                 $pluginentry->value = $state_item->value;
                 $result = $this->dbc->create_plugin_entry($this->data_entry_tablename, $pluginentry);
             }
@@ -195,13 +195,15 @@ class form_element_plugin_itemlist extends form_element_plugin {
     /**
      * read rows from item table and return them as array of key=>value
      * @param int $formfield_id
-     * @param string $field - extra field to read from items table: used by form_element_plugin_state
+     * @param bool|string $field - extra field to read from items table: used by form_element_plugin_state
      * @param bool    $useid    should ids be returned as the value or should the actual value
      *
+     * @return array
      */
     protected function get_option_list($formfield_id, $field = false, $useid = true) {
         $outlist = array();
         if ($formfield_id) {
+            // TODO $field is pointless here.
             $objlist = $this->dbc->get_optionlist($formfield_id, $this->tablename, $field);
 
             foreach ($objlist as $obj) {

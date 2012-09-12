@@ -957,6 +957,7 @@ class form_db extends form_logging {
      * dropdown options are returned
      * @param int $formfield_id the id of the form field whose option list is being returned
      * @param string $tablename the name of the table
+     * @param bool $field Field to get as well as id, value, name
      * @return array of objects
      */
     private function get_optionlist($formfield_id, $tablename, $field = false) {
