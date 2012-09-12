@@ -265,6 +265,7 @@ class form_element_plugin_html_editor extends form_element_plugin {
 
         $data = $entry_data->$fieldname;
         $entry_data->$newfieldname = $data;
+        unset($entry_data->$fieldname);
 
     }
 }
