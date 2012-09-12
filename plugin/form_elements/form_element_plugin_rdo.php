@@ -69,7 +69,7 @@ class form_element_plugin_rdo extends form_element_plugin_itemlist {
 
         $fieldname = "{$this->formfield_id}_field";
 
-        $optionlist = $this->get_option_list($this->formfield_id, false, false);
+        $optionlist = $this->get_option_list($this->formfield_id);
         $radioarray = array();
         foreach ($optionlist as $key => $value) {
             $radioarray[] = $mform->createElement('radio', $fieldname, '', $value, $key);
