@@ -182,10 +182,11 @@ class form_element_plugin_comment_editor extends form_element_plugin {
     /**
      * this function returns the mform elements that will be added to a form form
      *
+     * @param moodleQuickForm $mform
      */
     public function entry_form(&$mform) {
 
-        //create the fieldname
+        // Create the fieldname.
         $fieldname = "{$this->formfield_id}_field";
 
         if (!empty($this->description)) {
@@ -193,7 +194,7 @@ class form_element_plugin_comment_editor extends form_element_plugin {
                                strip_tags(html_entity_decode($this->description), FORM_STRIP_TAGS_DESCRIPTION));
             $this->label = '';
         }
-        //text field for element label
+        // Text field for element label.
         $mform->addElement(
             'editor',
             $fieldname,

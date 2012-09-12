@@ -196,7 +196,7 @@ class form_element_plugin_html_editor extends form_element_plugin {
     		$mform->addElement('static', "{$fieldname}_desc", $this->label, strip_tags(html_entity_decode($this->description),FORM_STRIP_TAGS_DESCRIPTION));
     		$this->label = '';
     	}
-    	//text field for element label
+    	// Text field for element label.
    		$mform->addElement(
 	           'editor',
 	            $fieldname,
@@ -205,8 +205,9 @@ class form_element_plugin_html_editor extends form_element_plugin {
 	    );
 
 
-        if (!empty($this->minimumlength)) $mform->addRule($fieldname, null, 'minlength', $this->minimumlength, 'client');
-        if (!empty($this->maximumlength)) $mform->addRule($fieldname, null, 'maxlength', $this->maximumlength, 'client');
+        // Disabled until http://tracker.moodle.org/browse/MDL-35402 is fixed as multiple rules is breaking it.
+        //if (!empty($this->minimumlength)) $mform->addRule($fieldname, null, 'minlength', $this->minimumlength, 'client');
+        //if (!empty($this->maximumlength)) $mform->addRule($fieldname, null, 'maxlength', $this->maximumlength, 'client');
         if (!empty($this->required)) $mform->addRule($fieldname, null, 'required', null, 'client');
         $mform->setType($fieldname, PARAM_RAW);
 
