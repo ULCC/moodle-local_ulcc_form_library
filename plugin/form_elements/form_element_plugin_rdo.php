@@ -109,7 +109,7 @@ class form_element_plugin_rdo extends form_element_plugin_itemlist {
 
         $entry = $this->dbc->get_pluginentry($this->tablename, $entry_id, $formfield_id, true);
         if (!empty($entry)) {
-            $entryobj->$fieldname = html_entity_decode($entry->value);
+            $entryobj->$fieldname = key($entry);
         }
     }
 }
