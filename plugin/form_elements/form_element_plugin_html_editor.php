@@ -237,12 +237,39 @@ class form_element_plugin_html_editor extends form_element_plugin {
      * handle user input
      **/
     public function entry_specific_process_data($formfield_id, $entry_id, $data) {
-        /*
-          * parent method is fine for simple form element types
-          * dd types will need something more elaborate to handle the intermediate
-          * items table and foreign key
-          */
-        return $this->entry_process_data($formfield_id, $entry_id, $data);
+
+        // Check to see if a entry record already exists for the formfield in this plugin.
+
+        // Create the fieldname.
+        $fieldname = $formfield_id."_field";
+        $editor = $data->$fieldname;
+        $inputtext = $editor['text'];
+
+        // Get the plugin table record that has the formfield_id.
+        $formelementrecord = $this->dbc->get_form_element_record($this->tablename, $formfield_id);
+        if (empty($formelementrecord)) {
+            print_error('formelementrecordnotfound');
+        }
+
+        // Get the _entry table record that has the formelementrecord id.
+        $formelemententry = $this->dbc->get_form_element_entry($this->tablename, $entry_id, $formfield_id);
+
+        // If no record has been created create the entry record.
+        if (empty($formelemententry)) {
+            $formelemententry = new stdClass();
+            $formelemententry->audit_type = $this->audit_type(); // Send the audit type through for logging purposes.
+            $formelemententry->entry_id = $entry_id;
+            $formelemententry->value = $inputtext;
+            $formelemententry->parent_id = $formelementrecord->id;
+            $result = $this->dbc->create_formelement_entry($this->data_entry_tablename, $formelemententry);
+        } else {
+            // Update the current record.
+            $formelemententry->audit_type = $this->audit_type(); // Send the audit type through for logging purposes.
+            $formelemententry->value = $inputtext;
+            $result = $this->dbc->update_formelement_entry($this->data_entry_tablename, $formelemententry);
+        }
+
+        return (!empty($result)) ? true : false;
     }
 
     /**
