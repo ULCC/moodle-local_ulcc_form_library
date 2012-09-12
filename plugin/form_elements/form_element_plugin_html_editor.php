@@ -265,9 +265,10 @@ class form_element_plugin_html_editor extends form_element_plugin {
         $newfieldnameformat = $fieldname."['format']";
 
         $data = $entry_data->$fieldname;
-        $entry_data->$newfieldnametext = $data;
-        $entry_data->$newfieldnameformat = 1;
-        unset($entry_data->$fieldname);
+        $entry_data->$fieldname = array(
+            'text' => $data,
+            'format' => 1
+        );
 
     }
 }
