@@ -37,34 +37,34 @@ class form_element_plugin_itemlist extends form_element_plugin {
 
         $result = true;
 
-        //create the fieldname
+        // Create the fieldname.
         $fieldname = $formfield_id."_field";
 
-        //get the plugin table record that has the formfield_id
+        // Get the plugin table record that has the formfield_id.
         $pluginrecord = $this->dbc->get_plugin_record($this->tablename, $formfield_id);
         if (empty($pluginrecord)) {
             print_error('pluginrecordnotfound');
         }
 
-        //check to see if a entry record already exists for the formfield in this plugin
+        // Check to see if a entry record already exists for the formfield in this plugin.
         $multiple = !empty($this->items_tablename);
         $entrydata = $this->dbc->get_pluginentry($this->tablename, $entry_id, $formfield_id, $multiple);
 
-        //if there are records connected to this entry in this formfield_id
+        // If there are records connected to this entry in this formfield_id.
         if (!empty($entrydata)) {
-            //delete all of the entries
+            // Delete all of the entries.
             $extraparams = array('audit_type' => $this->audit_type());
             foreach ($entrydata as $e) {
                 $this->dbc->delete_element_record_by_id($this->data_entry_tablename, $e->id, $extraparams);
             }
         }
 
-        //create new entries
+        // Create new entries.
         $pluginentry = new stdClass();
         $pluginentry->audit_type = $this->audit_type();
         $pluginentry->entry_id = $entry_id;
         $pluginentry->value = (!empty($data->$fieldname)) ? $data->$fieldname : '';
-        //pass the values given to $entryvalues as an array
+        // Pass the values given to $entryvalues as an array.
         $entryvalues = (!is_array($pluginentry->value)) ? array($pluginentry->value) : $pluginentry->value;
 
         foreach ($entryvalues as $ev) {
