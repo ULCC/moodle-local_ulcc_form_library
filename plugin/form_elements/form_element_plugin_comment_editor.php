@@ -205,12 +205,14 @@ class form_element_plugin_comment_editor extends form_element_plugin {
                   'cols' => '65')
         );
 
-        if (!empty($this->minimumlength)) {
-            $mform->addRule($fieldname, null, 'minlength', $this->minimumlength, 'client');
-        }
-        if (!empty($this->maximumlength)) {
-            $mform->addRule($fieldname, null, 'maxlength', $this->maximumlength, 'client');
-        }
+        // Disabled until http://tracker.moodle.org/browse/MDL-35402 is fixed.
+
+//        if (!empty($this->minimumlength)) {
+//            $mform->addRule($fieldname, null, 'minlength', $this->minimumlength, 'client');
+//        }
+//        if (!empty($this->maximumlength)) {
+//            $mform->addRule($fieldname, null, 'maxlength', $this->maximumlength, 'client');
+//        }
         if (!empty($this->required)) {
             $mform->addRule($fieldname, null, 'required', null, 'client');
         }
