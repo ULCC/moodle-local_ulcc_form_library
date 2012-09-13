@@ -62,7 +62,7 @@ class form_element_plugin_rdo extends form_element_plugin_itemlist {
     }
 
     /**
-     * This function returns the mform elements taht will be added to a form form
+     * This function returns the mform elements that will be added to a form form
      *
      */
     public function entry_form(MoodleQuickForm &$mform) {
@@ -71,8 +71,8 @@ class form_element_plugin_rdo extends form_element_plugin_itemlist {
 
         $optionlist = $this->get_option_list($this->formfield_id);
         $radioarray = array();
-        foreach ($optionlist as $key => $value) {
-            $radioarray[] = $mform->createElement('radio', $fieldname, '', $value, $key);
+        foreach ($optionlist as $itemid => $name) {
+            $radioarray[] = $mform->createElement('radio', $fieldname, '', $name, $itemid);
         }
 
         $mform->addGroup(
