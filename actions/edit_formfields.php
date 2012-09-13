@@ -54,6 +54,7 @@ $PAGE->set_url('/local/ulcc_form_library/actions/edit_formfields.php',$PARSER->g
 
 $fieldmform	= new add_field_mform($moodlepluginname,$moodleplugintype,$context_id,$form_id);
 
+
 // has the form been submitted?
 if($fieldmform->is_submitted()) {
     //get the form data submitted

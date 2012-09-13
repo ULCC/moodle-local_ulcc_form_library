@@ -37,15 +37,13 @@ class form_element_plugin_status_mform  extends form_element_plugin_itemlist_mfo
 	function specific_process_data($data) {
 		global 	$USER;
 
-		//if this field does not already have a status field add it otherwise do nothing
-		if (!$this->dbc->has_statusfield($data->status_id,$data->form_id)) {
-			$statusfield							=	new stdClass();
-			$statusfield->status_id					=	$data->status_id;
+			$statusfield						=	new stdClass();
+			$statusfield->selecttype			=	FORM_OPTIONSINGLE;
 			$statusfield->formfield_id			=	$data->formfield_id;
-			$statusfield->creator_id				=	$USER->id;
+			$statusfield->creator_id			=	$USER->id;
 
 			$this->dbc->create_statusfield($statusfield);
-		}
+
 	}
 
 

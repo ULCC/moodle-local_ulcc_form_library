@@ -37,6 +37,7 @@ $columns	=	array();
 $columns[]	=	'formname';
 $columns[]	=	'moveup';
 $columns[]	=	'movedown';
+$columns[]  =   'duplicateform';
 $columns[]	=	'editform';
 $columns[]	=	'editfields';
 $columns[]	=	'changestatus';
@@ -48,7 +49,8 @@ $headers[]  =   '';
 $headers[]  =   '';
 $headers[]  =   '';
 $headers[]  =   '';
-$headers[]  =   ' ';
+$headers[]  =   '';
+$headers[]  =   '';
 $headers[]  =   '';
 $headers[]  =   '';
 
@@ -111,6 +113,14 @@ if (!empty($forms))   {
         } else {
             $data[] 	=	"";
         }
+
+
+        // Set the duplicate form link.
+        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/view_forms.php?form_id={$row->id}&{$querystr}&duplicate=1'>
+                                    <img class='edit' src='".$OUTPUT->pix_url("/t/copy")."' alt='".get_string('duplicate')."' title='".get_string('duplicate')."' />
+                                 </a>";
+
+
 
         // Set the edit form link.
         $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$row->id}&{$querystr}'>

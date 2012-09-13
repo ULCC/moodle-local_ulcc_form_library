@@ -30,8 +30,10 @@ $string['currentfields']         = 'Current fields';
 
 
 // D
+$string['delete']               = 'Delete';
 $string['description']          = 'Description';
 $string['disableform']          = 'Disable form';
+$string['duplicate']            = 'Duplicate';
 
 
 
@@ -50,6 +52,7 @@ $string['formadmindesc']    = 'From this section you can create, edit and delete
 $string['formfields']       = 'Form fields';
 $string['forms']            = 'Forms';
 $string['formcreation']     = 'Form created';
+$string['formduplication']  = 'Form duplicated';
 $string['formpreview']     = 'Form preview';
 $string['formmovesuc']      = 'Form successfully moved';
 $string['formmoveerror']    = 'A error occured whilst changing the form position';
