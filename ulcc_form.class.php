@@ -82,20 +82,38 @@ class ulcc_form {
     private $cancelurl;
 
     /**
-     * @param $plugintype
-     * @param $pluginname
+     * @var form_entry_mform
+     */
+    private $mform;
+
+    /**
+     * @var int is of the entry record if there is one.
+     */
+    private $entryid;
+
+    /**
+     * @var bool We have to make sure that an attempt has been made to save page data before displaying.
+     */
+    private $formpagessaved = false;
+
+    /**
+     * @param string $plugintype
+     * @param string $pluginname
      * @param int $formid
-     * @param $pageurl
-     * @param $cancelurl
+     * @param string $pageurl
+     * @param string $cancelurl
+     * @param int $entryid
      * @param int $currentpage
      */
-    public function __construct($plugintype, $pluginname, $formid, $pageurl, $cancelurl, $currentpage = 1) {
+    public function __construct($plugintype, $pluginname, $formid, $pageurl,
+                                $cancelurl, $entryid = 0, $currentpage = 1) {
 
         $this->plugintype = $plugintype;
         $this->pluginname = $pluginname;
         $this->formid = $formid;
         $this->currentpage = $currentpage;
         $this->pageurl = $pageurl;
+        $this->entryid = $entryid;
         $this->dbc = new form_db();
         $this->formdata = null;
     }
@@ -113,16 +131,49 @@ class ulcc_form {
     }
 
     /**
-     * @param $pageurl
-     * @param $cancelurl
      * @param int|null $entry_id
      * @throws coding_exception
-     * @internal param $form_id
      * @return int|bool entry id if it was submitted, false otherwise.
      */
     public function display_form($entry_id = null) {
 
+        if (!$this->formpagessaved) {
+            throw new coding_exception('Must run try_to_save_whole_form_and_get_entry_id() before displaying the form');
+        }
+
+        $mform = $this->get_mform($entry_id);
+
+        // Set the current page variable inside of the form.
+
+        // Check if the form has already been submitted if not display the form.
+        if ($mform->is_cancelled()) {
+            // Send the user back to dashboard.
+            redirect($this->cancelurl, '', FORM_REDIRECT_DELAY);
+        }
+
+        $savedentryid = $this->try_to_save_whole_form_and_get_entry_id($mform);
+
+        // Loads the data into the form.
+        $mform->load_entry($entry_id);
+
+        $mform->display();
+
+    }
+
+    /**
+     * Gets the mform so stuff can be done with it. Does sanity checks.
+     *
+     * @return form_entry_mform
+     * @throws coding_exception
+     */
+    private function get_mform() {
+
         global $SESSION;
+
+        // Cache it so we don't have two.
+        if (isset($this->mform)) {
+            return $this->mform;
+        }
 
         if (empty($this->formid)) {
             throw new coding_exception('No form id specified. Cannot display form');
@@ -154,28 +205,11 @@ class ulcc_form {
             unset($SESSION->pagedata[$this->formid]);
         }
 
-        // Get the current page variable if it exists.
         $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $this->pageurl,
-                                      $entry_id, $this->currentpage);
+                                      $this->entryid, $this->currentpage);
+        $this->mform = $mform;
 
-        // Set the current page variable inside of the form.
-
-        // Check if the form has already been submitted if not display the form.
-        if ($mform->is_cancelled()) {
-            // Send the user back to dashboard.
-            redirect($this->cancelurl, '', FORM_REDIRECT_DELAY);
-        }
-
-        $entryid = $this->save_form_data($mform);
-        if ($entryid) {
-            return true;
-        }
-
-        // Loads the data into the form.
-        $mform->load_entry($entry_id);
-
-        $mform->display();
-
+        return $mform;
     }
 
     /**
@@ -183,12 +217,15 @@ class ulcc_form {
      * returns false, then we know that although a page may have changed, the form has not been submitted in
      * its entirety, so still needs displaying.
      *
-     * @param form_entry_mform $mform
      * @return int|bool
      */
-    public function save_form_data(form_entry_mform $mform) {
+    public function try_to_save_whole_form_and_get_entry_id() {
 
         global $SESSION;
+
+        $mform = $this->get_mform();
+
+        $this->formpagessaved = true;
 
         // Was the form submitted?
         // Has the form been submitted? This might mean we need to go to the next page, or it might mean ending.
@@ -212,8 +249,9 @@ class ulcc_form {
 
                 // If saving the data was not successful.
                 if (!$entryid) {
-                    // Print an error message.
+                    // Print an error message. Probably an exception before this happens.
                     print_error(get_string("entrycreationerror", 'block_ilp'), 'block_ilp');
+                    return false;
                 }
 
                 return $entryid; // Means a successful save (exception if not).
