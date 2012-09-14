@@ -99,6 +99,12 @@ abstract class form_lib_form extends moodleform {
         return null;
     }
 
+    /**
+     * Find out if the next button was pressed and act on it if necessary.
+     *
+     * @param $form_id
+     * @param $currentpage
+     */
     function next($form_id, $currentpage) {
 
         global $SESSION;
