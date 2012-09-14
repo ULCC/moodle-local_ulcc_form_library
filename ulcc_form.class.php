@@ -171,8 +171,8 @@ class ulcc_form {
         // Has the form been submitted? This might mean we need to go to the next page, or it might mean ending.
         if ($mform->is_submitted()) {
 
-            $mform->next($this->formid, $currentpage);
-            $mform->previous($this->formid, $currentpage);
+            $mform->next();
+            $mform->previous();
 
             $temp = new stdClass();
             $temp->currentpage = $currentpage;
