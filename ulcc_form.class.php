@@ -110,97 +110,99 @@ class ulcc_form {
         }
 
         // Check if the form is part of the current plugin.
-
-        if ($this->dbc->is_plugin_form($this->pluginname, $this->plugintype, $this->formid)) {
-
-            $f = $this->dbc->get_form_by_id($this->formid);
-
-            if (!empty($f->status) && empty($f->deleted)) {
-
-                // Check if the form is multipaged.
-                $is_multipaged = $this->dbc->element_type_exists($this->formid, 'ulcc_form_plg_pb');
-
-                // Get the current page variable if it exists.
-                $currentpage = optional_param('current_page', 1, PARAM_INT);
-
-                // Unset the current page variable otherwise moodleform will take it and use it in the
-                // in the current form (which will overwrite any changes we make to the current page element).
-                unset($_POST['current_page']);
-
-                $page_data = optional_param('page_data', 0, PARAM_RAW);
-
-                // The page_data element is part of all forms if it is not found and there is a session var for this form
-                // then it must be for all data unset it.
-                if (empty($page_data) && isset($SESSION->pagedata[$this->formid])) {
-                    unset($SESSION->pagedata[$this->formid]);
-                }
-
-                if (!empty($is_multipaged)) {
-                    $nextpressed = optional_param('nextbutton', 0, PARAM_RAW);
-                    $previouspressed = optional_param('previousbutton', 0, PARAM_RAW);
-                }
-
-                // If the next button has been pressed increment the page number by 1.
-                if (!empty($nextpressed)) {
-                    $currentpage++;
-                }
-
-                // If the previous button has been pressed decrease the page number by 1.
-                if (!empty($previouspressed)) {
-                    $currentpage--;
-                }
-
-                $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $pageurl, $entry_id, $currentpage);
-
-                // Set the current page variable inside of the form.
-
-                // Check if the form has already been submitted if not display the form.
-                if ($mform->is_cancelled()) {
-                    // Send the user back to dashboard.
-                    redirect($cancelurl, '', FORM_REDIRECT_DELAY);
-                }
-
-                // Was the form submitted?
-                // has the form been submitted?
-                if ($mform->is_submitted()) {
-
-                    $mform->next($form_id, $currentpage);
-
-                    $mform->previous($form_id, $currentpage);
-
-                    $temp = new stdClass();
-                    $temp->currentpage = $currentpage;
-                    $mform->set_data($temp);
-
-                    // Get the form data submitted.
-                    $formdata = $mform->get_multipage_data($form_id);
-
-                    $this->formdata = $formdata;
-
-                    if (isset($formdata->submitbutton)) {
-
-                        // Contains process_data.
-                        $success = $mform->submit($form_id);
-
-                        // We no longer need the form information for this page.
-                        unset($SESSION->pagedata[$form_id]);
-
-                        // If saving the data was not successful.
-                        if (!$success) {
-                            // Print an error message.
-                            print_error(get_string("entrycreationerror", 'block_ilp'), 'block_ilp');
-                        }
-
-                        return $success;
-                    }
-                }
-
-                // Loads the data into the form.
-                $mform->load_entry($entry_id);
-
-                $mform->display();
-            }
+        if (!$this->dbc->is_plugin_form($this->pluginname, $this->plugintype, $this->formid)) {
+            throw new coding_exception('Trying to display a form that does not belong to this plugin');
         }
+
+        $formrecord = $this->dbc->get_form_by_id($this->formid);
+
+        if (!empty($formrecord->status) && empty($formrecord->deleted)) {
+
+            // Check if the form is multipaged.
+            $is_multipaged = $this->dbc->element_type_exists($this->formid, 'ulcc_form_plg_pb');
+
+            // Get the current page variable if it exists.
+            $currentpage = optional_param('current_page', 1, PARAM_INT);
+
+            // Unset the current page variable otherwise moodleform will take it and use it in the
+            // in the current form (which will overwrite any changes we make to the current page element).
+            unset($_POST['current_page']);
+
+            $page_data = optional_param('page_data', 0, PARAM_RAW);
+
+            // The page_data element is part of all forms if it is not found and there is a session var for this form
+            // then it must be for all data unset it.
+            if (empty($page_data) && isset($SESSION->pagedata[$this->formid])) {
+                unset($SESSION->pagedata[$this->formid]);
+            }
+
+            if (!empty($is_multipaged)) {
+                $nextpressed = optional_param('nextbutton', 0, PARAM_RAW);
+                $previouspressed = optional_param('previousbutton', 0, PARAM_RAW);
+            }
+
+            // If the next button has been pressed increment the page number by 1.
+            if (!empty($nextpressed)) {
+                $currentpage++;
+            }
+
+            // If the previous button has been pressed decrease the page number by 1.
+            if (!empty($previouspressed)) {
+                $currentpage--;
+            }
+
+            $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $pageurl,
+                                          $entry_id, $currentpage);
+
+            // Set the current page variable inside of the form.
+
+            // Check if the form has already been submitted if not display the form.
+            if ($mform->is_cancelled()) {
+                // Send the user back to dashboard.
+                redirect($cancelurl, '', FORM_REDIRECT_DELAY);
+            }
+
+            // Was the form submitted?
+            // has the form been submitted?
+            if ($mform->is_submitted()) {
+
+                $mform->next($form_id, $currentpage);
+
+                $mform->previous($form_id, $currentpage);
+
+                $temp = new stdClass();
+                $temp->currentpage = $currentpage;
+                $mform->set_data($temp);
+
+                // Get the form data submitted.
+                $formdata = $mform->get_multipage_data($form_id);
+
+                $this->formdata = $formdata;
+
+                if (isset($formdata->submitbutton)) {
+
+                    // Contains process_data.
+                    $success = $mform->submit($form_id);
+
+                    // We no longer need the form information for this page.
+                    unset($SESSION->pagedata[$form_id]);
+
+                    // If saving the data was not successful.
+                    if (!$success) {
+                        // Print an error message.
+                        print_error(get_string("entrycreationerror", 'block_ilp'), 'block_ilp');
+                    }
+
+                    return $success;
+                }
+            }
+
+            // Loads the data into the form.
+            $mform->load_entry($entry_id);
+
+            $mform->display();
+        }
+
 
         return $success;
     }
