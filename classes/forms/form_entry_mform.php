@@ -164,7 +164,8 @@ class form_entry_mform extends form_lib_form
 
     /**
      * @param $data
-     * @return bool|int|mixed Record id or false if there's a problem.
+     * @throws coding_exception
+     * @return int Record id or false if there's a problem.
      */
     protected function process_data($data) {
 
@@ -177,8 +178,7 @@ class form_entry_mform extends form_lib_form
         $form_id = $data->form_id;
 
         // Get the id of the entry  if known.
-        $entry_id = $data->entry_id;
-        $result = false;
+        $entryid = $data->entry_id;
 
         if (empty($entry_id)) {
             // Create the entry.
@@ -186,9 +186,8 @@ class form_entry_mform extends form_lib_form
             $entry->form_id = $form_id;
             $entry->creator_id = $USER->id;
 
-            $entry_id = $this->dbc->create_entry($entry);
+            $entryid = $this->dbc->create_entry($entry);
 
-            $result = $entry_id;
         } else {
             // Update the entry.
             // As there is nothing to update but we want the entries timemodifed
@@ -197,9 +196,7 @@ class form_entry_mform extends form_lib_form
             $entry->id = $entry_id;
             $entry->form_id = $form_id;
 
-            if ($this->dbc->update_entry($entry)) {
-                $result = $entry->id; // For consistency - always return the record id or false.
-            }
+            $this->dbc->update_entry($entry); // Will throw exception if there's a problem.
         }
 
         // Get all of the fields in the current report, they will be returned in order as
@@ -230,12 +227,12 @@ class form_entry_mform extends form_lib_form
             // to the form.
             if ($pluginclass->is_processable()) {
                 if (!$pluginclass->entry_process_data($field->id, $entry_id, $data)) {
-                    $result = false;
+                    throw new coding_exception('Problem saving form plugin data');
                 }
             }
         }
 
-        return $result;
+        return $entryid;
     }
 
     /**

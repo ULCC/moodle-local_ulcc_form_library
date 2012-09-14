@@ -111,7 +111,7 @@ abstract class form_lib_form extends moodleform {
 
         $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
 
-        // Was the next button pressed.
+        // Was the next button pressed?
         if (isset($this->formdata->nextbutton)) {
 
             $cformdata = $this->formdata;
@@ -155,11 +155,17 @@ abstract class form_lib_form extends moodleform {
 
                 $this->set_data($tempdata);
             }
+
+            // When the form displays, it needs to have the new page number in it.
+            $this->currentpage++;
+            $temp = new stdClass();
+            $temp->currentpage = $this->currentpage;
+            $this->set_data($temp);
         }
     }
 
     /**
-     * Carrys out operations necessary if the form is a multipage form and the previous button has been pressed
+     * Carries out operations necessary if the form is a multipage form and the previous button has been pressed
      */
     public function previous($form_id, $currentpage) {
         global $SESSION;
@@ -196,16 +202,24 @@ abstract class form_lib_form extends moodleform {
                 $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$form_id][$currentpage]);
                 $this->set_data($tempdata);
             }
+
+            $this->currentpage--;
+            $temp = new stdClass();
+            $temp->currentpage = $this->currentpage;
+            $this->set_data($temp);
         }
     }
 
     /**
-     * @param $form_id
-     * @return mixed
+     * Submits all data from all form pages to the database.
+     *
+     * @return int id of the form entry record
      */
-    public function submit($form_id) {
+    public function submit() {
 
         global $SESSION;
+
+        $form_id = $this->form_id;
 
         // Get all of the submitted data.
         $this->formdata = $this->get_multipage_data($form_id);
