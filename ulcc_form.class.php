@@ -171,25 +171,25 @@ class ulcc_form {
         // Has the form been submitted? This might mean we need to go to the next page, or it might mean ending.
         if ($mform->is_submitted()) {
 
-            $mform->next($form_id, $currentpage);
-            $mform->previous($form_id, $currentpage);
+            $mform->next($this->formid, $currentpage);
+            $mform->previous($this->formid, $currentpage);
 
             $temp = new stdClass();
             $temp->currentpage = $currentpage;
             $mform->set_data($temp);
 
             // Get the form data submitted.
-            $formdata = $mform->get_multipage_data($form_id);
+            $formdata = $mform->get_multipage_data($this->formid);
 
             $this->formdata = $formdata;
 
             if (isset($formdata->submitbutton)) {
 
                 // Contains process_data.
-                $success = $mform->submit($form_id);
+                $success = $mform->submit($this->formid);
 
                 // We no longer need the form information for this page.
-                unset($SESSION->pagedata[$form_id]);
+                unset($SESSION->pagedata[$this->formid]);
 
                 // If saving the data was not successful.
                 if (!$success) {
