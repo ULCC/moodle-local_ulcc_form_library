@@ -34,8 +34,6 @@ class form_entry_mform extends form_lib_form {
      */
     function __construct($form_id, $type, $name, $pageurl, $entry_id = null, $page = 1) {
 
-        global $CFG;
-
         $this->form_id = $form_id;
         $this->entry_id = $entry_id;
         $this->currentpage = $page;
