@@ -103,8 +103,6 @@ class ulcc_form {
 
         global $SESSION;
 
-        $success = false;
-
         if (empty($this->formid)) {
             throw new coding_exception('No form id specified. Cannot display form');
         }
@@ -146,16 +144,6 @@ class ulcc_form {
             $previouspressed = optional_param('previousbutton', 0, PARAM_RAW);
         }
 
-        // If the next button has been pressed increment the page number by 1.
-        if (!empty($nextpressed)) {
-            $currentpage++;
-        }
-
-        // If the previous button has been pressed decrease the page number by 1.
-        if (!empty($previouspressed)) {
-            $currentpage--;
-        }
-
         $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $pageurl,
                                       $entry_id, $currentpage);
 
@@ -167,38 +155,9 @@ class ulcc_form {
             redirect($cancelurl, '', FORM_REDIRECT_DELAY);
         }
 
-        // Was the form submitted?
-        // Has the form been submitted? This might mean we need to go to the next page, or it might mean ending.
-        if ($mform->is_submitted()) {
-
-            $mform->next();
-            $mform->previous();
-
-            $temp = new stdClass();
-            $temp->currentpage = $currentpage;
-            $mform->set_data($temp);
-
-            // Get the form data submitted.
-            $formdata = $mform->get_multipage_data($this->formid);
-
-            $this->formdata = $formdata;
-
-            if (isset($formdata->submitbutton)) {
-
-                // Contains process_data.
-                $success = $mform->submit($this->formid);
-
-                // We no longer need the form information for this page.
-                unset($SESSION->pagedata[$this->formid]);
-
-                // If saving the data was not successful.
-                if (!$success) {
-                    // Print an error message.
-                    print_error(get_string("entrycreationerror", 'block_ilp'), 'block_ilp');
-                }
-
-                return $success;
-            }
+        $entryid = $this->save_form_data($mform);
+        if ($entryid) {
+            return true;
         }
 
         // Loads the data into the form.
@@ -206,7 +165,51 @@ class ulcc_form {
 
         $mform->display();
 
-        return $success;
+    }
+
+    /**
+     * This will save form data if it's there. This will process the move to the next or previous page, so if it
+     * returns false, then we know that although a page may have changed, the form has not been submitted in
+     * its entirety, so still needs displaying.
+     *
+     * @param form_entry_mform $mform
+     * @return int|bool
+     */
+    public function save_form_data(form_entry_mform $mform) {
+
+        global $SESSION;
+
+        // Was the form submitted?
+        // Has the form been submitted? This might mean we need to go to the next page, or it might mean ending.
+        if ($mform->is_submitted()) { // Has any data at all in GET or POST.
+
+            // Shift forwards/backwards by a page if we need to.
+            $mform->next();
+            $mform->previous();
+
+            // Get the form data submitted.
+            $formdata = $mform->get_multipage_data($this->formid);
+            $this->formdata = $formdata;
+
+            if (isset($formdata->submitbutton)) { // Submit and finish button, rather than next or previous.
+
+                // Contains process_data.
+                $entryid = $mform->submit();
+
+                // We no longer need the form information for this page.
+                unset($SESSION->pagedata[$this->formid]);
+
+                // If saving the data was not successful.
+                if (!$entryid) {
+                    // Print an error message.
+                    print_error(get_string("entrycreationerror", 'block_ilp'), 'block_ilp');
+                }
+
+                return $entryid; // Means a successful save (exception if not).
+            }
+        }
+
+        return false; // Means we still need to display the form.
     }
 
     /**
