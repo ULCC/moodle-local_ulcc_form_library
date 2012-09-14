@@ -253,4 +253,18 @@ class form_entry_mform extends form_lib_form
     function set_current_page($page) {
         // $this->currentpage  =   $page;
     }
+
+    /**
+     * Checks whether the next button was pressed and adjusts things.
+     */
+    public function next() {
+        parent::next($this->form_id, $this->currentpage);
+    }
+
+    /**
+     * Checks whether the previous biutton was pressed and adjusts things.
+     */
+    public function previous() {
+        parent::next($this->form_id, $this->currentpage);
+    }
 }
