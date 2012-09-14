@@ -66,15 +66,36 @@ class ulcc_form {
     private $formid;
 
     /**
+     * @var int what sequential page of a multipage form are we on?
+     */
+    private $currentpage;
+
+    /**
+     * @var string the url of the page we are on.
+     * @todo Possibly not needed as we could use $PAGE->url?
+     */
+    private $pageurl;
+
+    /**
+     * @var string Where to redirect to if the form is cancelled.
+     */
+    private $cancelurl;
+
+    /**
      * @param $plugintype
      * @param $pluginname
      * @param int $formid
+     * @param $pageurl
+     * @param $cancelurl
+     * @param int $currentpage
      */
-    public function __construct($plugintype, $pluginname, $formid = 0) {
+    public function __construct($plugintype, $pluginname, $formid, $pageurl, $cancelurl, $currentpage = 1) {
 
         $this->plugintype = $plugintype;
         $this->pluginname = $pluginname;
         $this->formid = $formid;
+        $this->currentpage = $currentpage;
+        $this->pageurl = $pageurl;
         $this->dbc = new form_db();
         $this->formdata = null;
     }
@@ -99,7 +120,7 @@ class ulcc_form {
      * @internal param $form_id
      * @return int|bool entry id if it was submitted, false otherwise.
      */
-    public function display_form($pageurl, $cancelurl, $entry_id = null) {
+    public function display_form($entry_id = null) {
 
         global $SESSION;
 
@@ -121,9 +142,6 @@ class ulcc_form {
             throw new coding_exception('Form has been deleted. Cannot display.');
         }
 
-        // Check if the form is multipaged.
-        $is_multipaged = $this->dbc->element_type_exists($this->formid, 'ulcc_form_plg_pb');
-
         // Unset the current page variable otherwise moodleform will take it and use it in the
         // in the current form (which will overwrite any changes we make to the current page element).
         unset($_POST['current_page']);
@@ -137,16 +155,15 @@ class ulcc_form {
         }
 
         // Get the current page variable if it exists.
-        $currentpage = optional_param('current_page', 1, PARAM_INT);
-        $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $pageurl,
-                                      $entry_id, $currentpage);
+        $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $this->pageurl,
+                                      $entry_id, $this->currentpage);
 
         // Set the current page variable inside of the form.
 
         // Check if the form has already been submitted if not display the form.
         if ($mform->is_cancelled()) {
             // Send the user back to dashboard.
-            redirect($cancelurl, '', FORM_REDIRECT_DELAY);
+            redirect($this->cancelurl, '', FORM_REDIRECT_DELAY);
         }
 
         $entryid = $this->save_form_data($mform);
