@@ -32,6 +32,11 @@ class form_entry_mform extends form_lib_form
     public $dbc;
 
     /**
+     * @var bool have we already saved the page data and moved to the next page?
+     */
+    private $pagessaved = false;
+
+    /**
      *
      */
     public function __construct($form_id, $type, $name, $pageurl, $entry_id = null, $page = 1) {
@@ -264,4 +269,5 @@ class form_entry_mform extends form_lib_form
     public function previous() {
         parent::next($this->form_id, $this->currentpage);
     }
+
 }
