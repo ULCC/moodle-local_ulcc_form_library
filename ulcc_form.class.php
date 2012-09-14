@@ -61,13 +61,20 @@ class ulcc_form {
     private $formdata;
 
     /**
+     * @var int id from the forms table
+     */
+    private $formid;
+
+    /**
      * @param $plugintype
      * @param $pluginname
+     * @param int $formid
      */
-    public function __construct($plugintype, $pluginname) {
+    public function __construct($plugintype, $pluginname, $formid = 0) {
 
         $this->plugintype = $plugintype;
         $this->pluginname = $pluginname;
+        $this->formid = $formid;
         $this->dbc = new form_db();
         $this->formdata = null;
     }
@@ -85,28 +92,33 @@ class ulcc_form {
     }
 
     /**
-     * @param $form_id
      * @param $pageurl
      * @param $cancelurl
      * @param int|null $entry_id
+     * @throws coding_exception
+     * @internal param $form_id
      * @return int|bool entry id if it was submitted, false otherwise.
      */
-    public function display_form($form_id, $pageurl, $cancelurl, $entry_id = null) {
+    public function display_form($pageurl, $cancelurl, $entry_id = null) {
 
         global $SESSION;
 
         $success = false;
 
+        if (empty($this->formid)) {
+            throw new coding_exception('No form id specified. Cannot display form');
+        }
+
         // Check if the form is part of the current plugin.
 
-        if ($this->dbc->is_plugin_form($this->pluginname, $this->plugintype, $form_id)) {
+        if ($this->dbc->is_plugin_form($this->pluginname, $this->plugintype, $this->formid)) {
 
-            $f = $this->dbc->get_form_by_id($form_id);
+            $f = $this->dbc->get_form_by_id($this->formid);
 
             if (!empty($f->status) && empty($f->deleted)) {
 
                 // Check if the form is multipaged.
-                $is_multipaged = $this->dbc->element_type_exists($form_id, 'ulcc_form_plg_pb');
+                $is_multipaged = $this->dbc->element_type_exists($this->formid, 'ulcc_form_plg_pb');
 
                 // Get the current page variable if it exists.
                 $currentpage = optional_param('current_page', 1, PARAM_INT);
@@ -119,8 +131,8 @@ class ulcc_form {
 
                 // The page_data element is part of all forms if it is not found and there is a session var for this form
                 // then it must be for all data unset it.
-                if (empty($page_data) && isset($SESSION->pagedata[$form_id])) {
-                    unset($SESSION->pagedata[$form_id]);
+                if (empty($page_data) && isset($SESSION->pagedata[$this->formid])) {
+                    unset($SESSION->pagedata[$this->formid]);
                 }
 
                 if (!empty($is_multipaged)) {
@@ -138,7 +150,7 @@ class ulcc_form {
                     $currentpage--;
                 }
 
-                $mform = new form_entry_mform($form_id, $this->plugintype, $this->pluginname, $pageurl, $entry_id, $currentpage);
+                $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $pageurl, $entry_id, $currentpage);
 
                 // Set the current page variable inside of the form.
 
