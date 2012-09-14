@@ -124,9 +124,6 @@ class ulcc_form {
         // Check if the form is multipaged.
         $is_multipaged = $this->dbc->element_type_exists($this->formid, 'ulcc_form_plg_pb');
 
-        // Get the current page variable if it exists.
-        $currentpage = optional_param('current_page', 1, PARAM_INT);
-
         // Unset the current page variable otherwise moodleform will take it and use it in the
         // in the current form (which will overwrite any changes we make to the current page element).
         unset($_POST['current_page']);
@@ -139,11 +136,8 @@ class ulcc_form {
             unset($SESSION->pagedata[$this->formid]);
         }
 
-        if (!empty($is_multipaged)) {
-            $nextpressed = optional_param('nextbutton', 0, PARAM_RAW);
-            $previouspressed = optional_param('previousbutton', 0, PARAM_RAW);
-        }
-
+        // Get the current page variable if it exists.
+        $currentpage = optional_param('current_page', 1, PARAM_INT);
         $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $pageurl,
                                       $entry_id, $currentpage);
 
