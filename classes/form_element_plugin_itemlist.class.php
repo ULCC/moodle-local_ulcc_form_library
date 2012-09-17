@@ -207,8 +207,8 @@ class form_element_plugin_itemlist extends form_element_plugin {
             $objlist = $this->dbc->get_optionlist($formfield_id, $this->tablename, $field);
 
             foreach ($objlist as $obj) {
-                //obj->value will only be returned if specifically requested (this should only before value editing)
-                //in all other cases id should be returned
+                // The $obj->value will only be returned if specifically requested (this should only before value editing)
+                // in all other cases id should be returned.
                 $value = (!empty($useid)) ? $obj->id : $obj->value;
                 $outlist[$value] = $obj->name;
             }

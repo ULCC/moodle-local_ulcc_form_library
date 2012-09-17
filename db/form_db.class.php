@@ -417,7 +417,7 @@ class form_db extends form_logging {
         $parenttable = "{$CFG->prefix}{$tablename}";
 
         $itemtable = (!empty($multiple)) ? "{$CFG->prefix}{$tablename}_items as i," : '';
-        $where = (!empty($multiple)) ? "e.parent_id	=	i.id AND i.parent_id	=	p.id" : "e.parent_id	=	p.id";
+        $where = (!empty($multiple)) ? "e.parent_id	=	p.id AND i.parent_id	=	p.id" : "e.parent_id	=	p.id";
 
         $sql = "SELECT		*
 					 FROM 		{$parenttable} as p,
