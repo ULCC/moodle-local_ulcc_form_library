@@ -18,6 +18,7 @@ require_once($CFG->libdir.'/formslib.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_lib_form.class.php');
+include_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
 
 class form_entry_mform extends form_lib_form {
 
@@ -172,6 +173,7 @@ class form_entry_mform extends form_lib_form {
 
         $data = (!is_object($data)) ? (object)$data : $data;
 
+        $data =  check_array($data);
         // Get the id of the report.
         $form_id = $data->form_id;
 

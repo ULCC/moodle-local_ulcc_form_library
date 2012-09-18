@@ -13,7 +13,7 @@
 global $CFG;
 
 require_once("$CFG->libdir/formslib.php");
-
+include_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
 
 class edit_form_mform extends moodleform {
 
@@ -111,7 +111,7 @@ class edit_form_mform extends moodleform {
                 array('class' => 'form_input', 'rows'=> '10', 'cols'=>'65')
             );
 
-            $mform->addRule('description', null, 'maxlength', 65535, 'client');
+          //  $mform->addRule('description', null, 'maxlength', 65535, 'client');
 
             $mform->setType('description', PARAM_RAW);
 
@@ -153,6 +153,7 @@ class edit_form_mform extends moodleform {
 		function process_data($data) {
 			global $CFG;
 
+            $data =  check_array($data);
 			if (empty($data->id)) {
 
             	$data->id = $this->dbc->create_form($data);
