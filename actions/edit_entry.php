@@ -17,19 +17,26 @@ global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
 // Meta includes
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
-
 //add the breadcrumbs
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
+// Setting the page context.
 
 //the id of the report  that the field will be in
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
-
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
+$context_id = $PARSER->required_param('context_id', PARAM_RAW);
 
-$moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
+require_login();
 
-$context_id       =   $PARSER->required_param('context_id', PARAM_RAW);
+if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
+    $context = context_block::instance_by_id($context_id);
+} else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
+    $context = context_module::instance_by_id($context_id);
+}
+// Set context.
+$PAGE->set_context($context);
 
 // instantiate the db
 $dbc = new form_db();
@@ -37,11 +44,11 @@ $dbc = new form_db();
 // setup the navigation breadcrumbs
 
 //siteadmin or modules
-$PAGE->navbar->add(get_string('formpreview','local_ulcc_form_library'), null, 'title');
+$PAGE->navbar->add(get_string('formpreview', 'local_ulcc_form_library'), null, 'title');
 
 
 // setup the page title and heading
-$SITE	=	$dbc->get_course_by_id(SITEID);
+$SITE = $dbc->get_course_by_id(SITEID);
 $PAGE->set_title($SITE->fullname." : ".$pluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');

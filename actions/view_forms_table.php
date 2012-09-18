@@ -14,45 +14,53 @@ if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.');
 }
 
-global  $CFG, $USER, $DB, $PARSER;
+global $CFG, $USER, $DB, $PARSER, $PAGE;
 
 require_once($CFG->libdir.'/tablelib.php');
 
-$moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
+$context_id = $PARSER->required_param('context_id', PARAM_RAW);
 
-$moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
+require_login();
 
-$context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
+if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
+    $context = context_block::instance_by_id($context_id);
+} else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
+    $context = context_module::instance_by_id($context_id);
+}
+// Set context.
+$PAGE->set_context($context);
 
 // Create the filed table.
 
 // Instantiate the flex table class.ADODB_Exception.
-$flextable  =   new flexible_table('pluginforms');
+$flextable = new flexible_table('pluginforms');
 
 // Define the base url that the table will return to.
 $flextable->define_baseurl($CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php');
 
 // Setup the array holding the column ids
-$columns	=	array();
-$columns[]	=	'formname';
-$columns[]	=	'moveup';
-$columns[]	=	'movedown';
-$columns[]  =   'duplicateform';
-$columns[]	=	'editform';
-$columns[]	=	'editfields';
-$columns[]	=	'changestatus';
-$columns[]	=	'delete';
+$columns = array();
+$columns[] = 'formname';
+$columns[] = 'moveup';
+$columns[] = 'movedown';
+$columns[] = 'duplicateform';
+$columns[] = 'editform';
+$columns[] = 'editfields';
+$columns[] = 'changestatus';
+$columns[] = 'delete';
 
 //  Setup the array holding the header texts.
-$headers	=	array();
-$headers[]  =   '';
-$headers[]  =   '';
-$headers[]  =   '';
-$headers[]  =   '';
-$headers[]  =   '';
-$headers[]  =   '';
-$headers[]  =   '';
-$headers[]  =   '';
+$headers = array();
+$headers[] = '';
+$headers[] = '';
+$headers[] = '';
+$headers[] = '';
+$headers[] = '';
+$headers[] = '';
+$headers[] = '';
+$headers[] = '';
 
 
 // Pass the columns to the table.
@@ -75,75 +83,74 @@ $flextable->column_class('label', 'leftalign');
 // Setup the table - now we can use it.
 $flextable->setup();
 
-$querystr   =   $PARSER->get_params_url();
+$querystr = $PARSER->get_params_url();
 
 // Get the data on fields to be used in the table.
-$forms		=	$dbc->get_forms_table($flextable, $moodlepluginname, $moodleplugintype);
-$totalformfields	=	count($forms);
+$forms = $dbc->get_forms_table($flextable, $moodlepluginname, $moodleplugintype);
+$totalformfields = count($forms);
 
-if (!empty($forms))   {
-    foreach($forms  as $row)   {
-        $data   =   array();
+if (!empty($forms)) {
+    foreach ($forms as $row) {
+        $data = array();
 
-        $data[] =   $row->name;
+        $data[] = $row->name;
 
         if ($row->position != 1) {
             // If the field is in any position except 1 it needs a up icon.
-            $title 	=	get_string('moveup','local_ulcc_form_library');
-            $icon	=	$OUTPUT->pix_url("/t/up");
-            $movetype	=	"up";
+            $title = get_string('moveup', 'local_ulcc_form_library');
+            $icon = $OUTPUT->pix_url("/t/up");
+            $movetype = "up";
 
-            $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_form.php?form_id={$row->id}&move=".FORM_MOVE_UP."&position={$row->position}&{$querystr}
+            $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_form.php?form_id={$row->id}&move=".FORM_MOVE_UP."&position={$row->position}&{$querystr}
             '>
                                         <img class='move' src='{$icon}' alt='{$title}' title='{$title}' />
                                     </a>";
         } else {
-            $data[] 	=	"";
+            $data[] = "";
         }
 
         if ($totalformfields != $row->position) {
             // if the field is in any position except last it needs a down icon.
-            $title 	=	get_string('movedown','local_ulcc_form_library');
-            $icon	=	$OUTPUT->pix_url("/t/down");
-            $movetype	=	"down";
+            $title = get_string('movedown', 'local_ulcc_form_library');
+            $icon = $OUTPUT->pix_url("/t/down");
+            $movetype = "down";
 
-            $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_form.php?form_id={$row->id}&move=".FORM_MOVE_DOWN."&position={$row->position}&{$querystr}'>
+            $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/move_form.php?form_id={$row->id}&move=".FORM_MOVE_DOWN."&position={$row->position}&{$querystr}'>
                                     <img class='move' src='{$icon}' alt='{$title}' title='{$title}' />
                                     </a>";
         } else {
-            $data[] 	=	"";
+            $data[] = "";
         }
 
 
         // Set the duplicate form link.
-        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/view_forms.php?form_id={$row->id}&{$querystr}&duplicate=1'>
+        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/view_forms.php?form_id={$row->id}&{$querystr}&duplicate=1'>
                                     <img class='edit' src='".$OUTPUT->pix_url("/t/copy")."' alt='".get_string('duplicate')."' title='".get_string('duplicate')."' />
                                  </a>";
 
 
-
         // Set the edit form link.
-        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$row->id}&{$querystr}'>
+        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$row->id}&{$querystr}'>
                                     <img class='edit' src='".$OUTPUT->pix_url("/i/edit")."' alt='".get_string('edit')."' title='".get_string('edit')."' />
                                  </a>";
 
         // Set the edit form fields link.
-        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_formfields.php?form_id={$row->id}&{$querystr}'>
-                                    <img class='prompt' src='".$OUTPUT->pix_url('i/questions')."' alt='".get_string('editfields','local_ulcc_form_library')."' title='".get_string('editfields','local_ulcc_form_library')."' />
+        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_formfields.php?form_id={$row->id}&{$querystr}'>
+                                    <img class='prompt' src='".$OUTPUT->pix_url('i/questions')."' alt='".get_string('editfields', 'local_ulcc_form_library')."' title='".get_string('editfields', 'local_ulcc_form_library')."' />
                                  </a>";
 
         // Decide whether the form is enabled or disabled and set the image and link accordingly.
-        $title 			= 	(!empty($row->status)) ? get_string('disableform','local_ulcc_form_library')  : get_string('enableform','local_ulcc_form_library');
+        $title = (!empty($row->status)) ? get_string('disableform', 'local_ulcc_form_library') : get_string('enableform', 'local_ulcc_form_library');
 
-        $icon	= 	(!empty($row->status)) ? "hide" : "show";
+        $icon = (!empty($row->status)) ? "hide" : "show";
 
-        $data[] 		=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form_status.php?form_id={$row->id}&{$querystr}'>
+        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form_status.php?form_id={$row->id}&{$querystr}'>
                                     <img class='status' src=".$OUTPUT->pix_url("/i/".$icon)." alt='".$title."' title='".$title."' />
                             </a>";
 
 
         // Set the delete field this is not enabled at the moment.
-        $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_form.php?form_id={$row->id}&{$querystr}'>
+        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_form.php?form_id={$row->id}&{$querystr}'>
                                     <img class='delete' src='".$OUTPUT->pix_url("/t/delete")."' alt='".get_string('delete')."' title='".get_string('delete')."' />
                                  </a>";
 
