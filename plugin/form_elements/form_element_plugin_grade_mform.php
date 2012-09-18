@@ -48,9 +48,9 @@ class form_element_plugin_grade_mform  extends form_element_plugin_mform {
             array('class' => 'form_input')
         );
 
-        $mform->addRule('maxgrade', null, 'maxlength', 3, 'client');
+        $mform->addRule('maxgrade', null, 'numeric', null, 'client');
         $mform->addRule('maxgrade', null, 'required', null, 'client');
-        $mform->addRule('maxgrade', null, 'numeric');
+
         $mform->setType('maxgrade', PARAM_RAW);
 
 
@@ -61,6 +61,11 @@ class form_element_plugin_grade_mform  extends form_element_plugin_mform {
 
 	 	$data = (object) $data;
 
+                //the grade cannot be bigger than 100
+              if( $data->maxgrade >100){
+
+                  $this->errors['maxgrade']	=   get_string('form_element_plugin_grade_maxgrade_error','local_ulcc_form_library');
+              }
 
 	 	return $this->errors;
 	 }
