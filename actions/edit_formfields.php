@@ -24,7 +24,8 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/add_field_mfo
 
 //add the breadcrumbs
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
-
+// Setting the page context.
+$PAGE->set_context(context_user::instance($USER->id));
 // the id of the form must be provided
 $form_id    =   $PARSER->required_param('form_id',PARAM_INT);
 

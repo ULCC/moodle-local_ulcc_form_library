@@ -40,6 +40,8 @@ form_element_plugin::install_new_plugins();
 
 $PAGE->set_url(new moodle_url('/local/ulcc_form_library/actions/view_forms.php'));
 $PAGE->set_pagelayout('admin');
+// Setting the page context.
+$PAGE->set_context(context_user::instance($USER->id));
 // Get all forms for this plugin. that exist
 $forms = $dbc->get_plugin_forms($moodlepluginname, $moodleplugintype);
 
