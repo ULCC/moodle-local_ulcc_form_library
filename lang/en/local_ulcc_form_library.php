@@ -98,6 +98,9 @@ $string['previous']            = 'Previous';
 // R
 $string['reportconfiguration']    = 'Form Configuration';
 $string['required']               = 'Required';
+$string['required_help']          = 'If set to required, formative assessment, or partial
+                                     assessment where you just give a comment and tell them
+                                     to resubmit will be impossible';
 $string['req']                  = 'Required';
 $string['reportcreationsuc']    = 'Report successfully created';
 $string['returnformprompt']     = 'Field change cancelled';

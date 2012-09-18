@@ -24,6 +24,16 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin
  */
 class form_element_plugin_modgrade_mform extends form_element_plugin_mform {
 
+
+    function definition() {
+
+        parent::definition();
+
+        $mform =& $this->_form;
+
+        $mform->addHelpButton('required', 'required', 'local_ulcc_form_library');
+    }
+
     /**
      * @param MoodleQuickForm $mform
      */
