@@ -165,7 +165,7 @@ class form_entry_mform extends form_lib_form {
 
     /**
      * @param $data
-     * @return bool|int Record id or false if there's a problem.
+     * @return bool|int|mixed Record id or false if there's a problem.
      */
     protected function process_data($data) {
 
@@ -173,7 +173,7 @@ class form_entry_mform extends form_lib_form {
 
         $data = (!is_object($data)) ? (object)$data : $data;
 
-        $data =  check_array($data);
+        check_array($data);
         // Get the id of the report.
         $form_id = $data->form_id;
 

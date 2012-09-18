@@ -219,7 +219,7 @@ abstract class form_element_plugin_mform extends moodleform {
      */
     function process_data($data) {
 
-        $data =  check_array($data);
+        check_array($data);
 
         $data->label	=	htmlentities($data->label);
 

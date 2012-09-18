@@ -118,7 +118,7 @@ function get_plugin_config($type,$name)    {
  * @param object $data holding form's submitted data
  *
  */
-function check_array($data)    {
+function check_array(&$data)    {
 
     foreach ($data as $key=>$item) {
         if (is_array($item) && array_key_exists('text', $item)) {
@@ -126,7 +126,6 @@ function check_array($data)    {
         }
     }
 
-return $data;
 }
 
 
