@@ -173,12 +173,13 @@ class form_element_plugin_grade extends form_element_plugin {
         $string['form_element_plugin_grade'] 		= 'Grade selector';
         $string['form_element_plugin_grade_type']    = 'Grade selector';
         $string['form_element_plugin_grade_description'] = 'A grade selector';
-        $string['form_element_plugin_grade_dynamicdesc'] =   'The dynamic checkbox below defines whether the grade
+       /* $string['form_element_plugin_grade_dynamicdesc'] =   'The dynamic checkbox below defines whether the grade
         produced in Module grade selector will be chosen now or will be chosen at run time using the data taken from the given
-        database. If you choose to make the selector dynamic then choose the module that you are working with.';
-        $string['form_element_plugin_grade_gradetype'] =   'Dynamic grade selector';
+        database. If you choose to make the selector dynamic then choose the module that you are working with.';*/
+       // $string['form_element_plugin_grade_gradetype'] =   'Dynamic grade selector';
         $string['form_element_plugin_grade_module'] =   'Module: ';
-        $string['form_element_plugin_grade_gradescale'] =   'Grade scale';
+        //$string['form_element_plugin_grade_gradescale'] =   'Grade scale';
+        $string['form_element_plugin_grade_maxgrade'] =   'Enter maximum possible grade';
 
 
         return $string;

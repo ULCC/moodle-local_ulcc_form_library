@@ -26,6 +26,7 @@
 global $CFG;
 
 require_once("$CFG->libdir/formslib.php");
+include_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
 
 abstract class form_element_plugin_mform extends moodleform {
 
@@ -165,7 +166,7 @@ abstract class form_element_plugin_mform extends moodleform {
             array('class' => 'form_input','rows'=> '10', 'cols'=>'65')
         );
 
-        $mform->addRule('description', null, 'maxlength', 10000, 'client');
+        //$mform->addRule('description', null, 'maxlength', 10000, 'client');
         $mform->setType('description', PARAM_RAW);
 
 
@@ -217,6 +218,8 @@ abstract class form_element_plugin_mform extends moodleform {
      * @param object $data The data to be saved
      */
     function process_data($data) {
+
+        check_array($data);
 
         $data->label	=	htmlentities($data->label);
 

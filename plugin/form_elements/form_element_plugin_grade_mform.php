@@ -12,7 +12,7 @@ class form_element_plugin_grade_mform  extends form_element_plugin_mform {
 
         $mform->addElement('html','<div>'.get_string('form_element_plugin_grade_dynamicdesc', 'local_ulcc_form_library').'</div>');
 
-        $mform->addElement('advcheckbox', 'gradetype', get_string('form_element_plugin_grade_gradetype', 'local_ulcc_form_library'), '', array('group' => 1), array(0, 1));
+        //$mform->addElement('advcheckbox', 'gradetype', get_string('form_element_plugin_grade_gradetype', 'local_ulcc_form_library'), '', array('group' => 1), array(0, 1));
 
         $modules     =   $DB->get_records('modules',array('visible'=>1));
 
@@ -26,9 +26,9 @@ class form_element_plugin_grade_mform  extends form_element_plugin_mform {
 
         $mform->setDefault('tablename', $this->moodlepluginname);
 
-        $mform->disabledIf('tablename','gradetype','unchecked');
+       // $mform->disabledIf('tablename','gradetype','unchecked');
 
-        $scales     =   $DB->get_records('scale');
+      /*  $scales     =   $DB->get_records('scale');
         $options    =   array();
 
         foreach($scales as $s)   {
@@ -37,13 +37,30 @@ class form_element_plugin_grade_mform  extends form_element_plugin_mform {
 
         $mform->addElement('select', 'gradescale', get_string('form_element_plugin_grade_gradescale', 'local_ulcc_form_library'), $options);
 
-        $mform->disabledIf('gradescale','gradetype','checked');
+        $mform->disabledIf('gradescale','gradetype','checked'); */
+
+
+
+        $mform->addElement(
+            'text',
+            'maxgrade',
+            get_string('form_element_plugin_grade_maxgrade', 'local_ulcc_form_library'),
+            array('class' => 'form_input')
+        );
+
+        $mform->addRule('maxgrade', null, 'maxlength', 3, 'client');
+        $mform->addRule('maxgrade', null, 'required', null, 'client');
+        $mform->addRule('maxgrade', null, 'numeric');
+        $mform->setType('maxgrade', PARAM_RAW);
+
+
 
 	}
 
 	protected function specific_validation($data) {
 
 	 	$data = (object) $data;
+
 
 	 	return $this->errors;
 	 }

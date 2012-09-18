@@ -44,7 +44,8 @@ $columns[]	=	'type';
 $columns[]	=	'moveup';
 $columns[]	=	'movedown';
 $columns[]	=	'edit';
-$columns[]	=	'summary';
+if ($moodlepluginname != 'coursework'){ // summary is not relevant to coursework, therefore is not displayed
+$columns[]	=	'summary';}
 $columns[]	=	'required';
 $columns[]	=	'delete';
 
@@ -55,7 +56,8 @@ $headers[]	=	get_string('type','local_ulcc_form_library');
 $headers[]	=	'';
 $headers[]	=	'';
 $headers[]	=	'';
-$headers[]	=	'';
+if ($moodlepluginname != 'coursework'){
+$headers[]	=	'';}
 $headers[]	=	'';
 $headers[]	=	'';
 
@@ -138,6 +140,7 @@ if (!empty($formfields)) {
 									<img class='required' src='{$icon}' alt='{$title}' title='{$title}' />
 								</a>";
         //set the summary row
+        if ($moodlepluginname != 'coursework'){
         $title 	= 	(!empty($row->summary)) ? get_string('insummary','local_ulcc_form_library') : get_string('notinsummary','local_ulcc_form_library');
         $icon	= 	$CFG->wwwroot."/local/ulcc_form_library/icons/";
         $icon	.= 	(!empty($row->summary)) ? "summary.png" : "notinsummary.png";
@@ -145,6 +148,7 @@ if (!empty($formfields)) {
         $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_field_summary.php?formfield_id={$row->id}&{$querystr}'>
 									<img class='required' src='{$icon}' alt='{$title}' title='{$title}' height='16' width='16'/>
 								</a>";
+        }
 
 
         $data[] 			=	"<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_field.php?formfield_id={$row->id}&{$querystr}'>
