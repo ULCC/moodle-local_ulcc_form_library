@@ -11,39 +11,40 @@
  */
 
 
-
 require_once('../../../config.php');
 
-global $USER, $CFG, $SESSION, $PARSER;
+global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
 //include any neccessary files
 
 // Perform access checks.
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
-
 // Meta includes
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
-
 //add the breadcrumbs
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
 // Setting the page context.
-$PAGE->set_context(context_user::instance($USER->id));
 
 //the id of the report  that the field will be in
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
-
 //the id of the plugin ype the field will be
 $formelement_id = $PARSER->required_param('formelement_id', PARAM_INT);
-
 //the id of the reportfield used when editing
 $formfield_id = $PARSER->optional_param('formfield_id',null ,PARAM_INT);
-
 // Get the type of the plugin that is currently invoking the form library.
 $moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
-
 $moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
-
 $context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
+
+require_login();
+
+if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
+    $context = context_block::instance_by_id($context_id);
+} else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
+    $context = context_module::instance_by_id($context_id);
+}
+// Set context.
+$PAGE->set_context($context);
 
 // instantiate the db
 $dbc = new form_db();

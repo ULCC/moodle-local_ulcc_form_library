@@ -12,30 +12,34 @@
 
 require_once('../../../config.php');
 
-global $USER, $CFG, $SESSION, $PARSER;
+global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
 //include any neccessary files
 
 // Meta includes
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
-
 //include the report entry preview mform class
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/form_preview_mform.php');
-
 //add the breadcrumbs
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
 // Setting the page context.
-$PAGE->set_context(context_user::instance($USER->id));
 
 //the id of the report  that the field will be in
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
-
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
+$context_id = $PARSER->required_param('context_id', PARAM_INT);
 
-$moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
+require_login();
 
-$context_id             =   $PARSER->required_param('context_id', PARAM_INT);
+if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
+    $context = context_block::instance_by_id($context_id);
+} else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
+    $context = context_module::instance_by_id($context_id);
+}
+// Set context.
+$PAGE->set_context($context);
 
 // instantiate the db
 $dbc = new form_db();
@@ -45,19 +49,19 @@ $dbc = new form_db();
 //siteadmin or modules
 
 //  Add section name to nav bar.
-$PAGE->navbar->add(get_string('formpreview','local_ulcc_form_library'), null, 'title');
+$PAGE->navbar->add(get_string('formpreview', 'local_ulcc_form_library'), null, 'title');
 
 
 // setup the page title and heading
-$SITE	=	$dbc->get_course_by_id(SITEID);
+$SITE = $dbc->get_course_by_id(SITEID);
 $PAGE->set_title($SITE->fullname." : ".$pluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');
 $PAGE->set_pagelayout('admin');
 $PAGE->set_url('/local/ulcc_form_library/actions/edit_field.php', $PARSER->get_params());
 
-$mform	= new	form_preview_mform($form_id,$moodleplugintype,$moodlepluginname,$context_id);
+$mform = new    form_preview_mform($form_id, $moodleplugintype, $moodlepluginname, $context_id);
 
-$previewform    =   $dbc->get_form_by_id($form_id);
+$previewform = $dbc->get_form_by_id($form_id);
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/form_preview.html');
