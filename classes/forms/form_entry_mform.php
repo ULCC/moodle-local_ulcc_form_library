@@ -30,11 +30,14 @@ class form_entry_mform extends form_lib_form {
     public $dbc;
 
     /**
+     * @var bool have we already saved the page data and moved to the next page?
+     */
+    private $pagessaved = false;
+
+    /**
      *
      */
     function __construct($form_id, $type, $name, $pageurl, $entry_id = null, $page = 1) {
-
-        global $CFG;
 
         $this->form_id = $form_id;
         $this->entry_id = $entry_id;
@@ -164,7 +167,8 @@ class form_entry_mform extends form_lib_form {
 
     /**
      * @param $data
-     * @return bool|int Record id or false if there's a problem.
+     * @throws coding_exception
+     * @return int Record id or false if there's a problem.
      */
     protected function process_data($data) {
 
@@ -176,8 +180,7 @@ class form_entry_mform extends form_lib_form {
         $form_id = $data->form_id;
 
         // Get the id of the entry  if known.
-        $entry_id = $data->entry_id;
-        $result = false;
+        $entryid = $data->entry_id;
 
         if (empty($entry_id)) {
             // Create the entry.
@@ -185,9 +188,8 @@ class form_entry_mform extends form_lib_form {
             $entry->form_id = $form_id;
             $entry->creator_id = $USER->id;
 
-            $entry_id = $this->dbc->create_entry($entry);
+            $entryid = $this->dbc->create_entry($entry);
 
-            $result = $entry_id;
         } else {
             // Update the entry.
             // As there is nothing to update but we want the entries timemodifed
@@ -196,45 +198,43 @@ class form_entry_mform extends form_lib_form {
             $entry->id = $entry_id;
             $entry->form_id = $form_id;
 
-            if ($this->dbc->update_entry($entry)) {
-                $result = $entry->id; // For consistency - always return the record id or false.
-            }
+            $this->dbc->update_entry($entry); // Will throw exception if there's a problem.
         }
 
-        //get all of the fields in the current report, they will be returned in order as
-        //no position has been specified
+        // Get all of the fields in the current report, they will be returned in order as
+        // no position has been specified.
         $formfields = $this->dbc->get_form_fields_by_position($form_id);
 
         foreach ($formfields as $field) {
 
-            //get the plugin record that for the plugin
+            // Get the plugin record that for the plugin.
             $formelementrecord = $this->dbc->get_form_element_plugin($field->formelement_id);
 
-            //take the name field from the plugin as it will be used to call the instantiate the plugin class
+            // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
             $classname = $formelementrecord->name;
 
-            // include the class for the plugin
+            // Include the class for the plugin.
             include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
             if (!class_exists($classname)) {
                 print_error('noclassforplugin', 'block_ilp', '', $formelementrecord->name);
             }
 
-            //instantiate the plugin class
+            // Instantiate the plugin class.
             $pluginclass = new $classname();
 
             $pluginclass->load($field->id);
 
-            //call the plugins entry_form function which will add an instance of the plugin
-            //to the form
+            // Call the plugins entry_form function which will add an instance of the plugin
+            // to the form.
             if ($pluginclass->is_processable()) {
                 if (!$pluginclass->entry_process_data($field->id, $entry_id, $data)) {
-                    $result = false;
+                    throw new coding_exception('Problem saving form plugin data');
                 }
             }
         }
 
-        return $result;
+        return $entryid;
     }
 
     /**
@@ -252,4 +252,19 @@ class form_entry_mform extends form_lib_form {
     function set_current_page($page) {
         // $this->currentpage  =   $page;
     }
+
+    /**
+     * Checks whether the next button was pressed and adjusts things.
+     */
+    public function next() {
+        parent::next($this->form_id, $this->currentpage);
+    }
+
+    /**
+     * Checks whether the previous biutton was pressed and adjusts things.
+     */
+    public function previous() {
+        parent::next($this->form_id, $this->currentpage);
+    }
+
 }

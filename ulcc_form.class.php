@@ -61,13 +61,59 @@ class ulcc_form {
     private $formdata;
 
     /**
-     * @param $plugintype
-     * @param $pluginname
+     * @var int id from the forms table
      */
-    public function __construct($plugintype, $pluginname) {
+    private $formid;
+
+    /**
+     * @var int what sequential page of a multipage form are we on?
+     */
+    private $currentpage;
+
+    /**
+     * @var string the url of the page we are on.
+     * @todo Possibly not needed as we could use $PAGE->url?
+     */
+    private $pageurl;
+
+    /**
+     * @var string Where to redirect to if the form is cancelled.
+     */
+    private $cancelurl;
+
+    /**
+     * @var form_entry_mform
+     */
+    private $mform;
+
+    /**
+     * @var int is of the entry record if there is one.
+     */
+    private $entryid;
+
+    /**
+     * @var bool We have to make sure that an attempt has been made to save page data before displaying.
+     */
+    private $formpagessaved = false;
+
+    /**
+     * @param string $plugintype
+     * @param string $pluginname
+     * @param int $formid
+     * @param string $pageurl
+     * @param string $cancelurl
+     * @param int $entryid
+     * @param int $currentpage
+     */
+    public function __construct($plugintype, $pluginname, $formid, $pageurl,
+                                $cancelurl, $entryid = 0, $currentpage = 1) {
 
         $this->plugintype = $plugintype;
         $this->pluginname = $pluginname;
+        $this->formid = $formid;
+        $this->currentpage = $currentpage;
+        $this->pageurl = $pageurl;
+        $this->entryid = $entryid;
         $this->dbc = new form_db();
         $this->formdata = null;
     }
@@ -85,112 +131,134 @@ class ulcc_form {
     }
 
     /**
-     * @param $form_id
-     * @param $pageurl
-     * @param $cancelurl
      * @param int|null $entry_id
+     * @throws coding_exception
      * @return int|bool entry id if it was submitted, false otherwise.
      */
-    public function display_form($form_id, $pageurl, $cancelurl, $entry_id = null) {
+    public function display_form($entry_id = null) {
+
+        if (!$this->formpagessaved) {
+            throw new coding_exception('Must run try_to_save_whole_form_and_get_entry_id() before displaying the form');
+        }
+
+        $mform = $this->get_mform($entry_id);
+
+        // Set the current page variable inside of the form.
+
+        // Check if the form has already been submitted if not display the form.
+        if ($mform->is_cancelled()) {
+            // Send the user back to dashboard.
+            redirect($this->cancelurl, '', FORM_REDIRECT_DELAY);
+        }
+
+        $savedentryid = $this->try_to_save_whole_form_and_get_entry_id($mform);
+
+        // Loads the data into the form.
+        $mform->load_entry($entry_id);
+
+        $mform->display();
+
+    }
+
+    /**
+     * Gets the mform so stuff can be done with it. Does sanity checks.
+     *
+     * @return form_entry_mform
+     * @throws coding_exception
+     */
+    private function get_mform() {
 
         global $SESSION;
 
-        $success = false;
+        // Cache it so we don't have two.
+        if (isset($this->mform)) {
+            return $this->mform;
+        }
+
+        if (empty($this->formid)) {
+            throw new coding_exception('No form id specified. Cannot display form');
+        }
 
         // Check if the form is part of the current plugin.
+        if (!$this->dbc->is_plugin_form($this->pluginname, $this->plugintype, $this->formid)) {
+            throw new coding_exception('Trying to display a form that does not belong to this plugin');
+        }
 
-        if ($this->dbc->is_plugin_form($this->pluginname, $this->plugintype, $form_id)) {
+        $formrecord = $this->dbc->get_form_by_id($this->formid);
 
-            $f = $this->dbc->get_form_by_id($form_id);
+        if (!empty($formrecord->status)) {
+            throw new coding_exception('Form definition is not finished yet. Cannot display.');
+        }
+        if (empty($formrecord->deleted)) {
+            throw new coding_exception('Form has been deleted. Cannot display.');
+        }
 
-            if (!empty($f->status) && empty($f->deleted)) {
+        // Unset the current page variable otherwise moodleform will take it and use it in the
+        // in the current form (which will overwrite any changes we make to the current page element).
+        unset($_POST['current_page']);
 
-                // Check if the form is multipaged.
-                $is_multipaged = $this->dbc->element_type_exists($form_id, 'ulcc_form_plg_pb');
+        $page_data = optional_param('page_data', 0, PARAM_RAW);
 
-                // Get the current page variable if it exists.
-                $currentpage = optional_param('current_page', 1, PARAM_INT);
+        // The page_data element is part of all forms if it is not found and there is a session var for this form
+        // then it must be for all data unset it.
+        if (empty($page_data) && isset($SESSION->pagedata[$this->formid])) {
+            unset($SESSION->pagedata[$this->formid]);
+        }
 
-                // Unset the current page variable otherwise moodleform will take it and use it in the
-                // in the current form (which will overwrite any changes we make to the current page element).
-                unset($_POST['current_page']);
+        $mform = new form_entry_mform($this->formid, $this->plugintype, $this->pluginname, $this->pageurl,
+                                      $this->entryid, $this->currentpage);
+        $this->mform = $mform;
 
-                $page_data = optional_param('page_data', 0, PARAM_RAW);
+        return $mform;
+    }
 
-                // The page_data element is part of all forms if it is not found and there is a session var for this form
-                // then it must be for all data unset it.
-                if (empty($page_data) && isset($SESSION->pagedata[$form_id])) {
-                    unset($SESSION->pagedata[$form_id]);
+    /**
+     * This will save form data if it's there. This will process the move to the next or previous page, so if it
+     * returns false, then we know that although a page may have changed, the form has not been submitted in
+     * its entirety, so still needs displaying.
+     *
+     * @return int|bool
+     */
+    public function try_to_save_whole_form_and_get_entry_id() {
+
+        global $SESSION;
+
+        $mform = $this->get_mform();
+
+        $this->formpagessaved = true;
+
+        // Was the form submitted?
+        // Has the form been submitted? This might mean we need to go to the next page, or it might mean ending.
+        if ($mform->is_submitted()) { // Has any data at all in GET or POST.
+
+            // Shift forwards/backwards by a page if we need to.
+            $mform->next();
+            $mform->previous();
+
+            // Get the form data submitted.
+            $formdata = $mform->get_multipage_data($this->formid);
+            $this->formdata = $formdata;
+
+            if (isset($formdata->submitbutton)) { // Submit and finish button, rather than next or previous.
+
+                // Contains process_data.
+                $entryid = $mform->submit();
+
+                // We no longer need the form information for this page.
+                unset($SESSION->pagedata[$this->formid]);
+
+                // If saving the data was not successful.
+                if (!$entryid) {
+                    // Print an error message. Probably an exception before this happens.
+                    print_error(get_string("entrycreationerror", 'block_ilp'), 'block_ilp');
+                    return false;
                 }
 
-                if (!empty($is_multipaged)) {
-                    $nextpressed = optional_param('nextbutton', 0, PARAM_RAW);
-                    $previouspressed = optional_param('previousbutton', 0, PARAM_RAW);
-                }
-
-                // If the next button has been pressed increment the page number by 1.
-                if (!empty($nextpressed)) {
-                    $currentpage++;
-                }
-
-                // If the previous button has been pressed decrease the page number by 1.
-                if (!empty($previouspressed)) {
-                    $currentpage--;
-                }
-
-                $mform = new form_entry_mform($form_id, $this->plugintype, $this->pluginname, $pageurl, $entry_id, $currentpage);
-
-                // Set the current page variable inside of the form.
-
-                // Check if the form has already been submitted if not display the form.
-                if ($mform->is_cancelled()) {
-                    // Send the user back to dashboard.
-                    redirect($cancelurl, '', FORM_REDIRECT_DELAY);
-                }
-
-                // Was the form submitted?
-                // has the form been submitted?
-                if ($mform->is_submitted()) {
-
-                    $mform->next($form_id, $currentpage);
-
-                    $mform->previous($form_id, $currentpage);
-
-                    $temp = new stdClass();
-                    $temp->currentpage = $currentpage;
-                    $mform->set_data($temp);
-
-                    // Get the form data submitted.
-                    $formdata = $mform->get_multipage_data($form_id);
-
-                    $this->formdata = $formdata;
-
-                    if (isset($formdata->submitbutton)) {
-
-                        // Contains process_data.
-                        $success = $mform->submit($form_id);
-
-                        // We no longer need the form information for this page.
-                        unset($SESSION->pagedata[$form_id]);
-
-                        // If saving the data was not successful.
-                        if (!$success) {
-                            // Print an error message.
-                            print_error(get_string("entrycreationerror", 'block_ilp'), 'block_ilp');
-                        }
-
-                        return $success;
-                    }
-                }
-
-                // Loads the data into the form.
-                $mform->load_entry($entry_id);
-
-                $mform->display();
+                return $entryid; // Means a successful save (exception if not).
             }
         }
 
-        return $success;
+        return false; // Means we still need to display the form.
     }
 
     /**
