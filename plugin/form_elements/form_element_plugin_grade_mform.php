@@ -61,7 +61,7 @@ class form_element_plugin_grade_mform  extends form_element_plugin_mform {
 
 	 	$data = (object) $data;
 
-
+                //the grade cannot be bigger than 100
               if( $data->maxgrade >100){
 
                   $this->errors['maxgrade']	=   get_string('form_element_plugin_grade_maxgrade_error','local_ulcc_form_library');

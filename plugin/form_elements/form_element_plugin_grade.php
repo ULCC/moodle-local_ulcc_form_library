@@ -221,11 +221,12 @@ class form_element_plugin_grade extends form_element_plugin {
                     $this->label = '';
                 }
 
-        //retrieve max value
+        //retrieve max value entered by the user
         $plugrecord= $this->dbc->get_form_element_by_formfield($this->tablename, $this->formfield_id);
-         $maxgrade = $plugrecord->maxgrade;
+        $maxgrade = $plugrecord->maxgrade;
         $gradelist = array();
-        for ($i = 0; $i<=$maxgrade; $i++){
+        //create list of grades
+        for ($i = 0; $i<=$maxgrade ; $i++){
              $gradelist[$i] = $i;
                }
 
