@@ -53,5 +53,5 @@ if (!empty($res)) {
     $resulttext	=	get_string('formdeleteerror','local_ulcc_form_library');
 }
 
-$return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_forms.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname','context_id'));
+$return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname','context_id'));
 redirect($return_url, $resulttext, FORM_REDIRECT_DELAY);
