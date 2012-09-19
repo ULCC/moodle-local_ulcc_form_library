@@ -90,11 +90,12 @@ abstract class form_element_plugin_mform extends moodleform {
         );
 
         //button to state whether the element is required
-        $mform->addElement('checkbox',
-            'summary',
-            get_string('addtosummary', 'local_ulcc_form_library')
-        );
-
+        if ($this->moodlepluginname != 'coursework'){
+            $mform->addElement('checkbox',
+                'summary',
+                get_string('addtosummary', 'local_ulcc_form_library')
+            );
+        }
         //the id of the form that the element will be in
         $mform->addElement('hidden', 'form_id');
         $mform->setType('form_id', PARAM_INT);
