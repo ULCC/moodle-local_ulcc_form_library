@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Creates a entry for a form
@@ -14,34 +28,28 @@ require_once('../../../config.php');
 
 global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
-
-// Meta includes
+// Meta includes.
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
-
-//add the breadcrumbs
+// Add the breadcrumbs.
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
 
-//the id of the report  that the field will be in
+// The id of the report  that the field will be in.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
-
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
+$context_id = $PARSER->required_param('context_id', PARAM_RAW);
 
-$moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
-
-$context_id       =   $PARSER->required_param('context_id', PARAM_RAW);
-
-// instantiate the db
+// Instantiate the db.
 $dbc = new form_db();
 
-// setup the navigation breadcrumbs
+// Setup the navigation breadcrumbs.
 
-//siteadmin or modules
-$PAGE->navbar->add(get_string('formpreview','local_ulcc_form_library'), null, 'title');
+// Siteadmin or modules.
+$PAGE->navbar->add(get_string('formpreview', 'local_ulcc_form_library'), null, 'title');
 
-
-// setup the page title and heading
-$SITE	=	$dbc->get_course_by_id(SITEID);
+// Setup the page title and heading.
+$SITE = $dbc->get_course_by_id(SITEID);
 $PAGE->set_title($SITE->fullname." : ".$pluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');
