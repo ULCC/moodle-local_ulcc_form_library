@@ -20,7 +20,7 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/add_field_mform.php');
 //add the breadcrumbs
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
-require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // the id of the form must be provided
 $form_id = $PARSER->required_param('form_id', PARAM_INT);

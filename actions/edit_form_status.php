@@ -18,7 +18,7 @@ global $CFG, $USER, $DB, $PARSER, $PAGE;
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
 // require action_includes.php
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
-require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
@@ -34,7 +34,7 @@ $PAGE->set_context($context);
 // instantiate the db
 $dbc = new form_db();
 
-//get the form 
+//get the form
 $form = $dbc->get_form_by_id($form_id);
 
 //if the form is not found throw an error

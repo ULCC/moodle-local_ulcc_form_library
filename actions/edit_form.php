@@ -20,7 +20,7 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/edit_form_mform.php');
 //add the breadcrumbs
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
-require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 $form_id = optional_param('form_id', null, PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.

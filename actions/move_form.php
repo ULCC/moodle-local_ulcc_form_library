@@ -17,7 +17,7 @@ global $CFG, $USER, $DB, $PARSER, $PAGE;
 
 // Perform access checks.
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
-require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 //the id of the form  that the field will be in
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
