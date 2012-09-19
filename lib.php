@@ -113,3 +113,12 @@ function get_plugin_config($type,$name)    {
         }
     }
 }
+
+function set_page_context($moodleplugintype, $context_id, &$context) {
+    if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
+        $context = context_block::instance_by_id($context_id);
+    } else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
+        $context = context_module::instance_by_id($context_id);
+    }
+}
+

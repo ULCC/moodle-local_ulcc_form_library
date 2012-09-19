@@ -22,7 +22,7 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/form_preview_mform.php');
 //add the breadcrumbs
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
-// Setting the page context.
+require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
 
 //the id of the report  that the field will be in
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
@@ -33,11 +33,8 @@ $context_id = $PARSER->required_param('context_id', PARAM_INT);
 
 require_login();
 
-if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
-    $context = context_block::instance_by_id($context_id);
-} else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
-    $context = context_module::instance_by_id($context_id);
-}
+// Setting the page context.
+set_page_context($moodleplugintype, $context_id, $context);
 // Set context.
 $PAGE->set_context($context);
 

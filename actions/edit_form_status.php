@@ -18,6 +18,7 @@ global $CFG, $USER, $DB, $PARSER, $PAGE;
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
 // require action_includes.php
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
 
 $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
@@ -26,11 +27,7 @@ $form_id = $PARSER->required_param('form_id', PARAM_RAW);
 
 require_login();
 
-if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
-    $context = context_block::instance_by_id($context_id);
-} else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
-    $context = context_module::instance_by_id($context_id);
-}
+set_page_context($moodleplugintype, $context_id, $context);
 // Set context.
 $PAGE->set_context($context);
 

@@ -15,15 +15,16 @@ require_once('../../../config.php');
 global $CFG, $USER, $DB, $PARSER, $PAGE;
 
 // Perform access checks.
-require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
-require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
-require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_parser.class.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/db/accesscheck.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/db/form_db.class.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/classes/form_parser.class.php');
 //check the plugin
-require_once($CFG->dirroot.'/local/ulcc_form_library/actions/plugincheck.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/actions/plugincheck.php');
 //add the breadcrumbs
-require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/breadcrumbs.php');
 // Require form element plugin class so any new form elements can be installed
-require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin.class.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/classes/form_element_plugin.class.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
 
 $context_id = $PARSER->required_param('context_id', PARAM_RAW);
 $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
@@ -33,16 +34,13 @@ $duplicate = optional_param('duplicate', null, PARAM_INT);
 
 require_login();
 
-if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
-    $context = context_block::instance_by_id($context_id);
-} else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
-    $context = context_module::instance_by_id($context_id);
-}
+set_page_context($moodleplugintype, $context_id, $context);
 // Set context.
 $PAGE->set_context($context);
 
 // Instantiate the db class.
 $dbc = new form_db();
+
 
 
 // Install new form element plugins.
@@ -109,7 +107,7 @@ if (!empty($form_id) && !empty($duplicate)) {
         $elementrecordid = $dbc->create_form_element_record($plugintable, $formelementrecord);
 
         //get name for _items (options) table
-        $itemtable = $plugintable.'_items';
+        $itemtable = $plugintable . '_items';
 
         //check whether _items table for particular plugin exist
         $dbman = $DB->get_manager(); //load ddl manager
@@ -131,10 +129,10 @@ if (!empty($form_id) && !empty($duplicate)) {
 
     $form_id = $newid; //change form_id to id of new form
     //redirect to edit form to make changes to the duplicate
-    $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_form.php?form_id='.$form_id.'&'.$PARSER->get_params_url();
+    $return_url = $CFG->wwwroot . '/local/ulcc_form_library/actions/edit_form.php?form_id=' . $form_id . '&' . $PARSER->get_params_url();
     redirect($return_url, get_string("formduplication", 'local_ulcc_form_library'), FORM_REDIRECT_DELAY);
 }
 
 
-require_once($CFG->dirroot.'/local/ulcc_form_library/views/view_forms.html');
+require_once($CFG->dirroot . '/local/ulcc_form_library/views/view_forms.html');
 
