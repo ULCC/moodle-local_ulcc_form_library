@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Wrapper class for Moodleform, this class adds additional functions to aid inthe creation and usage
@@ -56,21 +70,20 @@ abstract class form_lib_form extends moodleform {
             $elementnames[] = 'previousbutton';
             $elementnames[] = 'nextbutton';
 
-
             $submiteddata = array_merge($_GET, $_POST);
 
             foreach ($submiteddata as $key => $sd) {
                 foreach ($elementnames as $en) {
 
-                    //we will find anything with a name beginning with the code name of a field
-                    //e.g 9_field 9_field_test will both be found and returned
+                    // We will find anything with a name beginning with the code name of a field
+                    // e.g 9_field 9_field_test will both be found and returned.
                     if (preg_match("/\b{$en}/i", $key)) {
                         if (is_array($sd) && count($sd) > 3) {
                             if (array_key_exists('day', $sd) && array_key_exists('month', $sd) && array_key_exists('year', $sd)) {
                                 $sd = make_timestamp($sd['year'],
-                                                     $sd['month'],
-                                                     $sd['day'],
-                                                     0, 0, 0, 99, true);
+                                    $sd['month'],
+                                    $sd['day'],
+                                    0, 0, 0, 99, true);
                             }
                         }
                         $data[$key] = $sd;
@@ -92,12 +105,12 @@ abstract class form_lib_form extends moodleform {
 
         $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
 
-        //was the next button pressed
+        // Was the next button pressed.
         if (isset($this->formdata->nextbutton)) {
 
             $cformdata = $this->formdata;
 
-            //we do not want any of the following data to be saved as it stop the pagination features from working
+            // We do not want any of the following data to be saved as it stop the pagination features from working.
             if (isset($cformdata->current_page)) {
                 unset($cformdata->current_page);
             }
@@ -108,9 +121,9 @@ abstract class form_lib_form extends moodleform {
                 unset($cformdata->nextbutton);
             }
 
-            //save all data submitted from last page
+            // Save all data submitted from last page.
 
-            //check if the page data array has been created in the session
+            // Check if the page data array has been created in the session.
             if (!isset($SESSION->pagedata)) {
                 $SESSION->pagedata = array();
             }
@@ -216,49 +229,49 @@ abstract class form_lib_form extends moodleform {
 
         if (!empty($entry_id)) {
 
-            //create a entry_data object this will hold the data that will be passed to the form.
+            // Create a entry_data object this will hold the data that will be passed to the form.
             $entry_data = new stdClass();
 
-            //get the main entry record
+            // Get the main entry record.
             $entry = $this->dbc->get_form_entry($entry_id);
 
             if (!empty($entry)) {
-                //check if the maximum edit field has been set for this report.
+                // Check if the maximum edit field has been set for this report.
 
-                //get all of the fields in the current report, they will be returned in order as.
-                //no position has been specified
+                // Get all of the fields in the current report, they will be returned in order as.
+                // no position has been specified.
                 $formfields = $this->dbc->get_form_fields_by_position($entry->form_id);
 
                 foreach ($formfields as $field) {
 
-                    //get the plugin record that for the plugin.
+                    // Get the plugin record that for the plugin.
                     $pluginrecord = $this->dbc->get_form_element_plugin($field->formelement_id);
 
-                    //take the name field from the plugin as it will be used to call the instantiate the plugin class.
+                    // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
                     $classname = $pluginrecord->name;
 
-                    // include the class for the plugin.
+                    // Include the class for the plugin.
                     include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
                     if (!class_exists($classname)) {
                         print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
                     }
 
-                    //instantiate the plugin class.
+                    // Instantiate the plugin class.
                     $pluginclass = new $classname();
 
                     $pluginclass->load($field->id);
 
-                    //create the fieldname.
+                    // Create the fieldname.
                     $fieldname = $field->id."_field";
 
                     $pluginclass->load($field->id);
 
-                    //call the plugin class entry data method
+                    // Call the plugin class entry data method.
                     $pluginclass->entry_data($field->id, $entry_id, $entry_data);
                 }
 
-                //set the data in the form
+                // Set the data in the form.
                 $this->set_data($entry_data);
             }
         }
@@ -273,27 +286,27 @@ abstract class form_lib_form extends moodleform {
             // Create a entry_data object this will hold the data that will be passed to the form.
             $entry_data = new stdClass();
 
-            //get the main entry record
+            // Get the main entry record.
             $entry = $this->dbc->get_form_entry($entry_id);
 
             $entrydata = array();
 
             if (!empty($entry)) {
-                //check if the maximum edit field has been set for this report
+                // Check if the maximum edit field has been set for this report.
 
-                //get all of the fields in the current report, they will be returned in order as
-                //no position has been specified
+                // Get all of the fields in the current report, they will be returned in order as
+                // no position has been specified.
                 $formfields = $this->dbc->get_form_fields_by_position($entry->form_id);
 
                 foreach ($formfields as $field) {
 
-                    //get the plugin record that for the plugin
+                    // Get the plugin record that for the plugin.
                     $pluginrecord = $this->dbc->get_form_element_plugin($field->formelement_id);
                     if (!in_array($pluginrecord->name, $dontreturn)) {
-                        //take the name field from the plugin as it will be used to call the instantiate the plugin class
+                        // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
                         $classname = $pluginrecord->name;
 
-                        // include the class for the plugin
+                        // Include the class for the plugin.
                         include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
                         if (!class_exists($classname)) {
@@ -315,7 +328,7 @@ abstract class form_lib_form extends moodleform {
                             if (!empty($labels)) {
                                 $fielddata = $entry_data->$fieldname;
                                 $entry_data->$fieldname = array('label' => $field->label,
-                                                                'value' => $fielddata);
+                                    'value' => $fielddata);
                             }
                         } else {
                             $dontdisplay[] = $field->id;

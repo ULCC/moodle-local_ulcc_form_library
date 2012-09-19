@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * A collection of functions used within the form library code.
@@ -29,13 +43,13 @@ function form_records_to_menu($records, $field1, $field2, $callback = null, $cal
 
     $menu = array();
 
-    if(!empty($records)) {
+    if (!empty($records)) {
         foreach ($records as $record) {
-            if(empty($callback)) {
+            if (empty($callback)) {
                 $menu[$record->$field1] = $record->$field2;
             } else {
-                // array_unshift($callbackparams, $record->$field2);
-                $menu[$record->$field1] = call_user_func_array($callback,array($record->$field2,$callbackparams));
+                // Array_unshift($callbackparams, $record->$field2);.
+                $menu[$record->$field1] = call_user_func_array($callback, array($record->$field2, $callbackparams));
             }
         }
 
@@ -66,15 +80,17 @@ function ulcc_form_library_pluginfile($context, $filearea, $args, $forcedownload
     $fs = get_file_storage();
 
     $filename = array_pop($args);
-    $itemid   = array_pop($args);
+    $itemid = array_pop($args);
     $filepath = $args ? '/'.implode('/', $args).'/' : '/';
 
-    if (!$file = $fs->get_file($context->id, 'ulcc_form_library', $filearea, $itemid, $filepath, $filename) or $file->is_directory()) {
+    if (!$file = $fs->get_file($context->id, 'ulcc_form_library', $filearea, $itemid, $filepath, $filename) or
+        $file->is_directory()
+    ) {
         send_file_not_found();
     }
 
     session_get_instance()->write_close();
-    send_stored_file($file, 60*60, 0, $forcedownload);
+    send_stored_file($file, 60 * 60, 0, $forcedownload);
 }
 
 /**
@@ -82,52 +98,50 @@ function ulcc_form_library_pluginfile($context, $filearea, $args, $forcedownload
  *
  * @param $type
  * @param $name
+ * @return array|bool
  */
-function get_plugin_config($type,$name)    {
-    global  $CFG;
+function get_plugin_config($type, $name) {
+    global $CFG;
 
-    $path   =   '';
+    $path = '';
 
-    switch ($type)   {
+    switch ($type) {
         case    'mod':
-            $path   =  $CFG->dirroot.'/mod/'.$name.'/config_uflib.xml';
+            $path = $CFG->dirroot.'/mod/'.$name.'/config_uflib.xml';
             break;
 
         case    'block':
-            $path   .=  $CFG->dirroot.'/blocks/'.$name.'/config_uflib.xml';
+            $path .= $CFG->dirroot.'/blocks/'.$name.'/config_uflib.xml';
             break;
     }
 
-
-
-    if (!empty($path))  {
-        //get the xml file if it exists
+    if (!empty($path)) {
+        // Get the xml file if it exists.
         if (file_exists($path)) {
-            $xmlfile    =   file_get_contents($path);
-            $configopt  =   simplexml_load_string($xmlfile);
-            $elements   =   array();
+            $xmlfile = file_get_contents($path);
+            $configopt = simplexml_load_string($xmlfile);
+            $elements = array();
             foreach ($configopt->element as $e) {
-                   $elements[]   =     (string) $e;
+                $elements[] = (string)$e;
             }
-            return (isset($elements))    ? $elements  : false  ;
-        }
-    }
-}
-
-/**
- * @param object $data holding form's submitted data
- *
- */
-function check_array(&$data)    {
-
-    foreach ($data as $key=>$item) {
-        if (is_array($item) && array_key_exists('text', $item)) {
-            $data->$key = $item['text'];
+            return (isset($elements)) ? $elements : false;
         }
     }
 
+    /**
+     * @param object $data holding form's submitted data
+     *
+     */
+    function check_array(&$data) {
+
+        foreach ($data as $key => $item) {
+            if (is_array($item) && array_key_exists('text', $item)) {
+                $data->$key = $item['text'];
+            }
+        }
+
+    }
+
 }
-
-
 
 

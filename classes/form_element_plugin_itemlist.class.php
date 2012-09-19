@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * itemlists are dropdowns and radio/checkbox groups
@@ -71,7 +85,7 @@ class form_element_plugin_itemlist extends form_element_plugin {
             if (!empty($ev)) {
                 $state_item =
                     $this->dbc->get_state_item_id($this->tablename, $pluginrecord->id, $ev, $this->external_items_keyfield,
-                                                  $this->external_items_table);
+                        $this->external_items_table);
                 $pluginentry->parent_id = $state_item->parent_id;
                 $pluginentry->value = $state_item->id;
                 $result = $this->dbc->create_plugin_entry($this->data_entry_tablename, $pluginentry);
@@ -89,11 +103,11 @@ class form_element_plugin_itemlist extends form_element_plugin {
      * @param object $entryobj an object that will add parameters to
      */
     public function entry_data($formfield_id, $entry_id, &$entryobj) {
-        //this function will suffix for 90% of plugins who only have one value field (named value) i
-        //in the _ent table of the plugin. However if your plugin has more fields you should override
-        //the function
+        // This function will suffix for 90% of plugins who only have one value field (named value) i
+        // in the _ent table of the plugin. However if your plugin has more fields you should override
+        // the function.
 
-        //default entry_data
+        // Default entry_data.
         $fieldname = $formfield_id."_field";
 
         $entry = $this->dbc->get_pluginentry($this->tablename, $entry_id, $formfield_id, true);
@@ -101,12 +115,12 @@ class form_element_plugin_itemlist extends form_element_plugin {
         if (!empty($entry)) {
             $fielddata = array();
 
-            //loop through all of the data for this entry in the particular entry
+            // Loop through all of the data for this entry in the particular entry.
             foreach ($entry as $e) {
                 $fielddata[] = $e->parent_id;
             }
 
-            //save the data to the objects field
+            // Save the data to the objects field.
             $entryobj->$fieldname = $fielddata;
         }
     }
@@ -131,7 +145,7 @@ class form_element_plugin_itemlist extends form_element_plugin {
         if (!empty($entry)) {
             $fielddata = array();
             $comma = "";
-            //loop through all of the data for this entry in the particular entry
+            // Loop through all of the data for this entry in the particular entry.
             foreach ($entry as $e) {
                 if (empty($returnvalue)) {
                     $entryobj->$fieldname .= "{$comma}{$e->name}";
@@ -167,7 +181,7 @@ class form_element_plugin_itemlist extends form_element_plugin {
     public function return_data(&$formfield) {
         $data_exists = $this->dbc->plugin_data_item_exists($this->tablename, $formfield->id);
         if (empty($data_exists)) {
-            //if no, get options list
+            // If no, get options list.
             $formfield->optionlist = $this->get_option_list_text($formfield->id);
         } else {
             $formfield->existing_options = $this->get_option_list_text($formfield->id, '<br />');
@@ -227,7 +241,7 @@ class form_element_plugin_itemlist extends form_element_plugin {
 
         $keysep = ":";
         $optlist = explode($optsep, $optstring);
-        //now split each entry into key and value
+        // Now split each entry into key and value.
         $outlist = array();
         foreach ($optlist as $row) {
             if ($row) {
@@ -257,19 +271,19 @@ class form_element_plugin_itemlist extends form_element_plugin {
      */
     public function entry_form(MoodleQuickForm &$mform) {
 
-        //create the fieldname
+        // Create the fieldname.
         $fieldname = "{$this->formfield_id}_field";
 
-        //definition for user form
+        // Definition for user form.
         $optionlist = $this->get_option_list($this->formfield_id);
 
         if (!empty($this->description)) {
             $mform->addElement('static', "{$fieldname}_desc", $this->label,
-                               strip_tags(html_entity_decode($this->description), FORM_STRIP_TAGS_DESCRIPTION));
+                strip_tags(html_entity_decode($this->description), FORM_STRIP_TAGS_DESCRIPTION));
             $this->label = '';
         }
 
-        //text field for element label
+        // Text field for element label.
         $select = &$mform->addElement(
             'select',
             $fieldname,
@@ -292,18 +306,21 @@ class form_element_plugin_itemlist extends form_element_plugin {
      * Deletes a form element and any items that it may have
      *
      * @param int $formfield_id the id of the formfield
+     * @param null $tablename
+     * @param null $extraparams
+     * @return bool
      */
     public function delete_form_element($formfield_id, $tablename = null, $extraparams = null) {
-        //get the record for the field
+        // Get the record for the field.
         $pluginrecord = $this->dbc->get_form_element_by_formfield($this->tablename, $formfield_id);
 
         if (!empty($this->items_tablename)) {
-            //delete all items for the field then delete the field itself by calling the function in the
-            //parent class
+            // Delete all items for the field then delete the field itself by calling the function in the
+            // parent class.
             $this->dbc->delete_items($this->items_tablename, $pluginrecord->id);
         }
 
-        //also delete any submitted data - it'll survive in ghostly form in the log table
+        // Also delete any submitted data - it'll survive in ghostly form in the log table.
         $this->dbc->delete_items($this->data_entry_tablename, $pluginrecord->id);
 
         $formfield = $this->dbc->get_form_field_data($formfield_id);
@@ -330,9 +347,8 @@ class form_element_plugin_itemlist extends form_element_plugin {
     }
 
     public function install() {
-        global $CFG, $DB;
 
-        // create the table to store form fields
+        // Create the table to store form fields.
         $table = new $this->xmldb_table($this->tablename);
         $set_attributes = method_exists($this->xmldb_key, 'set_attributes') ? 'set_attributes' : 'setAttributes';
 
@@ -346,7 +362,7 @@ class form_element_plugin_itemlist extends form_element_plugin {
 
         $table_optiontype = new $this->xmldb_field('selecttype');
         $table_optiontype->$set_attributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED,
-                                           null); //1=single, 2=multi cf blocks/form/constants.php
+            null); // ...1=single, 2=multi cf blocks/form/constants.php.
         $table->addField($table_optiontype);
 
         $table_timemodified = new $this->xmldb_field('timemodified');
@@ -369,7 +385,7 @@ class form_element_plugin_itemlist extends form_element_plugin {
             $this->dbman->create_table($table);
         }
 
-        // create the new table to store dropdown options
+        // Create the new table to store dropdown options.
         if ($this->items_tablename) {
             $table = new $this->xmldb_table($this->items_tablename);
 
@@ -405,18 +421,19 @@ class form_element_plugin_itemlist extends form_element_plugin {
             $table_key->$set_attributes(XMLDB_KEY_FOREIGN, array('parent_id'), $this->tablename, 'id');
             $table->addKey($table_key);
 
-            /*
+            /* ...
                $table_key = new $this->xmldb_key('textplugin_unique_entry');
                $table_key->$set_attributes(XMLDB_KEY_FOREIGN, array('entry_id'),'block_form_entry','id');
                $table->addKey($table_key);
-       */
+               ...
+            */
 
             if (!$this->dbman->table_exists($table)) {
                 $this->dbman->create_table($table);
             }
         }
 
-        // create the new table to store responses to fields
+        // Create the new table to store responses to fields.
         $table = new $this->xmldb_table($this->data_entry_tablename);
 
         $table_id = new $this->xmldb_field('id');
@@ -451,10 +468,10 @@ class form_element_plugin_itemlist extends form_element_plugin {
         $table_key->$set_attributes(XMLDB_KEY_FOREIGN, array('parent_id'), $this->tablename, 'id');
         $table->addKey($table_key);
 
-        /*
+        /*      ...
                 $table_key = new $this->xmldb_key('textplugin_unique_entry');
                 $table_key->$set_attributes(XMLDB_KEY_FOREIGN, array('entry_id'),'block_form_entry','id');
-                $table->addKey($table_key);
+                $table->addKey($table_key);...
         */
 
         if (!$this->dbman->table_exists($table)) {
