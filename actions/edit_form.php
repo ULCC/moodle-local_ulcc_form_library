@@ -102,6 +102,11 @@ $pagetitle = (empty($form_id)) ? get_string('createform', 'local_ulcc_form_libra
 
 if (!empty($form_id)) {
     $formrecord = $dbc->get_form_by_id($form_id);
+    $editortext = $formrecord->description;
+    $formrecord->description = array(
+        'text' => $editortext,
+        'format' => FORMAT_MOODLE
+    );
     $mform->set_data($formrecord);
 }
 
