@@ -34,6 +34,7 @@ $duplicate = optional_param('duplicate', null, PARAM_INT);
 
 require_login();
 
+$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
 // Set context.
 $PAGE->set_context($context);
 

@@ -35,6 +35,7 @@ $move = $PARSER->required_param('move', PARAM_INT);
 
 require_login();
 
+$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
 $PAGE->set_context($context);
 
 // instantiate the db

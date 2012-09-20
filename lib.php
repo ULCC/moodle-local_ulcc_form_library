@@ -25,9 +25,6 @@
  * @param string $callbackparams (optional) the extra parameters for the callback function
  * @return mixed an associative array, or false if an error occured or the RecordSet was empty.
  */
-global $PARSER;
-$context_id = $PARSER->required_param('context_id', PARAM_RAW);
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 
 function form_records_to_menu($records, $field1, $field2, $callback = null, $callbackparams = null) {
 
@@ -118,21 +115,23 @@ function get_plugin_config($type, $name) {
 }
 
 /**
- * @param $context_id
  * @param $moodleplugintype
+ * @param $context_id
+ * @throws coding_exception
  * @return bool|context|context_system
  */
-function set_page_context($context_id, $moodleplugintype) {
+function local_ulcc_form_library_get_page_context($moodleplugintype, $context_id) {
 
     if (empty($context_id) || empty($moodleplugintype)) {
         $context = context_system::instance();
-    }
-
-    if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
+    } else if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
         $context = context_block::instance_by_id($context_id);
     } else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Module.
         $context = context_module::instance_by_id($context_id);
+    } else {
+        throw new coding_exception('Unrecognised plugintype');
     }
+
     return $context;
 }
 
