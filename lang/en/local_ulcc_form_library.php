@@ -47,6 +47,7 @@ $string['entrynotfound']            = 'Entry not found';
 
 
 // F
+$string['fieldmaximum']     = 'The element already exists in the form and only one is allowed';
 $string['formadmin']        = 'Form administration';
 $string['formadmindesc']    = 'From this section you can create, edit and delete forms';
 $string['formfields']       = 'Form fields';
