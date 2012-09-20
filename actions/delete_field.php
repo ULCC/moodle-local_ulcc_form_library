@@ -26,7 +26,7 @@
 
 require_once('../../../config.php');
 
-global $USER, $CFG, $SESSION, $PARSER;
+global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
 // Include any neccessary files.
 
@@ -44,6 +44,9 @@ $formfield_id = $PARSER->required_param('formfield_id', PARAM_INT);
 $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
 $context_id = $PARSER->required_param('context_id', PARAM_INT);
+
+$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
+$PAGE->set_context($context);
 
 // Instantiate the db.
 $dbc = new form_db();

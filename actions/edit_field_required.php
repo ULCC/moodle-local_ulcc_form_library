@@ -45,6 +45,11 @@ $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
 $context_id = $PARSER->required_param('context_id', PARAM_RAW);
 
+require_login();
+
+$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
+$PAGE->set_context($context);
+
 // Instantiate the db.
 $dbc = new form_db();
 
@@ -63,4 +68,4 @@ $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.ph
     $PARSER->get_params_url(array('form_id', 'moodleplugintype', 'moodlepluginname', 'context_id'));
 redirect($return_url, $resulttext, FORM_REDIRECT_DELAY);
 
-?>
+

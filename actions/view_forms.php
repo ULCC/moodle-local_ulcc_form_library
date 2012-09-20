@@ -28,17 +28,15 @@
 require_once('../../../config.php');
 global $CFG, $USER, $DB, $PARSER, $PAGE;
 
-global $CFG, $USER, $DB, $PARSER;
-
 // Perform access checks.
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_parser.class.php');
-//check the plugin
+// Check the plugin.
 require_once($CFG->dirroot.'/local/ulcc_form_library/actions/plugincheck.php');
-//add the breadcrumbs
+// Add the breadcrumbs.
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
-// Require form element plugin class so any new form elements can be installed
+// Require form element plugin class so any new form elements can be installed.
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin.class.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 

@@ -52,6 +52,9 @@ $context_id = $PARSER->required_param('context_id', PARAM_RAW);
 
 require_login();
 
+$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
+$PAGE->set_context($context);
+
 // Instantiate the db.
 $dbc = new form_db();
 

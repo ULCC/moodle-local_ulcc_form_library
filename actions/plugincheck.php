@@ -27,6 +27,10 @@
  * @version 1.0
  */
 
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+
 // Get the type of the plugin that is currently invoking the form library.
 $moodleplugintype = optional_param('moodleplugintype', false, PARAM_RAW);
 $moodlepluginname = optional_param('moodlepluginname', false, PARAM_RAW);
