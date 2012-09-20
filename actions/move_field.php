@@ -35,7 +35,6 @@ $move = $PARSER->required_param('move', PARAM_INT);
 
 require_login();
 
-$context = set_page_context();
 $PAGE->set_context($context);
 
 // instantiate the db

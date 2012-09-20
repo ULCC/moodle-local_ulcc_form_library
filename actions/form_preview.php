@@ -33,7 +33,6 @@ $context_id = $PARSER->required_param('context_id', PARAM_INT);
 
 require_login();
 
-$context = set_page_context();
 // Set context.
 $PAGE->set_context($context);
 

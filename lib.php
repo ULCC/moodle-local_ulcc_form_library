@@ -25,7 +25,9 @@
  * @param string $callbackparams (optional) the extra parameters for the callback function
  * @return mixed an associative array, or false if an error occured or the RecordSet was empty.
  */
-
+global $PARSER;
+$context_id = $PARSER->required_param('context_id', PARAM_RAW);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 
 function form_records_to_menu($records, $field1, $field2, $callback = null, $callbackparams = null) {
 
@@ -116,14 +118,13 @@ function get_plugin_config($type, $name) {
 }
 
 /**
+ * @param $context_id
+ * @param $moodleplugintype
  * @return bool|context|context_system
  */
-function set_page_context() {
-    global $PARSER;
-    $context_id = $PARSER->required_param('context_id', PARAM_RAW);
-    $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
+function set_page_context($context_id, $moodleplugintype) {
 
-    if (empty($context_id)) {
+    if (empty($context_id) || empty($moodleplugintype)) {
         $context = context_system::instance();
     }
 

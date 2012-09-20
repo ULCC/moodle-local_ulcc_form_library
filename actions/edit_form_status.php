@@ -27,7 +27,6 @@ $form_id = $PARSER->required_param('form_id', PARAM_RAW);
 
 require_login();
 
-$context = set_page_context();
 // Set context.
 $PAGE->set_context($context);
 

@@ -34,7 +34,6 @@ $duplicate = optional_param('duplicate', null, PARAM_INT);
 
 require_login();
 
-$context = set_page_context();
 // Set context.
 $PAGE->set_context($context);
 
