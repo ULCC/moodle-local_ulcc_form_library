@@ -13,7 +13,7 @@
 global $CFG;
 
 require_once("$CFG->libdir/formslib.php");
-include_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
+require_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
 
 class edit_form_mform extends moodleform {
 
@@ -66,7 +66,7 @@ class edit_form_mform extends moodleform {
 
         	//create a new fieldset
         	$mform->addElement('html', '<fieldset id="reportfieldset" class="clearfix ilpfieldset">');
-           $mform->addElement('html', '<legend >'.$fieldsettitle.'</legend>');
+            $mform->addElement('html', '<legend >'.$fieldsettitle.'</legend>');
 
         	$mform->addElement('hidden', 'id');
         	$mform->setType('id', PARAM_INT);
@@ -153,7 +153,7 @@ class edit_form_mform extends moodleform {
 		function process_data($data) {
 			global $CFG;
 
-            check_array($data);
+            local_ulcc_form_library_check_array($data);
 			if (empty($data->id)) {
 
             	$data->id = $this->dbc->create_form($data);

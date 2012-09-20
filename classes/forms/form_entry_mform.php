@@ -174,7 +174,7 @@ class form_entry_mform extends form_lib_form
 
         $data = (!is_object($data)) ? (object)$data : $data;
 
-        check_array($data);
+        local_ulcc_form_library_check_array($data);
         // Get the id of the report.
         $form_id = $data->form_id;
 

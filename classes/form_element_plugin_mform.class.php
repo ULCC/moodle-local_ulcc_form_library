@@ -26,7 +26,7 @@
 global $CFG;
 
 require_once("$CFG->libdir/formslib.php");
-include_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
+require_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
 
 abstract class form_element_plugin_mform extends moodleform {
 
@@ -217,7 +217,7 @@ abstract class form_element_plugin_mform extends moodleform {
      */
     function process_data($data) {
 
-        check_array($data);
+        local_ulcc_form_library_check_array($data);
 
         $data->label = htmlentities($data->label);
 

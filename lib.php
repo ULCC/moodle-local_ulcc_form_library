@@ -128,21 +128,19 @@ function get_plugin_config($type, $name) {
             return (isset($elements)) ? $elements : false;
         }
     }
+}
 
-    /**
-     * @param object $data holding form's submitted data
-     *
-     */
-    function check_array(&$data) {
+/**
+ * @param object $data holding form's submitted data
+ *
+ */
+function local_ulcc_form_library_check_array(&$data) {
 
-        foreach ($data as $key => $item) {
-            if (is_array($item) && array_key_exists('text', $item)) {
-                $data->$key = $item['text'];
-            }
+    foreach ($data as $key => $item) {
+        if (is_array($item) && array_key_exists('text', $item)) {
+            $data->$key = $item['text'];
         }
-
     }
-
 }
 
 /**
