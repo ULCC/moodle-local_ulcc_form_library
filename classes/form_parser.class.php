@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  *
@@ -22,7 +36,8 @@
  * @version 2.0
  */
 
-// fetch the table library
+// Fetch the table library.
+global $CFG;
 require_once($CFG->dirroot.'/local/ulcc_form_library/constants.php');
 
 class form_parser {
@@ -45,12 +60,12 @@ class form_parser {
      *
      * @return string the query string
      */
-    public function get_params_url($included=array()) {
-        $querystr   =   '';
-        foreach($this->params   as $p => $v)   {
-            if (empty($included) || in_array($p,$included))   {
-                if (!empty($querystr))  $querystr   .= '&';
-                $querystr   .=   $p.'='.$v;
+    public function get_params_url($included = array()) {
+        $querystr = '';
+        foreach ($this->params as $p => $v) {
+            if (empty($included) || in_array($p, $included)) {
+                if (!empty($querystr)) $querystr .= '&';
+                $querystr .= $p.'='.$v;
             }
         }
         return $querystr;
@@ -71,19 +86,19 @@ class form_parser {
      *
      * @uses required_param()
      * @param string $parname the name of the page parameter we want
-     * @param int $type expected type of parameter
+     * @param int|string $type expected type of parameter
      * @return mixed
      */
-    function required_param($parname, $type=PARAM_CLEAN) {
+    function required_param($parname, $type = PARAM_CLEAN) {
 
-        // detect_unchecked_vars addition
+        // Detect_unchecked_vars addition.
         global $CFG;
         if (!empty($CFG->detect_unchecked_vars)) {
             global $UNCHECKED_VARS;
             unset ($UNCHECKED_VARS->vars[$parname]);
         }
 
-        if (isset($_POST[$parname])) {       // POST has precedence
+        if (isset($_POST[$parname])) { // POST has precedence.
             $param = $_POST[$parname];
         } else if (isset($_GET[$parname])) {
             $param = $_GET[$parname];
@@ -100,7 +115,7 @@ class form_parser {
         if ($retparam === false) {
             print_error('wrongparam', 'local_ulcc_form_library', '', $parname);
         } else {
-            // add the param to the list
+            // Add the param to the list.
             $this->params[$parname] = $retparam;
 
             return $retparam;
@@ -122,31 +137,31 @@ class form_parser {
      * @uses optional_param()
      * @param string $parname the name of the page parameter we want
      * @param mixed  $default the default value to return if nothing is found
-     * @param int $type expected type of parameter
+     * @param int|string $type expected type of parameter
      * @return mixed
      */
-    function optional_param($parname, $default=NULL, $type=PARAM_CLEAN) {
+    function optional_param($parname, $default = NULL, $type = PARAM_CLEAN) {
 
-        // detect_unchecked_vars addition
+        // Detect_unchecked_vars addition.
         global $CFG;
         if (!empty($CFG->detect_unchecked_vars)) {
             global $UNCHECKED_VARS;
             unset ($UNCHECKED_VARS->vars[$parname]);
         }
 
-        if (isset($_POST[$parname])) {       // POST has precedence
+        if (isset($_POST[$parname])) { // POST has precedence.
             $param = $_POST[$parname];
         } else if (isset($_GET[$parname])) {
             $param = $_GET[$parname];
         } else {
-            // add the param to the list
+            // Add the param to the list.
             $this->params[$parname] = $default;
 
             return $default;
         }
 
         if ($param == "") {
-            // add the param to the list
+            // Add the param to the list.
             $this->params[$parname] = $default;
 
             return $default;
@@ -177,16 +192,16 @@ class form_parser {
      */
     function clean_param($param, $type) {
         if ($type == PARAM_INT) {
-            if(preg_match('/[0-9]+/', $param) == 0) {
+            if (preg_match('/[0-9]+/', $param) == 0) {
                 return false;
             }
         }
 
         if ($type == FORM_PARAM_ARRAY) {
-            if(!is_array($param)) {
+            if (!is_array($param)) {
                 return false;
             } else {
-                //TODO need to code some tests on the array
+                // TODO need to code some tests on the array.
                 return $param;
             }
         }
@@ -195,7 +210,6 @@ class form_parser {
     }
 }
 
-// create a global instance of the parser class
+// Create a global instance of the parser class.
 global $PARSER;
 $PARSER = new form_parser();
-?>

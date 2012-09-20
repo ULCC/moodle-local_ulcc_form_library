@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Creates and edits a form field
@@ -11,85 +25,71 @@
  */
 
 
-
 require_once('../../../config.php');
 
-global $USER, $CFG, $SESSION, $PARSER;
+global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
-//include any neccessary files
+// Include any neccessary files.
 
 // Perform access checks.
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
-
-// Meta includes
+// Meta includes.
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
-
-//add the breadcrumbs
+// Add the breadcrumbs.
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
 
-
-//the id of the report  that the field will be in
+// The id of the report  that the field will be in.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
-
-//the id of the plugin ype the field will be
+// The id of the plugin ype the field will be.
 $formelement_id = $PARSER->required_param('formelement_id', PARAM_INT);
-
-//the id of the reportfield used when editing
-$formfield_id = $PARSER->optional_param('formfield_id',null ,PARAM_INT);
-
+// The id of the reportfield used when editing.
+$formfield_id = $PARSER->optional_param('formfield_id', null, PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype       =   $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
+$context_id = $PARSER->required_param('context_id', PARAM_RAW);
 
-$moodlepluginname       =   $PARSER->required_param('moodlepluginname', PARAM_RAW);
-
-$context_id             =   $PARSER->required_param('context_id', PARAM_RAW);
-
-// instantiate the db
+// Instantiate the db.
 $dbc = new form_db();
 
-// setup the navigation breadcrumbs
+// Setup the navigation breadcrumbs.
 
-//siteadmin or modules
+// Siteadmin or modules.
 
-//  Add section name to nav bar.
-$title  =   (empty($formfield_id))  ? get_string('addfield','local_ulcc_form_library')   :   get_string('editfield','local_ulcc_form_library');
-
+// Add section name to nav bar.
+$title = (empty($formfield_id)) ? get_string('addfield', 'local_ulcc_form_library') : get_string('editfield',
+    'local_ulcc_form_library');
 $PAGE->navbar->add($title, null, 'title');
-
-
-// setup the page title and heading
-$SITE	=	$dbc->get_course_by_id(SITEID);
+// Setup the page title and heading.
+$SITE = $dbc->get_course_by_id(SITEID);
 $PAGE->set_title($SITE->fullname." : ".$pluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');
-
 $PAGE->set_url('/local/ulcc_form_library/actions/edit_field.php', $PARSER->get_params());
-
-//get the plugin record that for the plugin
-$pluginrecord	=	$dbc->get_formelement_by_id($formelement_id);
-
-//take the name field from the plugin as it will be used to call the instantiate the plugin class
+// Get the plugin record that for the plugin.
+$pluginrecord = $dbc->get_formelement_by_id($formelement_id);
+// Take the name field from the plugin as it will be used to call the instantiate the plugin class.
 $classname = $pluginrecord->name;
-// include the class for the plugin
+// Include the class for the plugin.
 include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
-if(!class_exists($classname)) {
+if (!class_exists($classname)) {
     print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
 }
 
-//instantiate the plugin class
-$pluginclass	=	new $classname();
+// Instantiate the plugin class.
+$pluginclass = new $classname();
 
-//has the maximum number of this field type in this report been reached?
-if (!$pluginclass->can_add($form_id) && empty($formfield_id))	{
-    $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?'.$PARSER->get_params_url(array('form_id','moodleplugintype','moodlepluginname','context_id'));
-    redirect($return_url, get_string("fieldmaximum", 'local_ulcc_form_library',$pluginclass->audit_type()));
+// Has the maximum number of this field type in this report been reached?
+if (!$pluginclass->can_add($form_id) && empty($formfield_id)) {
+    $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?'.
+        $PARSER->get_params_url(array('form_id', 'moodleplugintype', 'moodlepluginname', 'context_id'));
+    redirect($return_url, get_string("fieldmaximum", 'local_ulcc_form_library', $pluginclass->audit_type()));
 }
 
-//call the plugin edit function inside of which the plugin configuration mform
-$pluginclass->edit($form_id,$formelement_id,$formfield_id,$moodleplugintype,$moodlepluginname,$context_id);
+// Call the plugin edit function inside of which the plugin configuration mform.
+$pluginclass->edit($form_id, $formelement_id, $formfield_id, $moodleplugintype, $moodlepluginname, $context_id);
 
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/edit_field.html');
 
-?>
