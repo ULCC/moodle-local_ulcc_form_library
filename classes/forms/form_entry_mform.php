@@ -12,15 +12,16 @@
 
 global $CFG;
 
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
-// include the db class
-require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
+// Include the db class.
+require_once($CFG->dirroot . '/local/ulcc_form_library/db/form_db.class.php');
 
-require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_lib_form.class.php');
-include_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
+require_once($CFG->dirroot . '/local/ulcc_form_library/classes/form_lib_form.class.php');
+require_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
 
-class form_entry_mform extends form_lib_form {
+class form_entry_mform extends form_lib_form
+{
 
     public $course_id;
     public $form_id;
@@ -33,7 +34,7 @@ class form_entry_mform extends form_lib_form {
     /**
      *
      */
-    function __construct($form_id, $type, $name, $pageurl, $entry_id = null, $page = 1) {
+    public function __construct($form_id, $type, $name, $pageurl, $entry_id = null, $page = 1) {
 
         global $CFG;
 
@@ -45,7 +46,7 @@ class form_entry_mform extends form_lib_form {
 
         $this->dbc = new form_db();
 
-        // call the parent constructor
+        // Call the parent constructor.
         parent::__construct($pageurl);
     }
 
@@ -57,17 +58,17 @@ class form_entry_mform extends form_lib_form {
 
         $mform =& $this->_form;
 
-        //get all of the fields in the current report, they will be returned in order as
-        //no position has been specified
+        // Get all of the fields in the current report, they will be returned in order as
+        // no position has been specified.
         $formfields = $this->dbc->get_form_fields_by_position($this->form_id);
 
         $form = $this->dbc->get_form_by_id($this->form_id);
 
-        //create a new fieldset
+        // Create a new fieldset.
 
         $desc = html_entity_decode($form->description);
 
-        $mform->addElement('html', '<div class="descritivetext">'.$desc.'</div>');
+        $mform->addElement('html', '<div class="descritivetext">' . $desc . '</div>');
 
         $mform->addElement('hidden', 'entry_id', $this->entry_id);
         $mform->setType('entry_id', PARAM_INT);
@@ -85,14 +86,14 @@ class form_entry_mform extends form_lib_form {
             $pagebreakcount = $count;
         }
 
-        //pre form hook allows any elements to be added to the form by a developer
-        $prehook = $this->pluginname."_ulcc_pre_form";
+        // Pre form hook allows any elements to be added to the form by a developer.
+        $prehook = $this->pluginname . "_ulcc_pre_form";
         if (function_exists($prehook)) {
-            //if a hook function for the current plugin is defined call it
+            // If a hook function for the current plugin is defined call it.
             call_user_func($prehook,
-                           array(&$mform,
-                                 $this->form_id,
-                                 $formfields));
+                array(&$mform,
+                    $this->form_id,
+                    $formfields));
         }
 
         $breaksfound = 0;
@@ -101,10 +102,10 @@ class form_entry_mform extends form_lib_form {
 
             foreach ($formfields as $field) {
 
-                //get the plugin record that for the plugin
+                // Get the plugin record that for the plugin.
                 $formelementrecord = $this->dbc->get_formelement_by_id($field->formelement_id);
 
-                //take the name field from the plugin as it will be used to call the instantiate the plugin class
+                // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
                 $classname = $formelementrecord->name;
 
                 if ($formelementrecord->tablename == 'ulcc_form_plg_pb') {
@@ -116,36 +117,36 @@ class form_entry_mform extends form_lib_form {
                 }
 
                 if ($breaksfound == $this->currentpage - 1) {
-                    // include the class for the plugin
+                    // Include the class for the plugin.
                     include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
                     if (!class_exists($classname)) {
                         print_error('noclassforplugin', 'local_ulcc_form_library', '', $formelementrecord->name);
                     }
 
-                    //instantiate the plugin class
+                    // Instantiate the plugin class.
                     $formelementclass = new $classname();
 
                     $formelementclass->load($field->id);
 
-                    //call the plugins entry_form function which will add an instance of the plugin
-                    //to the form
+                    // Call the plugins entry_form function which will add an instance of the plugin
+                    // to the form.
                     $formelementclass->entry_form($mform);
                 }
             }
         }
 
-        //post form hook allows any elements to be added to the form by a developer
-        $posthook = $this->pluginname."_ulcc_post_form";
+        // Post form hook allows any elements to be added to the form by a developer.
+        $posthook = $this->pluginname . "_ulcc_post_form";
         if (function_exists($posthook)) {
-            //if a hook function for the current plugin is defined call it
+            // If a hook function for the current plugin is defined call it.
             call_user_func($posthook,
-                           array(&$mform,
-                                 $this->form_id,
-                                 $formfields));
+                array(&$mform,
+                    $this->form_id,
+                    $formfields));
         }
 
-        //only show previous if this is not the first page
+        // Only show previous if this is not the first page.
         if (!empty($pagebreakcount) && $this->currentpage > 1) {
             $buttonarray[] = &
                 $mform->createElement('submit', 'previousbutton', get_string('previous', 'local_ulcc_form_library'));
@@ -155,7 +156,7 @@ class form_entry_mform extends form_lib_form {
         }
         $buttonarray[] = &$mform->createElement('cancel');
 
-        //only show next if this is not the last page
+        // Only show next if this is not the last page.
         if (!empty($pagebreakcount) && $this->currentpage != $pagebreakcount + 1) {
             $buttonarray[] = &$mform->createElement('submit', 'nextbutton', get_string('next', 'local_ulcc_form_library'));
         }
@@ -203,32 +204,32 @@ class form_entry_mform extends form_lib_form {
             }
         }
 
-        //get all of the fields in the current report, they will be returned in order as
-        //no position has been specified
+        // Get all of the fields in the current report, they will be returned in order as
+        // no position has been specified.
         $formfields = $this->dbc->get_form_fields_by_position($form_id);
 
         foreach ($formfields as $field) {
 
-            //get the plugin record that for the plugin
+            // Get the plugin record that for the plugin.
             $formelementrecord = $this->dbc->get_form_element_plugin($field->formelement_id);
 
-            //take the name field from the plugin as it will be used to call the instantiate the plugin class
+            // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
             $classname = $formelementrecord->name;
 
-            // include the class for the plugin
+            // Include the class for the plugin.
             include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
             if (!class_exists($classname)) {
                 print_error('noclassforplugin', 'block_ilp', '', $formelementrecord->name);
             }
 
-            //instantiate the plugin class
+            // Instantiate the plugin class.
             $pluginclass = new $classname();
 
             $pluginclass->load($field->id);
 
-            //call the plugins entry_form function which will add an instance of the plugin
-            //to the form
+            // Call the plugins entry_form function which will add an instance of the plugin
+            // to the form.
             if ($pluginclass->is_processable()) {
                 if (!$pluginclass->entry_process_data($field->id, $entry_id, $data)) {
                     $result = false;
