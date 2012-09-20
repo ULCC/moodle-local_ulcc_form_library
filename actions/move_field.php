@@ -35,8 +35,7 @@ $move = $PARSER->required_param('move', PARAM_INT);
 
 require_login();
 
-set_page_context($moodleplugintype, $context_id, $context);
-// Set context.
+$context = set_page_context();
 $PAGE->set_context($context);
 
 // instantiate the db

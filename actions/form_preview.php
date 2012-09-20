@@ -33,8 +33,7 @@ $context_id = $PARSER->required_param('context_id', PARAM_INT);
 
 require_login();
 
-// Setting the page context.
-set_page_context($moodleplugintype, $context_id, $context);
+$context = set_page_context();
 // Set context.
 $PAGE->set_context($context);
 

@@ -34,7 +34,7 @@ $duplicate = optional_param('duplicate', null, PARAM_INT);
 
 require_login();
 
-set_page_context($moodleplugintype, $context_id, $context);
+$context = set_page_context();
 // Set context.
 $PAGE->set_context($context);
 

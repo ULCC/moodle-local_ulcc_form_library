@@ -25,17 +25,19 @@
  * @param string $callbackparams (optional) the extra parameters for the callback function
  * @return mixed an associative array, or false if an error occured or the RecordSet was empty.
  */
+
+
 function form_records_to_menu($records, $field1, $field2, $callback = null, $callbackparams = null) {
 
     $menu = array();
 
-    if(!empty($records)) {
+    if (!empty($records)) {
         foreach ($records as $record) {
-            if(empty($callback)) {
+            if (empty($callback)) {
                 $menu[$record->$field1] = $record->$field2;
             } else {
                 // array_unshift($callbackparams, $record->$field2);
-                $menu[$record->$field1] = call_user_func_array($callback,array($record->$field2,$callbackparams));
+                $menu[$record->$field1] = call_user_func_array($callback, array($record->$field2, $callbackparams));
             }
         }
 
@@ -66,7 +68,7 @@ function ulcc_form_library_pluginfile($context, $filearea, $args, $forcedownload
     $fs = get_file_storage();
 
     $filename = array_pop($args);
-    $itemid   = array_pop($args);
+    $itemid = array_pop($args);
     $filepath = $args ? '/'.implode('/', $args).'/' : '/';
 
     if (!$file = $fs->get_file($context->id, 'ulcc_form_library', $filearea, $itemid, $filepath, $filename) or $file->is_directory()) {
@@ -74,7 +76,7 @@ function ulcc_form_library_pluginfile($context, $filearea, $args, $forcedownload
     }
 
     session_get_instance()->write_close();
-    send_stored_file($file, 60*60, 0, $forcedownload);
+    send_stored_file($file, 60 * 60, 0, $forcedownload);
 }
 
 /**
@@ -83,42 +85,55 @@ function ulcc_form_library_pluginfile($context, $filearea, $args, $forcedownload
  * @param $type
  * @param $name
  */
-function get_plugin_config($type,$name)    {
-    global  $CFG;
+function get_plugin_config($type, $name) {
+    global $CFG;
 
-    $path   =   '';
+    $path = '';
 
-    switch ($type)   {
+    switch ($type) {
         case    'mod':
-            $path   =  $CFG->dirroot.'/mod/'.$name.'/config_uflib.xml';
+            $path = $CFG->dirroot.'/mod/'.$name.'/config_uflib.xml';
             break;
 
         case    'block':
-            $path   .=  $CFG->dirroot.'/blocks/'.$name.'/config_uflib.xml';
+            $path .= $CFG->dirroot.'/blocks/'.$name.'/config_uflib.xml';
             break;
     }
 
 
-
-    if (!empty($path))  {
+    if (!empty($path)) {
         //get the xml file if it exists
         if (file_exists($path)) {
-            $xmlfile    =   file_get_contents($path);
-            $configopt  =   simplexml_load_string($xmlfile);
-            $elements   =   array();
+            $xmlfile = file_get_contents($path);
+            $configopt = simplexml_load_string($xmlfile);
+            $elements = array();
             foreach ($configopt->element as $e) {
-                   $elements[]   =     (string) $e;
+                $elements[] = (string)$e;
             }
-            return (isset($elements))    ? $elements  : false  ;
+            return (isset($elements)) ? $elements : false;
         }
     }
 }
 
-function set_page_context($moodleplugintype, $context_id, &$context) {
+/**
+ * @return bool|context|context_system
+ */
+function set_page_context() {
+    global $PARSER;
+    $context_id = $PARSER->required_param('context_id', PARAM_RAW);
+    $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
+
+    if (empty($context_id)) {
+        $context = context_system::instance();
+    }
+
     if ($moodleplugintype == CONTEXT_BLOCK) { // Plugin type is block.
         $context = context_block::instance_by_id($context_id);
-    } else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Moodle.
+    } else if ($moodleplugintype == CONTEXT_MODULE) { // Plugin type is Module.
         $context = context_module::instance_by_id($context_id);
     }
+    return $context;
 }
+
+
 

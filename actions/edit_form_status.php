@@ -27,7 +27,7 @@ $form_id = $PARSER->required_param('form_id', PARAM_RAW);
 
 require_login();
 
-set_page_context($moodleplugintype, $context_id, $context);
+$context = set_page_context();
 // Set context.
 $PAGE->set_context($context);
 
