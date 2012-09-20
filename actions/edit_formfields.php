@@ -34,6 +34,7 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/add_field_mform.php');
 // Add the breadcrumbs.
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // The id of the form must be provided.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
@@ -41,6 +42,12 @@ $form_id = $PARSER->required_param('form_id', PARAM_INT);
 $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
 $context_id = $PARSER->required_param('context_id', PARAM_RAW);
+
+require_login();
+
+$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
+// Set context.
+$PAGE->set_context($context);
 
 // Instantiate the db.
 $dbc = new form_db();
@@ -75,3 +82,4 @@ $previewurl = $CFG->wwwroot.'/local/ulcc_form_library/actions/form_preview.php?'
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/edit_formfields.html');
 
+?>

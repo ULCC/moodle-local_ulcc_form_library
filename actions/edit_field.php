@@ -37,6 +37,7 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 // Add the breadcrumbs.
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // The id of the report  that the field will be in.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
@@ -48,6 +49,8 @@ $formfield_id = $PARSER->optional_param('formfield_id', null, PARAM_INT);
 $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
 $context_id = $PARSER->required_param('context_id', PARAM_RAW);
+
+require_login();
 
 // Instantiate the db.
 $dbc = new form_db();
@@ -93,3 +96,4 @@ $pluginclass->edit($form_id, $formelement_id, $formfield_id, $moodleplugintype, 
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/edit_field.html');
 
+?>

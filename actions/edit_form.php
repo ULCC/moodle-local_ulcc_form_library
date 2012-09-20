@@ -34,6 +34,7 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/edit_form_mform.php');
 // Add the breadcrumbs.
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 $form_id = optional_param('form_id', null, PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
@@ -41,13 +42,17 @@ $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
 $context_id = $PARSER->required_param('context_id', PARAM_RAW);
 
+require_login();
+
 $dbc = new form_db();
 
-// Instantiate the edit_report_mform class.
+$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
+// Set context.
+$PAGE->set_context($context);
+
 $mform = new edit_form_mform($moodlepluginname, $moodleplugintype, $context_id, $form_id);
 
-
-// Was the form cancelled?
+//was the form cancelled?
 if ($mform->is_cancelled()) {
     // Send the user back.
     $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?'.$PARSER->get_params_url();
@@ -95,7 +100,6 @@ if ($mform->is_submitted()) {
 $pagetitle = (empty($form_id)) ? get_string('createform', 'local_ulcc_form_library') :
     get_string('editform', 'local_ulcc_form_library');
 
-
 if (!empty($form_id)) {
     $formrecord = $dbc->get_form_by_id($form_id);
     $mform->set_data($formrecord);
@@ -114,4 +118,5 @@ $PAGE->set_url('/local/ulcc_form_library/actions/edit_form.php', $PARSER->get_pa
 
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/edit_form.html');
+
 

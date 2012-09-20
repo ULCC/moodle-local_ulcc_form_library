@@ -26,7 +26,7 @@
 
 require_once('../../../config.php');
 
-global $USER, $CFG, $SESSION, $PARSER;
+global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
 // Include any neccessary files.
 
@@ -34,6 +34,7 @@ global $USER, $CFG, $SESSION, $PARSER;
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
 // Meta includes
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // The id of the report  that the field will be in.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
@@ -62,3 +63,4 @@ $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.ph
     $PARSER->get_params_url(array('form_id', 'moodleplugintype', 'moodlepluginname', 'context_id'));
 redirect($return_url, $resulttext, FORM_REDIRECT_DELAY);
 
+?>

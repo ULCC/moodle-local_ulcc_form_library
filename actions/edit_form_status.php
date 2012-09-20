@@ -26,19 +26,26 @@
 
 require_once('../../../config.php');
 
-global $CFG, $USER, $DB, $PARSER;
+global $CFG, $USER, $DB, $PARSER, $PAGE;
 
 // Perform access checks.
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
 // Require action_includes.php.
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
 $context_id = $PARSER->required_param('context_id', PARAM_INT);
 $form_id = $PARSER->required_param('form_id', PARAM_RAW);
 
-// Instantiate the db.
+require_login();
+
+$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
+// Set context.
+$PAGE->set_context($context);
+
+// instantiate the db
 $dbc = new form_db();
 
 // Get the form.
