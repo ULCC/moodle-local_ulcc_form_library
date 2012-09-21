@@ -420,7 +420,7 @@ class form_db extends form_logging {
         // For single items, entries are attached to parent. For multiples, the items table sits in between them.
         $where = (!empty($multiple)) ? "e.parent_id	=	i.id AND i.parent_id	=	p.id" : "e.parent_id	=	p.id";
 
-        $sql = "SELECT		e.*
+        $sql = "SELECT		*
                  FROM 		{$parenttable} as p,
                             {$itemtable}
                             {$entrytable} as e
