@@ -419,13 +419,13 @@ class form_db extends form_logging {
         $itemtable = (!empty($multiple)) ? "{$CFG->prefix}{$tablename}_items as i," : '';
         $where = (!empty($multiple)) ? "e.parent_id	=	p.id AND i.parent_id	=	p.id" : "e.parent_id	=	p.id";
 
-        $sql = "SELECT		*
-					 FROM 		{$parenttable} as p,
-					 			{$itemtable}
-					 			{$entrytable} as e
-					 WHERE 		{$where}
-					 AND		e.entry_id	=	{$entry_id}
-					 AND		p.formfield_id	=	{$formfield_id}";
+        $sql = "SELECT		e.*
+                 FROM 		{$parenttable} as p,
+                            {$itemtable}
+                            {$entrytable} as e
+                 WHERE 		{$where}
+                 AND		e.entry_id	=	{$entry_id}
+                 AND		p.formfield_id	=	{$formfield_id}";
 
         return (empty($multiple)) ? $this->dbc->get_record_sql($sql) : $this->dbc->get_records_sql($sql);
     }
