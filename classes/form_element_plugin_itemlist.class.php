@@ -86,7 +86,7 @@ class form_element_plugin_itemlist extends form_element_plugin {
                 $state_item =
                     $this->dbc->get_state_item_id($this->tablename, $pluginrecord->id, $ev, $this->external_items_keyfield,
                         $this->external_items_table);
-                $pluginentry->parent_id = $state_item->parent_id;
+                $pluginentry->parent_id = $state_item->id;
                 $pluginentry->value = $state_item->id;
                 $result = $this->dbc->create_plugin_entry($this->data_entry_tablename, $pluginentry);
             }
