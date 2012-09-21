@@ -326,9 +326,13 @@ abstract class form_lib_form extends moodleform {
                             $pluginclass->view_data($field->id, $entry->id, $entry_data);
 
                             if (!empty($labels)) {
-                                $fielddata = !empty($entry_data->$fieldname) ? $entry_data->$fieldname : '';
+                                if (!empty($entry_data->$fieldname)) {
+                                    $fielddata = $entry_data->$fieldname;
+                                } else {
+                                    $fielddata = '';
+                                }
                                 $entry_data->$fieldname = array('label' => $field->label,
-                                    'value' => $fielddata);
+                                                                'value' => $fielddata);
                             }
                         } else {
                             $dontdisplay[] = $field->id;
