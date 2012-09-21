@@ -153,7 +153,7 @@ class edit_form_mform extends moodleform {
 		function process_data($data) {
 			global $CFG;
 
-            local_ulcc_form_library_check_array($data);
+            local_ulcc_form_library_convert_text_fields($data);
 			if (empty($data->id)) {
 
             	$data->id = $this->dbc->create_form($data);

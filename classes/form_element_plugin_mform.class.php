@@ -217,7 +217,7 @@ abstract class form_element_plugin_mform extends moodleform {
      */
     function process_data($data) {
 
-        local_ulcc_form_library_check_array($data);
+        local_ulcc_form_library_convert_text_fields($data);
 
         $data->label = htmlentities($data->label);
 

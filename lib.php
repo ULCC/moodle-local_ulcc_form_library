@@ -134,7 +134,7 @@ function get_plugin_config($type, $name) {
  * @param object $data holding form's submitted data
  *
  */
-function local_ulcc_form_library_check_array(&$data) {
+function local_ulcc_form_library_convert_text_fields(&$data) {
 
     foreach ($data as $key => $item) {
         if (is_array($item) && array_key_exists('text', $item)) {

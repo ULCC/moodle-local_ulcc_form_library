@@ -36,8 +36,6 @@ class form_entry_mform extends form_lib_form
      */
     public function __construct($form_id, $type, $name, $pageurl, $entry_id = null, $page = 1) {
 
-        global $CFG;
-
         $this->form_id = $form_id;
         $this->entry_id = $entry_id;
         $this->currentpage = $page;
@@ -53,7 +51,7 @@ class form_entry_mform extends form_lib_form
     /**
      * TODO comment this
      */
-    function definition() {
+    public function definition() {
         global $USER, $CFG;
 
         $mform =& $this->_form;
@@ -174,7 +172,7 @@ class form_entry_mform extends form_lib_form
 
         $data = (!is_object($data)) ? (object)$data : $data;
 
-        local_ulcc_form_library_check_array($data);
+        local_ulcc_form_library_convert_text_fields($data);
         // Get the id of the report.
         $form_id = $data->form_id;
 

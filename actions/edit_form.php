@@ -104,8 +104,7 @@ if (!empty($form_id)) {
     $formrecord = $dbc->get_form_by_id($form_id);
     $editortext = $formrecord->description;
     $formrecord->description = array(
-        'text' => $editortext,
-        'format' => FORMAT_MOODLE
+        'text' => $editortext
     );
     $mform->set_data($formrecord);
 }

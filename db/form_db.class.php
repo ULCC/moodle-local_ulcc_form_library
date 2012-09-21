@@ -35,13 +35,13 @@ class form_db extends form_logging {
     /**
      * Constructor for the form_db_functions class
      *
-     * @return void
+     * @return \form_db
      */
-    function __construct() {
-        global $CFG, $DB;
+    public function __construct() {
+        global $DB;
 
         $this->dbc = $DB;
-        // include the static constants
+        // Include the static constants.
 
     }
 
