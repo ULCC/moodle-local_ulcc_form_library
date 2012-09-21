@@ -401,7 +401,7 @@ class form_db extends form_logging {
     }
 
     /**
-     * get the data entry record with the id given
+     * Get the data entry record with the id given
      *
      * @param string tablename the name of the table that will be interrogated
      * @param int     $entry_id the entry id of the records that will be returned
@@ -417,7 +417,8 @@ class form_db extends form_logging {
         $parenttable = "{$CFG->prefix}{$tablename}";
 
         $itemtable = (!empty($multiple)) ? "{$CFG->prefix}{$tablename}_items as i," : '';
-        $where = (!empty($multiple)) ? "e.parent_id	=	p.id AND i.parent_id	=	p.id" : "e.parent_id	=	p.id";
+        // For single items, entries are attached to parent. For multiples, the items table sits in between them.
+        $where = (!empty($multiple)) ? "e.parent_id	=	i.id AND i.parent_id	=	p.id" : "e.parent_id	=	p.id";
 
         $sql = "SELECT		e.*
                  FROM 		{$parenttable} as p,
