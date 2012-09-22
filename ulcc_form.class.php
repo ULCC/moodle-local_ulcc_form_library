@@ -186,8 +186,8 @@ class ulcc_form {
 
         $formrecord = $this->dbc->get_form_by_id($this->formid);
 
-        if (!empty($formrecord->status)) {
-            throw new coding_exception('Form definition is not finished yet. Cannot display.');
+        if (empty($formrecord->status)) {
+            throw new coding_exception('Form definition is not finished yet. Cannot display until the form is enabled.');
         }
         if (empty($formrecord->deleted)) {
             throw new coding_exception('Form has been deleted. Cannot display.');
