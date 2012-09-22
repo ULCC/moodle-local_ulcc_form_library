@@ -43,7 +43,7 @@ abstract class form_element_plugin_mform extends moodleform {
      */
     protected $errors;
 
-    function __construct($form_id, $formelement_id, $creator_id, $moodleplugintype, $moodlepluginname, $context_id,
+    public function __construct($form_id, $formelement_id, $creator_id, $moodleplugintype, $moodlepluginname, $context_id,
                          $formfield_id = null) {
         global $CFG;
 
@@ -56,12 +56,13 @@ abstract class form_element_plugin_mform extends moodleform {
         $this->context_id = $context_id;
         $this->dbc = new form_db();
 
-        parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_field.php?formelement_id={$formelement_id}
-        &form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}");
+        parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_field.php?formelement_id=".
+                            "{$formelement_id}&form_id={$form_id}&moodleplugintype={$moodleplugintype}".
+                            "&moodlepluginname={$moodlepluginname}");
 
     }
 
-    function definition() {
+    public function definition() {
         global $USER, $CFG;
 
         // Get the plugin type by getting the plugin name.
