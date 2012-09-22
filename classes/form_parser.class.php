@@ -69,7 +69,8 @@ class form_parser {
     public function get_params_url($included = array()) {
         $querystr = '';
         foreach ($this->params as $p => $v) {
-            if (empty($included) || in_array($p, $included)) {
+            // Don't send empty stuff except 0.
+            if ($v !== '' && !is_null($v) && (empty($included) || in_array($p, $included))) {
                 if (!empty($querystr)) {
                     $querystr .= '&';
                 }

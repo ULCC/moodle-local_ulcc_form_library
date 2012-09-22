@@ -24,9 +24,9 @@
  * @version
  */
 
-global $DB, $CFG, $PAGE, $OUTPUT, $SESSION;
+global $DB, $CFG, $PAGE, $OUTPUT, $SESSION, $PARSER;
 
-$cm_id = optional_param('cm_id', null, PARAM_INT);
+$cm_id = $PARSER->optional_param('cm_id', null, PARAM_INT);
 
 // If the cm_id is empty check the global cfg to see if it has been saved into it.
 if (empty($cm_id)) {
