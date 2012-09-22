@@ -105,8 +105,8 @@ class ulcc_form {
      * @param int $entryid
      * @param int $currentpage
      */
-    public function __construct($plugintype, $pluginname, $formid= 0, $pageurl = '',
-                                $cancelurl = '', $entryid = 0, $currentpage = 1) {
+    public function __construct($plugintype, $pluginname, $formid= 0, $entryid = 0, $pageurl = '',
+                                $cancelurl = '', $currentpage = 1) {
 
         $this->plugintype = $plugintype;
         $this->pluginname = $pluginname;
