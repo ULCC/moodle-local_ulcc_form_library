@@ -40,17 +40,10 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin.class.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
-$context_id = $PARSER->required_param('context_id', PARAM_RAW);
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
-$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
+$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
 $form_id = optional_param('form_id', null, PARAM_INT);
 $duplicate = optional_param('duplicate', null, PARAM_INT);
-
-require_login();
-
-$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
-// Set context.
-$PAGE->set_context($context);
 
 // Instantiate the db class.
 $dbc = new form_db();
