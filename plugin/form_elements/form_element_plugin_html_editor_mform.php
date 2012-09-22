@@ -1,16 +1,37 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin_mform.class.php');
 
-class form_element_plugin_html_editor_mform  extends form_element_plugin_mform {
+/**
+ * Plugin that adds a HTML editor.
+ */
+class form_element_plugin_html_editor_mform extends form_element_plugin_mform {
 
+    /**
+     * @param MoodleQuickForm $mform
+     */
+    protected function specific_definition(MoodleQuickForm $mform) {
+        // Disabled until http://tracker.moodle.org/browse/MDL-35402 is fixed.
 
-
-	  protected function specific_definition(MoodleQuickForm $mform) {
-
-          // Disabled until http://tracker.moodle.org/browse/MDL-35402 is fixed.
-
-          //set the maximum length of the field default to 255
+        //set the maximum length of the field default to 255
 //        $mform->addElement(
 //            'text',
 //            'minimumlength',
@@ -31,41 +52,51 @@ class form_element_plugin_html_editor_mform  extends form_element_plugin_mform {
 
 //        $mform->addRule('maximumlength', null, 'maxlength', 4, 'client');
 //        $mform->setType('maximumlength', PARAM_INT);
-	}
+    }
 
-	 protected function specific_validation($data) {
+    /**
+     * @param $data
+     * @return array
+     */
+    protected function specific_validation($data) {
 
-	 	$data = (object) $data;
+        $data = (object)$data;
 
-	 	if ($data->maximumlength < 0 || $data->maximumlength > 9999) $this->errors['maximumlength'] = get_string('form_element_plugin_html_editor_maxlengthrange','local_ulcc_form_library');
-	 	if ($data->maximumlength < $data->minimumlength) $this->errors['maximumlength'] = get_string('form_element_plugin_html_editor_maxlessthanmin','local_ulcc_form_library');
+        if ($data->maximumlength < 0 || $data->maximumlength > 9999) {
+            $this->errors['maximumlength'] =
+                get_string('form_element_plugin_html_editor_maxlengthrange', 'local_ulcc_form_library');
+        }
+        if ($data->maximumlength < $data->minimumlength) {
+            $this->errors['maximumlength'] =
+                get_string('form_element_plugin_html_editor_maxlessthanmin', 'local_ulcc_form_library');
+        }
 
-	 	return $this->errors;
-	 }
+        return $this->errors;
+    }
 
-	 protected function specific_process_data($data) {
+    /**
+     * @param $data
+     * @return bool|mixed
+     */
+    protected function specific_process_data($data) {
 
-	 	$plgrec = (!empty($data->formfield_id)) ? $this->dbc->get_form_element_record("ulcc_form_plg_hte",$data->formfield_id) : false;
+        $plgrec = (!empty($data->formfield_id)) ?
+            $this->dbc->get_form_element_record("ulcc_form_plg_hte", $data->formfield_id) : false;
 
-	 	if (empty($plgrec)) {
-	 		return $this->dbc->create_form_element_record("ulcc_form_plg_hte",$data);
-	 	} else {
-	 		//get the old record from the elements plugins table
-	 		$oldrecord				=	$this->dbc->get_form_element_by_formfield("ulcc_form_plg_hte",$data->formfield_id);
+        if (empty($plgrec)) {
+            return $this->dbc->create_form_element_record("ulcc_form_plg_hte", $data);
+        } else {
+            // Get the old record from the elements plugins table.
+            $oldrecord = $this->dbc->get_form_element_by_formfield("ulcc_form_plg_hte", $data->formfield_id);
 
-	 		//create a new object to hold the updated data
-	 		$pluginrecord 					=	new stdClass();
-	 		$pluginrecord->id				=	$oldrecord->id;
-	 		$pluginrecord->minimumlength	=	$data->minimumlength;
-	 		$pluginrecord->maximumlength	=	$data->maximumlength;
+            // Create a new object to hold the updated data.
+            $pluginrecord = new stdClass();
+            $pluginrecord->id = $oldrecord->id;
+            $pluginrecord->minimumlength = $data->minimumlength;
+            $pluginrecord->maximumlength = $data->maximumlength;
 
-	 		//update the plugin with the new data
-	 		return $this->dbc->update_form_element_record("ulcc_form_plg_hte",$pluginrecord);
-	 	}
-	 }
-
-	 function definition_after_data() {
-
-	 }
-
+            // Update the plugin with the new data.
+            return $this->dbc->update_form_element_record("ulcc_form_plg_hte", $pluginrecord);
+        }
+    }
 }
