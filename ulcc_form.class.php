@@ -189,7 +189,7 @@ class ulcc_form {
         if (empty($formrecord->status)) {
             throw new coding_exception('Form definition is not finished yet. Cannot display until the form is enabled.');
         }
-        if (empty($formrecord->deleted)) {
+        if (!empty($formrecord->deleted)) {
             throw new coding_exception('Form has been deleted. Cannot display.');
         }
 
