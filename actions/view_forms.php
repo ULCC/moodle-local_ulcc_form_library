@@ -137,7 +137,7 @@ if (!empty($form_id) && !empty($duplicate)) {
     $form_id = $newid; // Change form_id to id of new form.
     // Redirect to edit form to make changes to the duplicate.
     $included = array('form_id',
-                      'moodleplgintype',
+                      'moodleplugintype',
                       'moodlepluginname',
                       'context_id');
     $return_url = new moodle_url('/local/ulcc_form_library/actions/edit_form.php', $PARSER->get_params_url($included));

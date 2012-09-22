@@ -63,7 +63,7 @@ $PAGE->set_url('/local/ulcc_form_library/actions/edit_formfields.php', $PARSER->
 $fieldmform = new add_field_mform($moodlepluginname, $moodleplugintype, $context_id, $form_id);
 
 $included = array('form_id',
-                  'moodleplgintype',
+                  'moodleplugintype',
                   'moodlepluginname',
                   'context_id');
 
