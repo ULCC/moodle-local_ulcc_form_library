@@ -28,8 +28,6 @@ require_once('../../../config.php');
 
 global $CFG, $USER, $SESSION, $OUTPUT, $PARSER, $PAGE;
 
-// Perform access checks.
-require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/edit_form_mform.php');
 // Add the breadcrumbs.
@@ -38,17 +36,13 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 $form_id = optional_param('form_id', null, PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
-$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
-$context_id = $PARSER->required_param('context_id', PARAM_RAW);
+$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = required_param('context_id', PARAM_INT);
 
 require_login();
 
 $dbc = new form_db();
-
-$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
-// Set context.
-$PAGE->set_context($context);
 
 $mform = new edit_form_mform($moodlepluginname, $moodleplugintype, $context_id, $form_id);
 

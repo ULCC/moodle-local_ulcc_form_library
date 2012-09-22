@@ -39,15 +39,9 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 // The id of the form must be provided.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
-$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
-$context_id = $PARSER->required_param('context_id', PARAM_RAW);
-
-require_login();
-
-$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
-// Set context.
-$PAGE->set_context($context);
+$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = required_param('context_id', PARAM_INT);
 
 // Instantiate the db.
 $dbc = new form_db();
@@ -58,7 +52,7 @@ $plugintype = ($moodleplugintype == 'block') ? get_string('blocks') : get_string
 $pluginname = get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
 $PAGE->navbar->add(get_string('formfields', 'local_ulcc_form_library'), null, 'title');
 
-// setup the page title and heading.
+// Setup the page title and heading.
 $SITE = $dbc->get_course_by_id(SITEID);
 $PAGE->set_title($SITE->fullname." : ".$pluginname);
 $PAGE->set_heading($SITE->fullname);

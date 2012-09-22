@@ -28,29 +28,25 @@ require_once('../../../config.php');
 
 global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
-//include any neccessary files
+// Include any neccessary files.
 
-// Meta includes
+// Meta includes.
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // The id of the form must be provided.
-$form_id = $PARSER->required_param('form_id', PARAM_INT);
+$form_id = required_param('form_id', PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
-$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
-$context_id = $PARSER->required_param('context_id', PARAM_INT);
-//the id of the formfield used when editing
-$formfield_id = $PARSER->required_param('formfield_id', PARAM_INT);
-//the id of the formfield used when editing
-$position = $PARSER->required_param('position', PARAM_INT);
-//the id of the formfield used when editing
-$move = $PARSER->required_param('move', PARAM_INT);
+$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = required_param('context_id', PARAM_INT);
+// The id of the formfield used when editing.
+$formfield_id = required_param('formfield_id', PARAM_INT);
+// The id of the formfield used when editing.
+$position = required_param('position', PARAM_INT);
+// The id of the formfield used when editing.
+$move = required_param('move', PARAM_INT);
 
-require_login();
-
-$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
-$PAGE->set_context($context);
 
 // Instantiate the db.
 $dbc = new form_db();
@@ -77,7 +73,9 @@ if (!empty($formfields)) {
             $newposition = (!empty($move)) ? $field->position - 1 : $field->position + 1;
         }
 
-        if (!$dbc->set_new_position($field->id, $newposition)) $movesuc = false;
+        if (!$dbc->set_new_position($field->id, $newposition)) {
+            $movesuc = false;
+        }
     }
 } else {
     $movesuc = false;

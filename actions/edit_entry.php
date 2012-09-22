@@ -36,15 +36,6 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // The id of the report  that the field will be in.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
-// Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
-$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
-$context_id = $PARSER->required_param('context_id', PARAM_RAW);
-
-require_login();
-
-$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
-$PAGE->set_context($context);
 
 // Instantiate the db.
 $dbc = new form_db();

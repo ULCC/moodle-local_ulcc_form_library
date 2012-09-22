@@ -34,22 +34,13 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // The id of the form  that the field will be in.
-$form_id = $PARSER->required_param('form_id', PARAM_INT);
-//the id of the formfield used when editing
-$position = $PARSER->required_param('position', PARAM_INT);
-//the id of the formfield used when editing
-$move = $PARSER->required_param('move', PARAM_INT);
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
-$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
-$context_id = $PARSER->required_param('context_id', PARAM_RAW);
+$form_id = required_param('form_id', PARAM_INT);
+// The id of the formfield used when editing.
+$position = required_param('position', PARAM_INT);
+// The id of the formfield used when editing.
+$move = required_param('move', PARAM_INT);
 
-require_login();
-
-$context = local_ulcc_form_library_get_page_context($moodleplugintype, $context_id);
-// Set context.
-$PAGE->set_context($context);
-
-// instantiate the db
+// Instantiate the db.
 $dbc = new form_db();
 
 // Change field position.

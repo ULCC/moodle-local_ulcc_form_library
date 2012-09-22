@@ -34,10 +34,6 @@ global $CFG, $USER, $DB, $PARSER, $PAGE, $OUTPUT;
 require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
 require_once($CFG->libdir.'/tablelib.php');
 
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
-$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
-$context_id = $PARSER->required_param('context_id', PARAM_RAW);
-
 // Create the filed table.
 
 // Instantiate the flex table class.ADODB_Exception.

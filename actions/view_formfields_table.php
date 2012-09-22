@@ -35,11 +35,11 @@ global $CFG, $USER, $DB, $PARSER, $OUTPUT;
 require_once($CFG->libdir.'/tablelib.php');
 
 // The id of the form must be provided.
-$form_id = $PARSER->required_param('form_id', PARAM_INT);
+$form_id = required_param('form_id', PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_RAW);
-$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_RAW);
-$context_id = $PARSER->required_param('context_id', PARAM_RAW);
+$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = required_param('context_id', PARAM_INT);
 // Instantiate the flextable table class.
 $flextable = new flexible_table("form_id{$form_id}user_id".$USER->id);
 // Define the base url that the table will return to.

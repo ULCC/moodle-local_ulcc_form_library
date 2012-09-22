@@ -46,7 +46,7 @@ for
 
 if (empty($moodlepluginname) || empty($moodleplugintype)) {
     // Redirect user to plugin select.
-    redirect('no_plugin_selected', get_string('selectplugin', 'local_ulcc_form_library'), REDIRECT_DELAY);
+    redirect('no_plugin_selected', get_string('selectplugin', 'local_ulcc_form_library'));
 } else {
 
     // Lets check if the plugin has been created in the form library plugin table.

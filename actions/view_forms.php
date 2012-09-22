@@ -40,8 +40,6 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin.class.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
-$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
-$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
 $form_id = optional_param('form_id', null, PARAM_INT);
 $duplicate = optional_param('duplicate', null, PARAM_INT);
 
