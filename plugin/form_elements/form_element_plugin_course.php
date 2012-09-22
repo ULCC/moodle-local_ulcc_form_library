@@ -224,7 +224,7 @@ class form_element_plugin_course extends form_element_plugin_itemlist{
 
 
         if (!empty($this->required)) $mform->addRule($fieldname, null, 'required', null, 'client');
-        $mform->setType('label', PARAM_RAW);
+        $mform->setType('label', PARAM_INT);
 
     }
 

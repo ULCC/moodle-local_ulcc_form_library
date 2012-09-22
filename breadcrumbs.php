@@ -40,9 +40,9 @@ if (empty($cm_id)) {
 
 
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = optional_param('moodleplugintype', false, PARAM_RAW);
+$moodleplugintype = optional_param('moodleplugintype', false, PARAM_ALPHAEXT);
 
-$moodlepluginname = optional_param('moodlepluginname', false, PARAM_RAW);
+$moodlepluginname = optional_param('moodlepluginname', false, PARAM_ALPHAEXT);
 
 $context_id = required_param('context_id', PARAM_INT);
 

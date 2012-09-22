@@ -32,7 +32,7 @@ global $CFG, $USER, $DB, $PARSER, $PAGE;
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
-$form_id = $PARSER->required_param('form_id', PARAM_RAW);
+$form_id = $PARSER->required_param('form_id', PARAM_INT);
 
 
 // Instantiate the db.

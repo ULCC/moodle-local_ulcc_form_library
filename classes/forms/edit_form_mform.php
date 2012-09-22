@@ -121,7 +121,7 @@ class edit_form_mform extends moodleform {
         );
         $mform->addRule('name', null, 'maxlength', 255, 'client');
         $mform->addRule('name', null, 'required', null, 'client');
-        $mform->setType('name', PARAM_RAW);
+        $mform->setType('name', PARAM_TEXT);
 
         // DESCRIPTION element.
         $mform->addElement(

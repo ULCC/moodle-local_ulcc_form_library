@@ -57,6 +57,7 @@ class form_db extends form_logging {
     public function __call($method, $params) {
 
         // Sanitise everything coming into the database here.
+        // TODO find all places that need this and sanitise the data using optional/required_param.
         $params = $this->encode($params);
 
         if (method_exists($this, $method)) {
@@ -75,25 +76,25 @@ class form_db extends form_logging {
      * @param mixed $data The unencoded object/array/string/etc
      * @return mixed The encoded version
      */
-    static function encode(&$data) {
+    protected static function encode(&$data) {
         if (is_object($data) || is_array($data)) {
-            // skip the ilp_flexible_table
+            // Skip the ilp_flexible_table.
             if (!is_a($data, 'ilp_flexible_table')) {
                 foreach ($data as $index => &$datum) {
 
-                    //we will skip any index with the prefix binary
+                    // We will skip any index with the prefix binary.
                     if (substr($index, 0, 7) != 'binary_') {
-                        $datum = form_db::encode($datum);
+                        $datum = self::encode($datum);
                     }
                 }
             }
             return $data;
         } else {
 
-            // decode any special characters prevent malicious code slipping through
-            $data = form_db::decode_htmlchars($data, ENT_QUOTES);
+            // Decode any special characters prevent malicious code slipping through.
+            $data = self::decode_htmlchars($data, ENT_QUOTES);
 
-            // purify all data (e.g. validate html, remove js and other bad stuff)
+            // Purify all data (e.g. validate html, remove js and other bad stuff).
 
             //I have had to remove the purify call as it was causing pages to timeout in 1.9
             //this should be put back in once the ilp is moodle 2.0 only
