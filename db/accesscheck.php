@@ -49,6 +49,7 @@ if ($context && $context->contextlevel == CONTEXT_MODULE) {
     // The user must be logged in.
     require_login(0);
     $context = context_system::instance();
+    $PAGE->set_context($context);
 }
 
 // If there is no user context then throw an error.
