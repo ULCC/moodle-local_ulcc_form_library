@@ -154,9 +154,9 @@ function local_ulcc_form_library_get_page_context($moodleplugintype, $context_id
     if (empty($context_id) || empty($moodleplugintype)) {
         $context = context_system::instance();
     } else if ($moodleplugintype == 'block') { // Plugin type is block.
-        $context = context_block::instance_by_id($context_id);
+        $context = context::instance_by_id($context_id);
     } else if ($moodleplugintype == 'mod') { // Plugin type is Module.
-        $context = context_module::instance_by_id($context_id);
+        $context = context::instance_by_id($context_id);
     } else {
         throw new coding_exception('Unrecognised plugintype');
     }
