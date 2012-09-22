@@ -25,7 +25,7 @@
  * @version 1.0
  */
 
-global  $CFG, $DB, $USER, $PAGE;
+global  $CFG, $DB, $USER, $PAGE, $PARSER;
 
 $context_id = $PARSER->optional_param('context_id', 0, PARAM_INT);
 $context = false;
