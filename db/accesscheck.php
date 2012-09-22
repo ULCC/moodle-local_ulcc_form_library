@@ -25,7 +25,9 @@
  * @version 1.0
  */
 
-global  $CFG, $DB, $USER, $PAGE, $PARSER;
+global  $CFG, $DB, $USER, $PAGE;
+
+require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_parser.class.php');
 
 $context_id = $PARSER->optional_param('context_id', 0, PARAM_INT);
 $context = false;

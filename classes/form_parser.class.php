@@ -40,9 +40,15 @@
 global $CFG;
 require_once($CFG->dirroot.'/local/ulcc_form_library/constants.php');
 
+/**
+ * Manages the url parameters.
+ */
 class form_parser {
 
-    var $params;
+    /**
+     * @var array
+     */
+    protected $params;
 
     /**
      * Returns all the params parsed for a given page.
@@ -64,7 +70,9 @@ class form_parser {
         $querystr = '';
         foreach ($this->params as $p => $v) {
             if (empty($included) || in_array($p, $included)) {
-                if (!empty($querystr)) $querystr .= '&';
+                if (!empty($querystr)) {
+                    $querystr .= '&';
+                }
                 $querystr .= $p.'='.$v;
             }
         }
@@ -89,7 +97,7 @@ class form_parser {
      * @param int|string $type expected type of parameter
      * @return mixed
      */
-    function required_param($parname, $type = PARAM_CLEAN) {
+    public function required_param($parname, $type = PARAM_CLEAN) {
 
         // Detect_unchecked_vars addition.
         global $CFG;
@@ -141,7 +149,7 @@ class form_parser {
      * @param int|string $type expected type of parameter
      * @return mixed
      */
-    function optional_param($parname, $default = NULL, $type = PARAM_CLEAN) {
+    public function optional_param($parname, $default = NULL, $type = PARAM_CLEAN) {
 
         // Detect_unchecked_vars addition.
         global $CFG;
@@ -173,7 +181,7 @@ class form_parser {
         if ($retparam === false) {
             print_error('wrongparamopt', '', '', $parname);
         } else {
-            // add the param to the list
+            // Add the param to the list.
             $this->params[$parname] = $retparam;
 
             return $retparam;
@@ -191,7 +199,7 @@ class form_parser {
      * @param int $type expected format of param after cleaning.
      * @return mixed
      */
-    function clean_param($param, $type) {
+    protected function clean_param($param, $type) {
         if ($type == PARAM_INT) {
             if (preg_match('/[0-9]+/', $param) == 0) {
                 return false;
