@@ -31,27 +31,27 @@ class form_element_plugin_html_editor_mform extends form_element_plugin_mform {
     protected function specific_definition(MoodleQuickForm $mform) {
         // Disabled until http://tracker.moodle.org/browse/MDL-35402 is fixed.
 
-        //set the maximum length of the field default to 255
-//        $mform->addElement(
-//            'text',
-//            'minimumlength',
-//            get_string('form_element_plugin_html_editor_minimumlength', 'local_ulcc_form_library'),
-//            array('class' => 'form_input')
-//        );
+        // Set the maximum length of the field default to 255.
+        $mform->addElement(
+            'text',
+            'minimumlength',
+            get_string('form_element_plugin_html_editor_minimumlength', 'local_ulcc_form_library'),
+            array('class' => 'form_input')
+        );
 
-        //$mform->addRule('minimumlength', null, 'maxlength', 3, 'client');
-        //$mform->setType('minimumlength', PARAM_INT);
+        $mform->addRule('minimumlength', null, 'maxlength', 3, 'client');
+        $mform->setType('minimumlength', PARAM_INT);
 
-        //set the maximum length of the field default to 255
-//        $mform->addElement(
-//            'text',
-//            'maximumlength',
-//            get_string('form_element_plugin_html_editor_maximumlength', 'local_ulcc_form_library'),
-//            array('class' => 'form_input')
-//        );
+        // Set the maximum length of the field default to 255.
+        $mform->addElement(
+            'text',
+            'maximumlength',
+            get_string('form_element_plugin_html_editor_maximumlength', 'local_ulcc_form_library'),
+            array('class' => 'form_input')
+        );
 
-//        $mform->addRule('maximumlength', null, 'maxlength', 4, 'client');
-//        $mform->setType('maximumlength', PARAM_INT);
+        $mform->addRule('maximumlength', null, 'maxlength', 4, 'client');
+        $mform->setType('maximumlength', PARAM_INT);
     }
 
     /**
@@ -61,16 +61,15 @@ class form_element_plugin_html_editor_mform extends form_element_plugin_mform {
     protected function specific_validation($data) {
 
         $data = (object)$data;
-        // Disabled as right now, there can't be more than one rule in place on a form element.
-//
-//        if ($data->maximumlength < 0 || $data->maximumlength > 9999) {
-//            $this->errors['maximumlength'] =
-//                get_string('form_element_plugin_html_editor_maxlengthrange', 'local_ulcc_form_library');
-//        }
-//        if ($data->maximumlength < $data->minimumlength) {
-//            $this->errors['maximumlength'] =
-//                get_string('form_element_plugin_html_editor_maxlessthanmin', 'local_ulcc_form_library');
-//        }
+
+        if ($data->maximumlength < 0 || $data->maximumlength > 9999) {
+            $this->errors['maximumlength'] =
+                get_string('form_element_plugin_html_editor_maxlengthrange', 'local_ulcc_form_library');
+        }
+        if ($data->maximumlength < $data->minimumlength) {
+            $this->errors['maximumlength'] =
+                get_string('form_element_plugin_html_editor_maxlessthanmin', 'local_ulcc_form_library');
+        }
 
         return $this->errors;
     }
