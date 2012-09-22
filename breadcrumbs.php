@@ -55,25 +55,25 @@ $formpagelink = new moodle_url('/local/ulcc_form_library/actions/view_forms.php'
 if (isset($cm_id)) {
     // Set the nav bar -> courses -> course -> coursemodule -> form lib.
 
-    $coursemodule = get_coursemodule_from_id('coursework', $cm_id, 0,
-        false, MUST_EXIST);
-
-    //  Add courses.
-    $PAGE->navbar->add(get_string('courses'), null, 'title');
-
-    $course = $DB->get_record('course', array('id' => $coursemodule->course));
-
-    $courselink = new moodle_url('/course/view.php', array('id' => $course->id));
-
-    //  Add course name to the nav bar.
-    $PAGE->navbar->add($course->shortname, $courselink, 'title');
-
-    $cmlink = new moodle_url('/mod/coursework/view.php', array('id' => $cm_id));
-
-    //  Add course name to the nav bar.
-    $PAGE->navbar->add($coursemodule->name, $cmlink, 'title');
-
-    $PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), $formpagelink, 'title');
+//    $coursemodule = get_coursemodule_from_id('coursework', $cm_id, 0,
+//        false, MUST_EXIST);
+//
+//    //  Add courses.
+//    $PAGE->navbar->add(get_string('courses'), null, 'title');
+//
+//    $course = $DB->get_record('course', array('id' => $coursemodule->course));
+//
+//    $courselink = new moodle_url('/course/view.php', array('id' => $course->id));
+//
+//    //  Add course name to the nav bar.
+//    $PAGE->navbar->add($course->shortname, $courselink, 'title');
+//
+//    $cmlink = new moodle_url('/mod/coursework/view.php', array('id' => $cm_id));
+//
+//    //  Add course name to the nav bar.
+//    $PAGE->navbar->add($coursemodule->name, $cmlink, 'title');
+//
+//    $PAGE->navbar->add(get_string('pluginname', 'local_ulcc_form_library'), $formpagelink, 'title');
 } else {
     //  Add section name to nav bar.
     $PAGE->navbar->add(get_string('administrationsite'), null, 'title');
