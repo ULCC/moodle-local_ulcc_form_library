@@ -26,7 +26,7 @@
  */
 
 require_once('../../../config.php');
-global $CFG, $USER, $DB, $PARSER, $PAGE;
+global $CFG, $USER, $DB, $PAGE;
 
 // Perform access checks.
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/accesscheck.php');
@@ -42,6 +42,9 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 $form_id = optional_param('form_id', null, PARAM_INT);
 $duplicate = optional_param('duplicate', null, PARAM_INT);
+$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = required_param('context_id', PARAM_INT);
 
 // Instantiate the db class.
 $dbc = new form_db();
@@ -52,7 +55,10 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/form_element_plugin
 // Install new form element plugins.
 form_element_plugin::install_new_plugins();
 
-$PAGE->set_url(new moodle_url('/local/ulcc_form_library/actions/view_forms.php'));
+$PAGE->set_url(new moodle_url('/local/ulcc_form_library/actions/view_forms.php'), compact('form_id',
+                                                                                          'moodleplugintype',
+                                                                                          'moodlepluginname',
+                                                                                          'context_id'));
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title(get_string('viewforms', 'local_ulcc_form_library'));
 $PAGE->set_heading(get_string('viewforms', 'local_ulcc_form_library'));
@@ -134,9 +140,11 @@ if (!empty($form_id) && !empty($duplicate)) {
 
     $form_id = $newid; // Change form_id to id of new form.
     // redirect to edit form to make changes to thel duplicate.
-    $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_form.php?form_id='.$form_id.
-        '&'.$PARSER->get_params_url();
-    redirect($return_url, get_string("formduplication", 'local_ulcc_form_library'), FORM_REDIRECT_DELAY);
+    $return_url = new moodle_url('/local/ulcc_form_library/actions/edit_form.php', compact('form_id',
+                                                                                           'moodleplugintype',
+                                                                                           'moodlepluginname',
+                                                                                           'context_id'));
+    redirect($return_url, get_string("formduplication", 'local_ulcc_form_library'));
 }
 
 
