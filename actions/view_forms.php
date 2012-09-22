@@ -69,7 +69,7 @@ $PAGE->set_heading(get_string('viewforms', 'local_ulcc_form_library'));
 $forms = $dbc->get_plugin_forms($moodlepluginname, $moodleplugintype);
 
 
-//check whether duplicate was selected
+// Check whether duplicate was selected.
 if (!empty($form_id) && !empty($duplicate)) {
 
     // Retrieve the form to be duplicated.
