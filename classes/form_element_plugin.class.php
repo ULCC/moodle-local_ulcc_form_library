@@ -221,8 +221,8 @@ class form_element_plugin {
             $this->mform->set_data($formfield);
 
             // Enter a back url.
-            $backurl = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}&moodleplugintype=
-            {$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
+            $backurl = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}&moodleplugintype=".
+            "{$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
 
             // Was the form cancelled?
             if ($this->mform->is_cancelled()) {
@@ -251,8 +251,8 @@ class form_element_plugin {
 
                     if ($this->mform->is_submitted()) {
                         // Return the user to the.
-                        $return_url = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}
-                        &moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
+                        $return_url = $CFG->wwwroot."/local/ulcc_form_library/actions/edit_formfields.php?form_id={$form_id}".
+                        "&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}&context_id={$context_id}";
                         redirect($return_url, get_string("fieldcreationsuc", 'local_ulcc_form_library'), FORM_REDIRECT_DELAY);
                     }
                 }
