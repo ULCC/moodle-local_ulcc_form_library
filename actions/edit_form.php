@@ -108,7 +108,8 @@ $PAGE->navbar->add(get_string('createform', 'local_ulcc_form_library'), null, 't
 
 // Setup the page title and heading.
 $SITE = $dbc->get_course_by_id(SITEID);
-$PAGE->set_title($SITE->fullname." : ".$moodlepluginname);
+$pluginname = get_string('pluginname', $moodleplugintype.'_'.$moodlepluginname);
+$PAGE->set_title($SITE->fullname." : ".$pluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');
 $PAGE->set_pagelayout('admin');

@@ -62,17 +62,21 @@ $PAGE->set_url('/local/ulcc_form_library/actions/edit_formfields.php', $PARSER->
 
 $fieldmform = new add_field_mform($moodlepluginname, $moodleplugintype, $context_id, $form_id);
 
+$included = array('form_id',
+                  'moodleplgintype',
+                  'moodlepluginname',
+                  'context_id');
 
 // Has the form been submitted?
 if ($fieldmform->is_submitted()) {
     // Get the form data submitted.
     $formdata = $fieldmform->get_data();
     $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_field.php?formelement_id='.
-        $formdata->formelement_id.'&'.$PARSER->get_params_url();
+        $formdata->formelement_id.'&'.$PARSER->get_params_url($included);
     redirect($return_url, get_string("addfield", 'local_ulcc_form_library'), FORM_REDIRECT_DELAY);
 }
 
-$previewurl = $CFG->wwwroot.'/local/ulcc_form_library/actions/form_preview.php?'.$PARSER->get_params_url();
+$previewurl = $CFG->wwwroot.'/local/ulcc_form_library/actions/form_preview.php?'.$PARSER->get_params_url($included);
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/edit_formfields.html');
 

@@ -69,13 +69,14 @@ $pluginrecord = $dbc->get_formelement_by_id($formelement_id);
 // Take the name field from the plugin as it will be used to call the instantiate the plugin class.
 $classname = $pluginrecord->name;
 // Include the class for the plugin.
-include_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
+require_once("{$CFG->dirroot}/local/ulcc_form_library/plugin/form_elements/{$classname}.php");
 
 if (!class_exists($classname)) {
     print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
 }
 
 // Instantiate the plugin class.
+/* @var form_element_plugin $pluginclass */
 $pluginclass = new $classname();
 
 // Has the maximum number of this field type in this report been reached?
