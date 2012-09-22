@@ -235,7 +235,8 @@ class ulcc_form {
 
             if (!empty($entrydata)) {
                 ob_start();
-                include_once($CFG->dirroot."/local/ulcc_form_library/views/entry_display.html");
+                // Must not be include once, or else we'll only get one entry!
+                include($CFG->dirroot."/local/ulcc_form_library/views/entry_display.html");
 
                 $formentry = ob_get_contents();
 
