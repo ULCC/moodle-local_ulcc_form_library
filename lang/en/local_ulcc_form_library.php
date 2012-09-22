@@ -115,6 +115,8 @@ $string['type']             = 'Type';
 
 // V
 $string['viewformpreview']  = 'View form preview';
+$string['viewforms'] = 'Forms overview';
+
 
 
 global $CFG;
