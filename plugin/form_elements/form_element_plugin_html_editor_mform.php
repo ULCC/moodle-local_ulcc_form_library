@@ -61,15 +61,16 @@ class form_element_plugin_html_editor_mform extends form_element_plugin_mform {
     protected function specific_validation($data) {
 
         $data = (object)$data;
-
-        if ($data->maximumlength < 0 || $data->maximumlength > 9999) {
-            $this->errors['maximumlength'] =
-                get_string('form_element_plugin_html_editor_maxlengthrange', 'local_ulcc_form_library');
-        }
-        if ($data->maximumlength < $data->minimumlength) {
-            $this->errors['maximumlength'] =
-                get_string('form_element_plugin_html_editor_maxlessthanmin', 'local_ulcc_form_library');
-        }
+        // Disabled as right now, there can't be more than one rule in place on a form element.
+//
+//        if ($data->maximumlength < 0 || $data->maximumlength > 9999) {
+//            $this->errors['maximumlength'] =
+//                get_string('form_element_plugin_html_editor_maxlengthrange', 'local_ulcc_form_library');
+//        }
+//        if ($data->maximumlength < $data->minimumlength) {
+//            $this->errors['maximumlength'] =
+//                get_string('form_element_plugin_html_editor_maxlessthanmin', 'local_ulcc_form_library');
+//        }
 
         return $this->errors;
     }
