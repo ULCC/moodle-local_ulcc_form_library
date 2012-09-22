@@ -124,7 +124,8 @@ class form_parser {
 
     /**
      * Returns a particular value for the named variable, taken from
-     * POST or GET, otherwise returning a given default.
+     * POST or GET, otherwise returning a given default. Also stores it so that all of them can be
+     * retrieved easily later using get_params_url().
      *
      * This function should be used to initialise all optional values
      * in a script that are based on parameters.  Usually it will be

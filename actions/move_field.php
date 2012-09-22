@@ -35,17 +35,17 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // The id of the form must be provided.
-$form_id = required_param('form_id', PARAM_INT);
+$form_id = $PARSER->required_param('form_id', PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
-$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
-$context_id = required_param('context_id', PARAM_INT);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = $PARSER->required_param('context_id', PARAM_INT);
 // The id of the formfield used when editing.
-$formfield_id = required_param('formfield_id', PARAM_INT);
+$formfield_id = $PARSER->required_param('formfield_id', PARAM_INT);
 // The id of the formfield used when editing.
-$position = required_param('position', PARAM_INT);
+$position = $PARSER->required_param('position', PARAM_INT);
 // The id of the formfield used when editing.
-$move = required_param('move', PARAM_INT);
+$move = $PARSER->required_param('move', PARAM_INT);
 
 
 // Instantiate the db.

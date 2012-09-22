@@ -27,7 +27,7 @@
 
 global  $CFG, $DB, $USER, $PAGE;
 
-$context_id = optional_param('context_id', 0, PARAM_INT);
+$context_id = $PARSER->optional_param('context_id', 0, PARAM_INT);
 $context = false;
 if ($context_id) {
     // We need to get the current context so we can if the user has the capability to use the forms library.

@@ -28,7 +28,7 @@ require_once('../../../config.php');
 
 global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
-// Include any neccessary files.
+// Include any necessary files.
 
 // Meta includes.
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
@@ -75,7 +75,7 @@ if (!empty($formfield)) {
                     // If the field is being moved up all other fields have postion value increased
                     // if the field is being moved down all other fields have postion value decreased
                     // move up = 1 move down = 0.
-                    if (!$dbc->set_new_position($field->id, $field->position - 1));
+                    $dbc->set_new_position($field->id, $field->position - 1);
                 }
             }
         }

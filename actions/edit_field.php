@@ -43,6 +43,9 @@ $form_id = $PARSER->required_param('form_id', PARAM_INT);
 $formelement_id = $PARSER->required_param('formelement_id', PARAM_INT);
 // The id of the reportfield used when editing.
 $formfield_id = $PARSER->optional_param('formfield_id', null, PARAM_INT);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = $PARSER->required_param('context_id', PARAM_INT);
 
 // Instantiate the db.
 $dbc = new form_db();
@@ -57,7 +60,7 @@ $title = (empty($formfield_id)) ? get_string('addfield', 'local_ulcc_form_librar
 $PAGE->navbar->add($title, null, 'title');
 // Setup the page title and heading.
 $SITE = $dbc->get_course_by_id(SITEID);
-$PAGE->set_title($SITE->fullname." : ".$pluginname);
+$PAGE->set_title($SITE->fullname." : ".$moodlepluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');
 $PAGE->set_url('/local/ulcc_form_library/actions/edit_field.php', $PARSER->get_params());
@@ -88,4 +91,3 @@ $pluginclass->edit($form_id, $formelement_id, $formfield_id, $moodleplugintype, 
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/edit_field.html');
 
-?>

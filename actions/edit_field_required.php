@@ -30,13 +30,16 @@ global $USER, $CFG, $SESSION, $PARSER, $PAGE;
 
 // Include any neccessary files.
 
-// Meta includes
+// Meta includes.
 require_once($CFG->dirroot.'/local/ulcc_form_library/action_includes.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
 // The id of the report  that the field will be in.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
 // The id of the formfield used when editing.
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = $PARSER->required_param('context_id', PARAM_INT);
 $formfield_id = $PARSER->required_param('formfield_id', PARAM_INT);
 
 // Instantiate the db.

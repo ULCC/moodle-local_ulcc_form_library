@@ -34,11 +34,11 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/edit_form_mfo
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
 
-$form_id = optional_param('form_id', null, PARAM_INT);
+$form_id = $PARSER->optional_param('form_id', null, PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = required_param('moodleplugintype', PARAM_ALPHAEXT);
-$moodlepluginname = required_param('moodlepluginname', PARAM_ALPHAEXT);
-$context_id = required_param('context_id', PARAM_INT);
+$moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_ALPHAEXT);
+$moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_ALPHAEXT);
+$context_id = $PARSER->required_param('context_id', PARAM_INT);
 
 require_login();
 
@@ -46,7 +46,7 @@ $dbc = new form_db();
 
 $mform = new edit_form_mform($moodlepluginname, $moodleplugintype, $context_id, $form_id);
 
-//was the form cancelled?
+// Was the form cancelled?
 if ($mform->is_cancelled()) {
     // Send the user back.
     $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?'.$PARSER->get_params_url();
@@ -106,9 +106,9 @@ if (!empty($form_id)) {
 // Add create form title to nav.
 $PAGE->navbar->add(get_string('createform', 'local_ulcc_form_library'), null, 'title');
 
-// setup the page title and heading.
+// Setup the page title and heading.
 $SITE = $dbc->get_course_by_id(SITEID);
-$PAGE->set_title($SITE->fullname." : ".$pluginname);
+$PAGE->set_title($SITE->fullname." : ".$moodlepluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');
 $PAGE->set_pagelayout('admin');
