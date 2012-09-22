@@ -191,4 +191,16 @@ class form_element_plugin_page_break extends form_element_plugin {
     public function is_configurable() {
         return false;
     }
+
+    /**
+     * Places entry data for the form field given into the entryobj given by the user. Page breaks have no data
+     * so this is just an empty override.
+     *
+     * @param int $formfield_id the id of the formfield that the entry is attached to
+     * @param int $entry_id the id of the entry
+     * @param object $entryobj an object that will add parameters to
+     */
+    public function entry_data($formfield_id, $entry_id, &$entryobj) {
+        // Deliberately empty.
+    }
 }
