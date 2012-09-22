@@ -43,7 +43,7 @@ $form_id = $PARSER->required_param('form_id', PARAM_INT);
 // Get the type of the plugin that is currently invoking the form library.
 $moodleplugintype = $PARSER->required_param('moodleplugintype', PARAM_ALPHAEXT);
 $moodlepluginname = $PARSER->required_param('moodlepluginname', PARAM_ALPHAEXT);
-
+$context_id = $PARSER->required_param('context_id', PARAM_INT);
 
 // Instantiate the db.
 $dbc = new form_db();
