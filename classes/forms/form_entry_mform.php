@@ -224,6 +224,7 @@ class form_entry_mform extends form_lib_form
             }
 
             // Instantiate the plugin class.
+            /* @var form_element_plugin $pluginclass */
             $pluginclass = new $classname();
 
             $pluginclass->load($field->id);
@@ -231,7 +232,7 @@ class form_entry_mform extends form_lib_form
             // Call the plugins entry_form function which will add an instance of the plugin
             // to the form.
             if ($pluginclass->is_processable()) {
-                if (!$pluginclass->entry_process_data($field->id, $entry_id, $data)) {
+                if (!$pluginclass->entry_process_data($field->id, $entryid, $data)) {
                     throw new coding_exception('Problem saving form plugin data');
                 }
             }
