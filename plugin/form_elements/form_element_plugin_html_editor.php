@@ -298,5 +298,27 @@ class form_element_plugin_html_editor extends form_element_plugin {
         );
 
     }
+
+    /**
+     * Places entry data formatted for viewing for the form field given  into the
+     * entryobj given by the user. By default the entry_data function is called to provide
+     * the data. Any child class which needs to have its data formatted should override this
+     * function.
+     *
+     * @param int $formfield_id the id of the formfield that the entry is attached to
+     * @param int $entry_id the id of the entry
+     * @param object $entryobj an object that will add parameters to
+     * @param bool $returnvalue
+     */
+    public function view_data($formfield_id, $entry_id, &$entryobj, $returnvalue = false) {
+
+        // This will leave us with an array. Good for getting data reloaded into the form element, but bad for HTML.
+        $this->entry_data($formfield_id, $entry_id, $entryobj);
+
+        // Convert it back to a simple string.
+        $fieldname = $formfield_id."_field";
+        $arraydata = $entryobj->$fieldname;
+        $entryobj->$fieldname = $arraydata['text'];
+    }
 }
 
