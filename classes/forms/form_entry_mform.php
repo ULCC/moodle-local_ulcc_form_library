@@ -293,7 +293,7 @@ class form_entry_mform extends form_lib_form {
      * Checks whether the previous biutton was pressed and adjusts things.
      */
     public function previous() {
-        parent::previous($this->form_id, $this->currentpage);
+        return parent::previous($this->form_id, $this->currentpage);
     }
 
 }
