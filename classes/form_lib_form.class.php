@@ -134,7 +134,7 @@ abstract class form_lib_form extends moodleform {
                 $SESSION->pagedata = array();
             }
 
-            // Create a array to hold the page temp_data.
+            // Create an array to hold the page temp_data.
             if (!isset($SESSION->pagedata[$form_id])) {
                 $SESSION->pagedata[$form_id] = array();
             }
