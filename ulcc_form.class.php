@@ -158,7 +158,8 @@ class ulcc_form {
     }
 
     /**
-     * Gets the mform so stuff can be done with it. Does sanity checks.
+     * Gets the mform so stuff can be done with it. Does sanity checks. Will rebuild the form based on the current
+     * page.
      *
      * @return form_entry_mform
      * @throws coding_exception
@@ -166,11 +167,6 @@ class ulcc_form {
     private function get_mform() {
 
         global $SESSION;
-
-        // Cache it so we don't have two.
-        if (isset($this->mform)) {
-            return $this->mform;
-        }
 
         if (empty($this->formid)) {
             throw new coding_exception('No form id specified. Cannot display form');
