@@ -535,6 +535,15 @@ class form_element_plugin {
     public function is_configurable() {
         return true;
     }
+
+    /**
+     * Loads the name and description etc for this specific instance of the plugin field.
+     *
+     * @param $formfield_id
+     */
+    public function load($formfield_id) {
+
+    }
 }
 
 
