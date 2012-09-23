@@ -894,8 +894,9 @@ class form_db extends form_logging {
     /**
      * delete option items for a plugin list-type element referenced by element_id (parent_id) instead of formfield_id
      * $tablename is the element table eg block_ilp_plu_category
-     * @param string tablename
-     * @param int formfield_id
+     * @param string $tablename
+     * @param $parent_id
+     * @param array $extraparams
      *
      * @return boolean true or false
      */
@@ -906,7 +907,7 @@ class form_db extends form_logging {
         $item_table = $tablename."_items";
         $entry_table = $tablename."_ent";
 
-        //get parent_id
+        // Get parent_id.
         //return $this->dbc->delete_records( $item_table, array( 'parent_id' => $parent_id ) , $extraparams );
         return $this->delete_records($item_table, array('parent_id' => $parent_id), $extraparams);
     }
@@ -935,7 +936,7 @@ class form_db extends form_logging {
      * the full data from listelement_item_exists is used by ilp_element_plugin_status::get_option_list(),
      * so please do not change the return type
      *
-     * @param string $tablename     the name of the
+     * @param string $item_tablename     the name of the
      * @param array  $conditionlist array containing conditions
      * @return array of objects
      */
@@ -1026,11 +1027,12 @@ class form_db extends form_logging {
      * check if any user data has been uploaded to a particular list-type formfield
      * if it has then admin should not be allowed to delete any existing
      * options
-     * @param string tablename
-     * @param int formfield_id
-     * @param string item_table - use this item_table if item_table name is not simply $tablename . "_items"
-     * @param string item_key - use this foreign key if specific item_table has been sent as arg. Send empty string to simply get all rows from the item table
-     * @param string item_value_field - field from the item table to use as the value submitted to the user entry table
+     * @param string $tablename
+     * @param int $formfield_id
+     * @param bool|string $item_table use this item_table if item_table name is not simply $tablename . "_items"
+     * @param bool|string $item_key use this foreign key if specific item_table has been sent as arg. Send empty string to
+     * simply get all rows from the item table
+     * @param string|bool $item_value_field field from the item table to use as the value submitted to the user entry table
      * @return mixed array of objects or false
      */
     private function plugin_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
@@ -1106,7 +1108,7 @@ class form_db extends form_logging {
     /**
      * Updates an entry record
      *
-     * @param object entry the object that we want to update
+     * @param object $entry the object that we want to update
      *
      * @return bool true or false
      */
@@ -1191,7 +1193,7 @@ class form_db extends form_logging {
      * @param int $id the id of the data that is being retrieved
      * @return mixed the data that was saved
      */
-    private function delete_temp_data($id) {
+    public function delete_temp_data($id) {
         return $this->dbc->delete_records('ulcc_form_lib_temp', array('id' => $id));
     }
 
@@ -1250,7 +1252,7 @@ class form_db extends form_logging {
      * @param array $extraparams
      * @return mixed true or false
      */
-    function delete_element_record_by_id($tablename, $id, $extraparams = array()) {
+    public function delete_element_record_by_id($tablename, $id, $extraparams = array()) {
         return $this->delete_records($tablename, array('id' => $id), $extraparams);
     }
 
@@ -1263,7 +1265,7 @@ class form_db extends form_logging {
      * @param array $extraparams
      * @return bool true or false
      */
-    function delete_items($tablename,$parent_id, $extraparams=array() ) {
+    public function delete_items($tablename, $parent_id, $extraparams=array() ) {
         return $this->delete_records( $tablename, array('parent_id' => $parent_id), $extraparams );
     }
 
