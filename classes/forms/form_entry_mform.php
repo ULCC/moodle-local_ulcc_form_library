@@ -20,15 +20,44 @@ require_once($CFG->dirroot . '/local/ulcc_form_library/db/form_db.class.php');
 require_once($CFG->dirroot . '/local/ulcc_form_library/classes/form_lib_form.class.php');
 require_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
 
-class form_entry_mform extends form_lib_form
-{
+/**
+ * Form that is used to display the dynamically generated elements to the user for data entry.
+ */
+class form_entry_mform extends form_lib_form {
 
+    /**
+     * @var int
+     */
     public $course_id;
+
+    /**
+     * @var int
+     */
     public $form_id;
+
+    /**
+     * @var int
+     */
     public $entry_id;
+
+    /**
+     * @var int
+     */
     public $currentpage;
+
+    /**
+     * @var string e.g. block, mod
+     */
     public $plugintype;
+
+    /**
+     * @var string e.g. coursework, ilp
+     */
     public $pluginname;
+
+    /**
+     * @var form_db
+     */
     public $dbc;
 
     /**
@@ -57,7 +86,7 @@ class form_entry_mform extends form_lib_form
      * TODO comment this
      */
     public function definition() {
-        global $USER, $CFG;
+        global $CFG;
 
         $mform =& $this->_form;
 
@@ -85,7 +114,8 @@ class form_entry_mform extends form_lib_form
         $mform->addElement('hidden', 'page_data', 1);
         $mform->setType('page_data', PARAM_INT);
 
-        if ($count = $this->dbc->element_type_exists($this->form_id, 'ulcc_form_plg_pb')) {
+        $count = $this->dbc->element_type_exists($this->form_id, 'ulcc_form_plg_pb');
+        if ($count) {
             $pagebreakcount = $count;
         }
 
@@ -241,11 +271,6 @@ class form_entry_mform extends form_lib_form
         return $entryid;
     }
 
-    /**
-     * TODO comment this
-     */
-    function definition_after_data() {
-    }
 
     /**
      * Sets the current page to the given number, this must be less than or equal to number of page breaks in
@@ -253,8 +278,8 @@ class form_entry_mform extends form_lib_form
      *
      * @param $page
      */
-    function set_current_page($page) {
-        // $this->currentpage  =   $page;
+    public function set_current_page($page) {
+        $this->currentpage = $page;
     }
 
     /**
