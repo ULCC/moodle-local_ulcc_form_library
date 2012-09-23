@@ -33,8 +33,14 @@ require_once($CFG->libdir.'/formslib.php');
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
 
+/**
+ * Abstract class that really only has one implementation, so should really be merged with form_entry_mform
+ */
 abstract class form_lib_form extends moodleform {
 
+    /**
+     * @var int
+     */
     public $form_id;
 
     /**
@@ -42,7 +48,15 @@ abstract class form_lib_form extends moodleform {
      */
     public $dbc;
 
+    /**
+     * @var stdClass
+     */
     public $formdata;
+
+    /**
+     * @var int
+     */
+    protected $currentpage;
 
     /**
      * Returns data submitted from previous pages on the current form.
@@ -50,9 +64,9 @@ abstract class form_lib_form extends moodleform {
      *
      * @param int $form_id the id of the mutlipage form that we want to get submitted data for
      *
-     * @return mixed array or null if not data is found
+     * @return mixed stdClass or null if not data is found
      */
-    function get_multipage_data($form_id) {
+    public function get_multipage_data($form_id) {
 
         $normdata = $this->get_submitted_data();
 
@@ -104,6 +118,7 @@ abstract class form_lib_form extends moodleform {
      *
      * @param $form_id
      * @param $currentpage
+     * @return bool
      */
     public function next($form_id, $currentpage) {
 
@@ -149,19 +164,6 @@ abstract class form_lib_form extends moodleform {
                 $this->dbc->update_temp_data($tempid, $cformdata);
             }
 
-            // Set the data in the page to what it equaled before.
-            if (isset($SESSION->pagedata[$form_id][$currentpage])) {
-                $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$form_id][$currentpage]);
-
-                $this->set_data($tempdata);
-            }
-
-            // When the form displays, it needs to have the new page number in it.
-            $this->currentpage++;
-            $temp = new stdClass();
-            $temp->currentpage = $this->currentpage;
-            $this->set_data($temp);
-
             return true;
         }
 
@@ -195,26 +197,17 @@ abstract class form_lib_form extends moodleform {
                 unset($cformdata->nextbutton);
             }
 
-            if (!isset($SESSION->pagedata[$form_id][$currentpage + 1])) {
-                // If no data has been saved for the current page save the data to the dd
+            // We save the data that was entered so it can be reloaded if the user comes back to this page, or
+            // when the form is submitted.
+            if (!isset($SESSION->pagedata[$form_id][$currentpage])) {
+                // If no data has been saved for the current page save the data to the db
                 // and save the key..
-                $SESSION->pagedata[$form_id][$currentpage + 1] = $this->dbc->save_temp_data($cformdata);
+                $SESSION->pagedata[$form_id][$currentpage] = $this->dbc->save_temp_data($cformdata);
             } else {
                 // If data for this page has already been saved get the key and update the record.
-                $tempid = $SESSION->pagedata[$form_id][$currentpage + 1];
+                $tempid = $SESSION->pagedata[$form_id][$currentpage];
                 $this->dbc->update_temp_data($tempid, $cformdata);
             }
-
-            // Set the data in the page to what it equaled before.
-            if (isset($SESSION->pagedata[$form_id][$currentpage])) {
-                $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$form_id][$currentpage]);
-                $this->set_data($tempdata);
-            }
-
-            $this->currentpage--; // Not sure this is needed.
-            $temp = new stdClass();
-            $temp->currentpage = $this->currentpage;
-            $this->set_data($temp);
 
             return true;
         }
@@ -258,7 +251,7 @@ abstract class form_lib_form extends moodleform {
      */
     public function load_entry($entry_id = false) {
 
-        global $CFG;
+        global $CFG, $SESSION;
 
         if (!empty($entry_id)) {
 
@@ -290,7 +283,7 @@ abstract class form_lib_form extends moodleform {
                         print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
                     }
 
-                    // Instantiate the plugin class.
+                    /* @var form_element_plugin $pluginclass */
                     $pluginclass = new $classname();
 
                     $pluginclass->load($field->id);
@@ -308,9 +301,22 @@ abstract class form_lib_form extends moodleform {
                 $this->set_data($entry_data);
             }
         }
+
+        // If we have data from previous pages (next/previous buttons used on multi page form), load it here.
+        // Set the data in the page to what it equalled before.
+        if (isset($SESSION->pagedata[$this->form_id][$this->currentpage])) {
+            $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$this->form_id][$this->currentpage]);
+            $this->set_data($tempdata);
+        }
     }
 
-    function return_entry($entry_id = false, $labels = false, $dontreturn = array()) {
+    /**
+     * @param bool $entry_id
+     * @param bool $labels
+     * @param array $dontreturn
+     * @return bool|stdClass
+     */
+    public function return_entry($entry_id = false, $labels = false, $dontreturn = array()) {
 
         global $CFG;
 
@@ -346,7 +352,7 @@ abstract class form_lib_form extends moodleform {
                             print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
                         }
 
-                        // Instantiate the plugin class.
+                        /* @var form_element_plugin $pluginclass */
                         $pluginclass = new $classname();
 
                         // Create the fieldname.

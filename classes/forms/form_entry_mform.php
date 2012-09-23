@@ -41,11 +41,6 @@ class form_entry_mform extends form_lib_form {
     public $entry_id;
 
     /**
-     * @var int
-     */
-    public $currentpage;
-
-    /**
      * @var string e.g. block, mod
      */
     public $plugintype;
