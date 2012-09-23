@@ -1117,15 +1117,15 @@ class form_db extends form_logging {
     /**
      * Returns the id of the item with the given value
      *
+     * @param $tablename
      * @param    int $parent_id    the id of the state item record that is the parent of the item
      * @param    int $itemvalue the actual value of the field
      * @param    string $keyfield field from $itemtable to use as key
-     * @param    string $itemtable name of item table to use if this element type does not follow the '_items' naming convention
+     * @param bool|string $itemtable name of item table to use if this element type does not follow the '_items' naming convention
      *
      * @return    mixed object or false
      */
     private function get_state_item_id($tablename, $parent_id, $itemvalue, $keyfield = 'id', $itemtable = false) {
-        global $CFG;
 
         $tablename = (!empty($itemtable)) ? $itemtable : $tablename."_items";
         $params[$keyfield] = $itemvalue;
@@ -1186,6 +1186,16 @@ class form_db extends form_logging {
     }
 
     /**
+     * Deletes the temp data record with the given id
+     *
+     * @param int $id the id of the data that is being retrieved
+     * @return mixed the data that was saved
+     */
+    private function delete_temp_data($id) {
+        return $this->dbc->delete_records('ulcc_form_lib_temp', array('id' => $id));
+    }
+
+    /**
      * Returns the form entry with the id that matches the one given
      *
      * @param int $entry_id the id of the entry that you want to return
@@ -1203,8 +1213,7 @@ class form_db extends form_logging {
      * @param string $name the name of the plugin that the forms will be counted for
      * @return int the new forms position number
      */
-
-    function get_new_form_position($type, $name) {
+    public function get_new_form_position($type, $name) {
 
         $from = "FROM 		{ulcc_form_lib_form} as f,
                                 {ulcc_form_lib_plugin} as p ";
@@ -1213,7 +1222,7 @@ class form_db extends form_logging {
                      AND        p.type     =    :ptype
                      AND        p.id       =    f.plugin_id";
 
-        // get a count of all the records
+        // Get a count of all the records.
         $position = $this->dbc->count_records_sql('SELECT COUNT(*) '.$from.$where,
                                                   array('pname' => $name,
                                                         'ptype' => $type));
@@ -1238,14 +1247,12 @@ class form_db extends form_logging {
      * will be deleted form
      * @param    int $id the id of the record you will be deleting
      *
+     * @param array $extraparams
      * @return mixed true or false
      */
     function delete_element_record_by_id($tablename, $id, $extraparams = array()) {
         return $this->delete_records($tablename, array('id' => $id), $extraparams);
     }
-
-
-
 
     /**
      * Generic delete function used to delete items from the items table
@@ -1253,6 +1260,7 @@ class form_db extends form_logging {
      * @param string $tablename the table that you want to delete the record from
      * @param int $parent_id the parent_id that all fields to be deleted should have
      *
+     * @param array $extraparams
      * @return bool true or false
      */
     function delete_items($tablename,$parent_id, $extraparams=array() ) {
