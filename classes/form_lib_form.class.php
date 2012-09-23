@@ -221,6 +221,10 @@ abstract class form_lib_form extends moodleform {
                 $tempdata = (is_array($tempdata)) ? $tempdata : (array)$tempdata;
                 $darray = array_merge($darray, $tempdata);
             }
+
+            // Important in case someone else changes the data, then the user goes back to the form - it'll
+            // reload their old stuff from the session.
+            unset($SESSION->pagedata[$form_id]);
         }
 
         $formdata = (is_array($this->formdata)) ? $this->formdata : (array)$this->formdata;
