@@ -157,7 +157,7 @@ class form_entry_mform extends form_lib_form {
                         print_error('noclassforplugin', 'local_ulcc_form_library', '', $formelementrecord->name);
                     }
 
-                    // Instantiate the plugin class.
+                    /* @var form_element_plugin $formelementclass */
                     $formelementclass = new $classname();
 
                     $formelementclass->load($field->id);
