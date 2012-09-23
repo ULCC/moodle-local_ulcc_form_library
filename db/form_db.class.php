@@ -1141,9 +1141,9 @@ class form_db extends form_logging {
      * Saves temp data into the ulcc_form_lib_temp table data stored using this function is serialised. It should be
      * noted that only temp data should be stored using this function as the ulcc_form_lib_temp table can be purged
      *
-     * @param $data the data to be serialized and saved into the temp table
+     * @param stdClass $data the data to be serialized and saved into the temp table
      *
-     * @return mixed int the id of the data thats been saved or bool false
+     * @return mixed int the id of the data that's been saved or bool false
      */
     private function save_temp_data($data) {
         $serialiseddata = serialize($data);

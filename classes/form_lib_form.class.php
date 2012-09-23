@@ -122,52 +122,60 @@ abstract class form_lib_form extends moodleform {
      */
     public function next($form_id, $currentpage) {
 
-        global $SESSION;
-
         $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
 
         // Was the next button pressed?
         if (isset($this->formdata->nextbutton)) {
 
-            $cformdata = $this->formdata;
-
-            // We do not want any of the following data to be saved as it stop the pagination features from working.
-            if (isset($cformdata->current_page)) {
-                unset($cformdata->current_page);
-            }
-            if (isset($cformdata->previousbutton)) {
-                unset($cformdata->previousbutton);
-            }
-            if (isset($cformdata->nextbutton)) {
-                unset($cformdata->nextbutton);
-            }
-
-            // Save all data submitted from last page.
-
-            // Check if the page data array has been created in the session.
-            if (!isset($SESSION->pagedata)) {
-                $SESSION->pagedata = array();
-            }
-
-            // Create an array to hold the page temp_data.
-            if (!isset($SESSION->pagedata[$form_id])) {
-                $SESSION->pagedata[$form_id] = array();
-            }
-
-            if (!isset($SESSION->pagedata[$form_id][$currentpage - 1])) {
-                // If no data has been saved for the current page save the data to the dd
-                // and save the key.
-                $SESSION->pagedata[$form_id][$currentpage - 1] = $this->dbc->save_temp_data($cformdata);
-            } else {
-                // If data for this page has already been saved get the key and update the record.
-                $tempid = $SESSION->pagedata[$form_id][$currentpage - 1];
-                $this->dbc->update_temp_data($tempid, $cformdata);
-            }
+            $this->save_current_page_data();
 
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Saves the data from the current page. Used if the next or previous button has been pressed.
+     */
+    protected function save_current_page_data() {
+
+        global $SESSION;
+
+        $cformdata = $this->formdata;
+
+        // We do not want any of the following data to be saved as it stop the pagination features from working.
+        if (isset($cformdata->current_page)) {
+            unset($cformdata->current_page);
+        }
+        if (isset($cformdata->previousbutton)) {
+            unset($cformdata->previousbutton);
+        }
+        if (isset($cformdata->nextbutton)) {
+            unset($cformdata->nextbutton);
+        }
+
+        // Save all data submitted from last page.
+
+        // Check if the page data array has been created in the session.
+        if (!isset($SESSION->pagedata)) {
+            $SESSION->pagedata = array();
+        }
+
+        // Create an array to hold the page temp_data.
+        if (!isset($SESSION->pagedata[$this->form_id])) {
+            $SESSION->pagedata[$this->form_id] = array();
+        }
+
+        if (!isset($SESSION->pagedata[$this->form_id][$this->currentpage])) {
+            // If no data has been saved for the current page save the data to the dd
+            // and save the key.
+            $SESSION->pagedata[$this->form_id][$this->currentpage] = $this->dbc->save_temp_data($cformdata);
+        } else {
+            // If data for this page has already been saved get the key and update the record.
+            $tempid = $SESSION->pagedata[$this->form_id][$this->currentpage];
+            $this->dbc->update_temp_data($tempid, $cformdata);
+        }
     }
 
     /**
@@ -178,36 +186,12 @@ abstract class form_lib_form extends moodleform {
      * @return bool
      */
     public function previous($form_id, $currentpage) {
-        global $SESSION;
 
         $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
 
         if (isset($this->formdata->previousbutton)) {
 
-            $cformdata = $this->formdata;
-
-            // We do not want any of the following data to be saved as it stop the pagination features from working.
-            if (isset($cformdata->current_page)) {
-                unset($cformdata->current_page);
-            }
-            if (isset($cformdata->previousbutton)) {
-                unset($cformdata->previousbutton);
-            }
-            if (isset($cformdata->nextbutton)) {
-                unset($cformdata->nextbutton);
-            }
-
-            // We save the data that was entered so it can be reloaded if the user comes back to this page, or
-            // when the form is submitted.
-            if (!isset($SESSION->pagedata[$form_id][$currentpage])) {
-                // If no data has been saved for the current page save the data to the db
-                // and save the key..
-                $SESSION->pagedata[$form_id][$currentpage] = $this->dbc->save_temp_data($cformdata);
-            } else {
-                // If data for this page has already been saved get the key and update the record.
-                $tempid = $SESSION->pagedata[$form_id][$currentpage];
-                $this->dbc->update_temp_data($tempid, $cformdata);
-            }
+            $this->save_current_page_data();
 
             return true;
         }
