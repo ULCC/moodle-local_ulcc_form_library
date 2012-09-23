@@ -105,7 +105,7 @@ abstract class form_lib_form extends moodleform {
      * @param $form_id
      * @param $currentpage
      */
-    function next($form_id, $currentpage) {
+    public function next($form_id, $currentpage) {
 
         global $SESSION;
 
@@ -225,6 +225,7 @@ abstract class form_lib_form extends moodleform {
         $this->formdata = $this->get_multipage_data($form_id);
         $darray = array();
 
+        // The session contains a list of ids in the temp data table.
         if (!empty($SESSION->pagedata[$form_id])) {
             foreach ($SESSION->pagedata[$form_id] as $tempid) {
                 $tempdata = $this->dbc->get_temp_data($tempid);
