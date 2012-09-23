@@ -220,6 +220,7 @@ abstract class form_lib_form extends moodleform {
                 $tempdata = $this->dbc->get_temp_data($tempid);
                 $tempdata = (is_array($tempdata)) ? $tempdata : (array)$tempdata;
                 $darray = array_merge($darray, $tempdata);
+                $this->dbc->delete_temp_data($tempid);
             }
 
             // Important in case someone else changes the data, then the user goes back to the form - it'll
