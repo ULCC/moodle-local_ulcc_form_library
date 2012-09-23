@@ -161,11 +161,19 @@ abstract class form_lib_form extends moodleform {
             $temp = new stdClass();
             $temp->currentpage = $this->currentpage;
             $this->set_data($temp);
+
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Carries out operations necessary if the form is a multipage form and the previous button has been pressed
+     *
+     * @param int $form_id
+     * @param int $currentpage
+     * @return bool
      */
     public function previous($form_id, $currentpage) {
         global $SESSION;
@@ -203,11 +211,15 @@ abstract class form_lib_form extends moodleform {
                 $this->set_data($tempdata);
             }
 
-            $this->currentpage--;
+            $this->currentpage--; // Not sure this is needed.
             $temp = new stdClass();
             $temp->currentpage = $this->currentpage;
             $this->set_data($temp);
+
+            return true;
         }
+
+        return false;
     }
 
     /**

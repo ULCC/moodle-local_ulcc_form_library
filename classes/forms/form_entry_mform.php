@@ -286,7 +286,7 @@ class form_entry_mform extends form_lib_form {
      * Checks whether the next button was pressed and adjusts things.
      */
     public function next() {
-        parent::next($this->form_id, $this->currentpage);
+        return parent::next($this->form_id, $this->currentpage);
     }
 
     /**

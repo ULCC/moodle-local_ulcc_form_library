@@ -224,9 +224,16 @@ class ulcc_form {
         // Has the form been submitted? This might mean we need to go to the next page, or it might mean ending.
         if ($mform->is_submitted()) { // Has any data at all in GET or POST.
 
-            // Shift forwards/backwards by a page if we need to.
-            $mform->next();
-            $mform->previous();
+            // Shift forwards/backwards by a page if we need to. We need to get a new version of the form once this
+            // has happened so that the fields can be rebuilt for the next/previous page. For this reason, the functions
+            // here save the temp form data in the DB (and place the id of the record in the session), then we
+            // keep track of the page we are on here so when display() is called, we get a new form with the new
+            // elements.
+            if ($mform->next()) {
+                $this->currentpage++;
+            } else if ($mform->previous()) {
+                $this->currentpage--;
+            }
 
             // Get the form data submitted.
             $formdata = $mform->get_multipage_data($this->formid);
