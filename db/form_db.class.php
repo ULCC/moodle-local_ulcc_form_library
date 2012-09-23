@@ -1160,7 +1160,7 @@ class form_db extends form_logging {
      * @param int $tempid the id of the record to be updated
      * @param mixed $data the data that will be saved
      *
-     * return bool true if successful false is not
+     * @return bool true if successful false is not
      */
     private function update_temp_data($tempid, $data) {
 
