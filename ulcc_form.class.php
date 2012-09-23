@@ -131,17 +131,16 @@ class ulcc_form {
     }
 
     /**
-     * @param int|null $entry_id
      * @throws coding_exception
      * @return int|bool entry id if it was submitted, false otherwise.
      */
-    public function display_form($entry_id = null) {
+    public function display_form() {
 
         if (!$this->formpagessaved) {
             throw new coding_exception('Must run try_to_save_whole_form_and_get_entry_id() before displaying the form');
         }
 
-        $mform = $this->get_mform($entry_id);
+        $mform = $this->get_mform();
 
         // Set the current page variable inside of the form.
 
@@ -151,10 +150,8 @@ class ulcc_form {
             redirect($this->cancelurl, '', FORM_REDIRECT_DELAY);
         }
 
-        $savedentryid = $this->try_to_save_whole_form_and_get_entry_id($mform);
-
         // Loads the data into the form.
-        $mform->load_entry($entry_id);
+        $mform->load_entry($this->entryid);
 
         $mform->display();
 
