@@ -117,7 +117,8 @@ $string['type']             = 'Type';
 $string['viewformpreview']  = 'View form preview';
 $string['viewforms'] = 'Forms overview';
 
-
+// U
+$string['ulcc_form_library:formadmin'] = 'ULCC Form Library: formadmin';
 
 global $CFG;
 
