@@ -822,7 +822,8 @@ class form_db extends form_logging {
      * @return int or false
      */
     public function get_element_id_from_formfield_id($tablename, $formfield_id) {
-        $element_record = array_shift($this->dbc->get_records($tablename, array('formfield_id' => $formfield_id)));
+        $element_record_variable = $this->dbc->get_records($tablename, array('formfield_id' => $formfield_id));
+        $element_record = array_shift($element_record_variable);
 
         if (!empty($element_record)) {
             return $element_record->id;
