@@ -313,7 +313,7 @@ abstract class form_lib_form extends moodleform {
                             print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
                         }
 
-                        // Instantiate the plugin class.
+                        /* @var form_element_plugin $pluginclass */
                         $pluginclass = new $classname();
 
                         // Create the fieldname.
