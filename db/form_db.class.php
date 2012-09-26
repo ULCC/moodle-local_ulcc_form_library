@@ -925,16 +925,12 @@ class form_db extends form_logging {
      * check if any user data has been uploaded to a particular list-type formfield
      * if it has then admin should not be allowed to delete any existing
      * options
-     * @param $tablename
-     * @param $formfield_id
-     * @param bool $item_table
-     * @param bool $item_key
-     * @param bool $item_value_field
-     * @internal param \tablename $string
-     * @internal param \formfield_id $int
-     * @internal param \item_table $string - use this item_table if item_table name is not simply $tablename . "_items"
-     * @internal param \item_key $string - use this foreign key if specific item_table has been sent as arg. Send empty string to simply get all rows from the item table
-     * @internal param \item_value_field $string - field from the item table to use as the value submitted to the user entry table
+     * @param string $tablename
+     * @param int $formfield_id
+     * @param bool $item_table Use this item_table if item_table name is not simply $tablename . "_items"
+     * @param bool $item_key Use this foreign key if specific item_table has been sent as arg. Send empty string to simply
+     * get all rows from the item table
+     * @param bool $item_value_field field from the item table to use as the value submitted to the user entry table
      * @return mixed array of objects or false
      */
     public function plugin_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
