@@ -116,13 +116,11 @@ abstract class form_lib_form extends moodleform {
     /**
      * Find out if the next button was pressed and act on it if necessary.
      *
-     * @param $form_id
-     * @param $currentpage
      * @return bool
      */
-    public function next($form_id, $currentpage) {
+    public function next() {
 
-        $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
+        $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($this->form_idform_id) : $this->formdata;
 
         // Was the next button pressed?
         if (isset($this->formdata->nextbutton)) {
@@ -181,13 +179,11 @@ abstract class form_lib_form extends moodleform {
     /**
      * Carries out operations necessary if the form is a multipage form and the previous button has been pressed
      *
-     * @param int $form_id
-     * @param int $currentpage
      * @return bool
      */
-    public function previous($form_id, $currentpage) {
+    public function previous() {
 
-        $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
+        $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($this->form_id) : $this->formdata;
 
         if (isset($this->formdata->previousbutton)) {
 
