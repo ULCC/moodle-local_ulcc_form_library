@@ -113,6 +113,7 @@ class ulcc_form {
         $this->formid = $formid;
         $this->currentpage = $currentpage;
         $this->pageurl = $pageurl;
+        $this->cancelurl = $cancelurl;
         $this->entryid = $entryid;
         $this->dbc = new form_db();
         $this->formdata = null;
@@ -215,6 +216,10 @@ class ulcc_form {
     public function try_to_save_whole_form_and_get_entry_id() {
 
         global $SESSION;
+
+        if ($this->formpagessaved) {
+            return false;
+        }
 
         $mform = $this->get_mform();
 
