@@ -1049,7 +1049,6 @@ class form_db extends form_logging {
      * Returns the id of the item with the given value
      *
      * @param $tablename
-     * @param $tablename
      * @param    int $parent_id    the id of the state item record that is the parent of the item
      * @param    int $itemvalue the actual value of the field
      * @param    string $keyfield field from $itemtable to use as key
@@ -1059,8 +1058,6 @@ class form_db extends form_logging {
      * @return    mixed object or false
      */
     public function get_state_item_id($tablename, $parent_id, $itemvalue, $keyfield = 'id', $itemtable = false) {
-        global $CFG;
-    private function get_state_item_id($tablename, $parent_id, $itemvalue, $keyfield = 'id', $itemtable = false) {
 
         $tablename = (!empty($itemtable)) ? $itemtable : $tablename."_items";
         $params[$keyfield] = $itemvalue;
@@ -1216,7 +1213,7 @@ class form_db extends form_logging {
     public function get_form_element_item_records($itemtable, $id) {
         return $this->dbc->get_records($itemtable, array('parent_id' => $id));
 
-}
+    }
 
 
     /** Creates a new record in the _items table for the given plugin
