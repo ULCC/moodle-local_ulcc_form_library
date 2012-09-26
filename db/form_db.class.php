@@ -45,124 +45,15 @@ class form_db extends form_logging {
 
     }
 
-    /**
-     * A PHP magic method that intercepts all calls to the database class and
-     * encodes all the data being input.
-     *
-     * @param string $method The name of the method being called.
-     * @param array $params The array of parameters passed to the method.
-     * @throws Exception
-     * @return mixed The result of the query.
-     */
-    public function __call($method, $params) {
-
-        // Sanitise everything coming into the database here.
-        // TODO find all places that need this and sanitise the data using optional/required_param.
-        $params = $this->encode($params);
-
-        if (method_exists($this, $method)) {
-            $classname = get_class($this);
-
-            return call_user_func_array(array($classname,
-                                              $method), $params);
-        } else {
-            throw new Exception('Undefined class method '.$method.'() called');
-        }
-    }
-
-    /**
-     * Encodes mixed params before they are sent to the database.
-     *
-     * @param mixed $data The unencoded object/array/string/etc
-     * @return mixed The encoded version
-     */
-    protected static function encode(&$data) {
-        if (is_object($data) || is_array($data)) {
-            // Skip the ilp_flexible_table.
-            if (!is_a($data, 'ilp_flexible_table')) {
-                foreach ($data as $index => &$datum) {
-
-                    // We will skip any index with the prefix binary.
-                    if (substr($index, 0, 7) != 'binary_') {
-                        $datum = self::encode($datum);
-                    }
-                }
-            }
-            return $data;
-        } else {
-
-            // Decode any special characters prevent malicious code slipping through.
-            $data = self::decode_htmlchars($data, ENT_QUOTES);
-
-            // Purify all data (e.g. validate html, remove js and other bad stuff).
-
-            //I have had to remove the purify call as it was causing pages to timeout in 1.9
-            //this should be put back in once the ilp is moodle 2.0 only
-            $data = purify_html($data);
-
-            // encode the purified string
-            $data = trim(preg_replace('/\\\/', '&#92;', htmlentities($data, ENT_QUOTES, 'utf-8', false)));
-
-            // convert the empty string into null as such values break nullable FK fields
-            return ($data == '') ? null : $data;
-        }
-    }
-
-    /**
-     * Decodes mixed params.
-     *
-     * @param mixed The encoded object/array/string/etc
-     * @return mixed The decoded version
-     */
-    static function decode(&$data) {
-        if (is_object($data) || is_array($data)) {
-            foreach ($data as $index => &$datum) {
-                //skip any fields with prefix binary_
-                if (substr($index, 0, 7) != 'binary_') {
-                    $datum = form_db::decode($datum);
-                }
-            }
-            return $data;
-        } else {
-            return html_entity_decode($data, ENT_QUOTES, 'utf-8');
-        }
-    }
-
-    /**
-     * Decodes mixed params.
-     *
-     * @param mixed The encoded object/array/string/etc
-     * @return mixed The decoded version
-     */
-    static function decode_htmlchars(&$data) {
-        if (is_object($data) || is_array($data)) {
-            foreach ($data as $index => &$datum) {
-                //skip any fields with prefix binary_
-                if (substr($index, 0, 7) != 'binary_') {
-                    $datum = form_db_functions::decode_htmlchars($datum);
-                }
-            }
-            return $data;
-        } else {
-            return str_replace(array('&quot;',
-                                     '&#039;',
-                                     '&lt;',
-                                     '&gt;'),
-                               array('"',
-                                     "'",
-                                     '<',
-                                     '>'), $data);
-        }
-    }
-
-    /**
+   /**
      * finds and returns a block record from the db using the blocks name
      *
      * @param string $name - the name of the block
      *
      * return mixed object containing the block record or bool false
+     * @return mixed
      */
-    private function get_block_by_name($name) {
+    public function get_block_by_name($name) {
         return $this->dbc->get_record('block', array('name' => $name));
     }
 
@@ -172,8 +63,9 @@ class form_db extends form_logging {
      * @param string $name - the name of the module
      *
      * return mixed object containing module record or bool false
+     * @return mixed
      */
-    private function get_mod_by_name($name) {
+    public function get_mod_by_name($name) {
         return $this->dbc->get_record('modules', array('name' => $name));
     }
 
@@ -184,8 +76,9 @@ class form_db extends form_logging {
      *                                   db
      *
      *  return mixed int id number of new record or bool false
+     * @return mixed
      */
-    private function create_plugin($pluginrecord) {
+    public function create_plugin($pluginrecord) {
         return $this->insert_record('ulcc_form_lib_plugin', $pluginrecord);
     }
 
@@ -197,9 +90,10 @@ class form_db extends form_logging {
      * @param string $type  -   the type of the plugin that whose forms will be returned
      * @param string $formtype - the type of the form that will be returned
      *
+     * @param bool $disabled
      * @return mixed array containing form objects or bool false
      */
-    private function get_plugin_forms($name, $type, $formtype = null, $disabled = false) {
+    public function get_plugin_forms($name, $type, $formtype = null, $disabled = false) {
 
         $sqlparams = array('name' => $name,
                            'type' => $type);
@@ -236,7 +130,7 @@ class form_db extends form_logging {
      *
      * @return mixed array containing form objects or bool false
      */
-    private function get_plugin_forms_by_id($plugin_id) {
+    public function get_plugin_forms_by_id($plugin_id) {
         return $this->dbc->get_records('ulcc_form_lib_form', array('plugin_id' => $plugin_id));
     }
 
@@ -246,7 +140,7 @@ class form_db extends form_logging {
      * @param $form_id  -   the id of the form whose record will be returned
      * @return mixed object contain form data or false
      */
-    private function get_form_by_id($form_id) {
+    public function get_form_by_id($form_id) {
         return $this->dbc->get_record('ulcc_form_lib_form', array('id' => $form_id));
     }
 
@@ -257,7 +151,7 @@ class form_db extends form_logging {
      * @param $type     -   the type of the plugin
      * @return mixed object the plugin record or false
      */
-    private function get_moodle_plugin($name, $type) {
+    public function get_moodle_plugin($name, $type) {
         return $this->dbc->get_record('ulcc_form_lib_plugin',
                                       array('name' => $name,
                                             'type' => $type));
@@ -268,7 +162,7 @@ class form_db extends form_logging {
      *
      * @return array Result objects
      */
-    private function get_form_element_plugins() {
+    public function get_form_element_plugins() {
         global $DB;
 
         //this must be done to prevent errors when the plugin is being installed
@@ -282,11 +176,13 @@ class form_db extends form_logging {
      * returns data that can be used with a pagable ilp_flexible_table
      *
      * @param object $flextable an object of type flextable
+     * @param $pluginname
+     * @param $type
      * @param boolean $deleted should deleted reports be returned
      *                   defaults to false
      * @return mixed object containing report records or false
      */
-    private function get_forms_table($flextable, $pluginname, $type, $deleted = false) {
+    public function get_forms_table($flextable, $pluginname, $type, $deleted = false) {
         global $CFG;
 
         $select = "SELECT		f.* ";
@@ -328,7 +224,7 @@ class form_db extends form_logging {
      *
      * @return mixed object containing course record or bool false
      */
-    private function get_course_by_id($courseid) {
+    public function get_course_by_id($courseid) {
         return $this->dbc->get_record('course', array('id' => $courseid));
     }
 
@@ -338,7 +234,7 @@ class form_db extends form_logging {
      * @param   object  $form   the form that will be created
      * @return  mixed int the id of the new record or bool false
      */
-    private function create_form($form) {
+    public function create_form($form) {
         return $this->insert_record('ulcc_form_lib_form', $form);
     }
 
@@ -349,7 +245,7 @@ class form_db extends form_logging {
      * @return   bool true if updates successful or false if not
      */
 
-    private function update_form($form) {
+    public function update_form($form) {
         return $this->update_record('ulcc_form_lib_form', $form);
     }
 
@@ -362,7 +258,7 @@ class form_db extends form_logging {
      *
      * @return  array of recordset objects or bool false
      */
-    private function get_user_courses($user_id) {
+    public function get_user_courses($user_id) {
         global $CFG;
 
         if (stripos($CFG->release, "2.") !== false) {
@@ -379,25 +275,29 @@ class form_db extends form_logging {
      *
      * @return mixed object containing all course records or false
      */
-    private function get_courses() {
+    public function get_courses() {
         return $this->dbc->get_records("course", array(), 'fullname ASC');
     }
 
     /**
      * Create a plugin entry in the table given
      *
+     * @param $tablename
+     * @param $pluginentry
      * @return mixed int id of new reocrd or false
      */
-    private function create_plugin_entry($tablename, $pluginentry) {
+    public function create_plugin_entry($tablename, $pluginentry) {
         return $this->insert_record($tablename, $pluginentry);
     }
 
     /**
      * Update a plugin entry record in the table given
      *
+     * @param $tablename
+     * @param $pluginentry
      * @return bool true or false
      */
-    private function update_plugin_entry($tablename, $pluginentry) {
+    public function update_plugin_entry($tablename, $pluginentry) {
         return $this->update_record($tablename, $pluginentry);
     }
 
@@ -411,7 +311,7 @@ class form_db extends form_logging {
      * if yes set mutliple to true
      * @return mixed object the entry record or false
      */
-    private function get_pluginentry($tablename, $entry_id, $formfield_id, $multiple = false) {
+    public function get_pluginentry($tablename, $entry_id, $formfield_id, $multiple = false) {
         global $CFG;
 
         $entrytable = "{$CFG->prefix}{$tablename}_ent";
@@ -439,7 +339,7 @@ class form_db extends form_logging {
      * @param string $tablename the name of the plugin table that holds the data that will be retrieved
      * @return object containing plugin record that matches criteria
      */
-    private function get_form_element_by_formfield($tablename, $formfield_id) {
+    public function get_form_element_by_formfield($tablename, $formfield_id) {
         return $this->dbc->get_record($tablename, array("formfield_id" => $formfield_id));
     }
 
@@ -449,14 +349,16 @@ class form_db extends form_logging {
      * if position and type are not specified all forms are returned ordered by
      * position
      *
-     * @param bool $disabled should disabled forms be returned
+     * @param $mplugname
+     * @param $mplugtype
      * @param int $position the position of fields that will be returned
      *      greater than or less than depending on $type
      * @param  int $type determines whether fields returned will be greater than
      *         or less than position. move up = 1 move down 0
+     * @param bool $disabled should disabled forms be returned
      * @return mixed object containing the plugin record or false
      */
-    private function get_forms_by_position($mplugname, $mplugtype, $position = null, $type = null, $disabled = true) {
+    public function get_forms_by_position($mplugname, $mplugtype, $position = null, $type = null, $disabled = true) {
         global $CFG;
 
         $positionsql = "";
@@ -493,9 +395,10 @@ class form_db extends form_logging {
      * Sets the new position of a form
      *
      * @param int $form_id the id of the report whose position will be changed
+     * @param $newposition
      * @return mixed object containing the plugin record or false
      */
-    private function set_new_form_position($form_id, $newposition) {
+    public function set_new_form_position($form_id, $newposition) {
         return $this->dbc->set_field('ulcc_form_lib_form', "position", $newposition, array('id' => $form_id));
     }
 
@@ -503,9 +406,10 @@ class form_db extends form_logging {
      * Creates a new form element plugin record.
      *
      * @param string $name the name of the new form element plugin
+     * @param $tablename
      * @return mixed the id of the inserted record or false
      */
-    private function create_form_element_plugin($name, $tablename) {
+    public function create_form_element_plugin($name, $tablename) {
         $type = new stdClass();
         $type->name = $name;
         $type->tablename = $tablename;
@@ -519,9 +423,11 @@ class form_db extends form_logging {
     /**
      * This function sets the status of a form to enabled or disabled
      *
+     * @param $form_id
+     * @param $status
      * @return    mixed  object containing the record or bool false
      */
-    private function set_form_status($form_id, $status) {
+    public function set_form_status($form_id, $status) {
         return $this->dbc->set_field('ulcc_form_lib_form', 'status', $status, array('id' => $form_id));
     }
 
@@ -538,7 +444,7 @@ class form_db extends form_logging {
      *         or less than position. move up = 1 move down 0
      * @return mixed object containing the plugin record or false
      */
-    private function get_form_fields_by_position($form_id, $position = null, $type = null) {
+    public function get_form_fields_by_position($form_id, $position = null, $type = null) {
 
         $positionsql = "";
 
@@ -561,9 +467,10 @@ class form_db extends form_logging {
      * Sets the new position of a field
      *
      * @param int $formfield_id the id of the formfield whose position will be changed
+     * @param $newposition
      * @return mixed object containing the plugin record or false
      */
-    private function set_new_position($formfield_id, $newposition) {
+    public function set_new_position($formfield_id, $newposition) {
         return $this->dbc->set_field('ulcc_form_lib_form_field', "position", $newposition, array('id' => $formfield_id));
     }
 
@@ -573,7 +480,7 @@ class form_db extends form_logging {
      * @param int $formelement_id the id of the plugin that will be retrieved
      * @return mixed object containing the plugin record or false
      */
-    private function get_formelement_by_id($formelement_id) {
+    public function get_formelement_by_id($formelement_id) {
         return $this->dbc->get_record('ulcc_form_lib_form_element', array('id' => $formelement_id));
     }
 
@@ -583,7 +490,7 @@ class form_db extends form_logging {
      * @param int    $formfield_id the id of the report field that you want to get the data on
      * @return object containing data from the report field record that matches criteria
      */
-    private function get_form_field_data($formfield_id) {
+    public function get_form_field_data($formfield_id) {
         return $this->dbc->get_record("ulcc_form_lib_form_field", array("id" => $formfield_id));
     }
 
@@ -595,14 +502,14 @@ class form_db extends form_logging {
      * @param int    $form_id the id of the report
      * @return mixed array of objects
      */
-    private function get_form_fields_by_form_id($form_id){
+    public function get_form_fields_by_form_id($form_id){
         return $this->dbc->get_records("ulcc_form_lib_form_field", array("form_id" => $form_id));
     }
 
     /** Returns latest position of the report in the table
      * @return mixed object
      */
-    private function get_form_latest_position(){
+    public function get_form_latest_position(){
 
         $sql =  "SELECT *
 				FROM {ulcc_form_lib_form}
@@ -618,18 +525,19 @@ class form_db extends form_logging {
      * @param int $formelement_id the id of the form element to be returned
      * @return mixed the id of the inserted record or false
      */
-    private function get_form_element_plugin($formelement_id) {
+    public function get_form_element_plugin($formelement_id) {
         return $this->dbc->get_record("ulcc_form_lib_form_element", array('id' => $formelement_id));
     }
 
     /**
      * Returns the position number a new report field should take
      *
-     * @param int $report_id the id of the report that the new field will be in
+     * @param $form_id
+     * @internal param int $report_id the id of the report that the new field will be in
      * @return int the new fields position number
      */
 
-    private function get_new_form_field_position($form_id) {
+    public function get_new_form_field_position($form_id) {
 
         $position = $this->dbc->count_records("ulcc_form_lib_form_field", array("form_id" => $form_id));
 
@@ -643,7 +551,7 @@ class form_db extends form_logging {
      * @param object $formelementrecord an object containing the data on the record
      * @return mixed the id of the inserted record or false
      */
-    private function create_form_element_record($tablename, $formelementrecord) {
+    public function create_form_element_record($tablename, $formelementrecord) {
         return $this->insert_record($tablename, $formelementrecord);
     }
 
@@ -654,7 +562,7 @@ class form_db extends form_logging {
      * @param object $formelementrecord an object containing the data on the record
      * @return bool true or false depending on result of query
      */
-    private function update_form_element_record($tablename, $formelementrecord) {
+    public function update_form_element_record($tablename, $formelementrecord) {
         return $this->update_record($tablename, $formelementrecord);
     }
 
@@ -665,9 +573,10 @@ class form_db extends form_logging {
      * @param    string $label    the label that is being test to see if it exists
      * @param    int $form_id the id of the report that will be checked
      *
+     * @param $field_id
      * @return    mixed array of recordsets or bool false
      */
-    private function label_exists($label, $form_id, $field_id) {
+    public function label_exists($label, $form_id, $field_id) {
 
         $label = mysql_real_escape_string($label);
 
@@ -701,7 +610,7 @@ class form_db extends form_logging {
      * @param object $formfield an object containing the data to be saved
      * @return mixed the id of the inserted record or false
      */
-    private function create_form_field($formfield) {
+    public function create_form_field($formfield) {
         return $this->insert_record("ulcc_form_lib_form_field", $formfield);
     }
 
@@ -712,7 +621,7 @@ class form_db extends form_logging {
      * @param object $formfield an object containing the data on the record
      * @return bool true or false depending on result of query
      */
-    private function update_form_field($formfield) {
+    public function update_form_field($formfield) {
         return $this->update_record('ulcc_form_lib_form_field', $formfield);
     }
 
@@ -723,7 +632,7 @@ class form_db extends form_logging {
      * @param int $formfield_id the formfield_id that the record must have
      * @return mixed object containing the plugin instance record or false
      */
-    private function get_form_element_record($tablename, $formfield_id) {
+    public function get_form_element_record($tablename, $formfield_id) {
         return $this->dbc->get_record($tablename, array('formfield_id' => $formfield_id));
     }
 
@@ -733,9 +642,10 @@ class form_db extends form_logging {
      * @param string $tablename the table that you want to delete the record from
      * @param int $id the id of the record that you want to delete
      *
+     * @param array $extraparams
      * @return bool true or false
      */
-    private function delete_form_element_by_formfield($tablename, $id, $extraparams = array()) {
+    public function delete_form_element_by_formfield($tablename, $id, $extraparams = array()) {
         return $this->delete_records($tablename, array('formfield_id' => $id), $extraparams);
     }
 
@@ -744,18 +654,21 @@ class form_db extends form_logging {
      *
      * @param int $id the id of the record that you want to delete
      *
+     * @param array $extraparams
      * @return bool true or false
      */
-    private function delete_form_field($id, $extraparams = array()) {
+    public function delete_form_field($id, $extraparams = array()) {
         return $this->delete_records('ulcc_form_lib_form_field', array('id' => $id), $extraparams);
     }
 
     /**
      * This function sets the delete field of a reportd
      *
+     * @param $form_id
+     * @param $deleted
      * @return    mixed  object containing the record or bool false
      */
-    private function delete_form($form_id, $deleted) {
+    public function delete_form($form_id, $deleted) {
         return $this->dbc->set_field('ulcc_form_lib_form', 'deleted', $deleted, array('id' => $form_id));
     }
 
@@ -766,7 +679,7 @@ class form_db extends form_logging {
      * @param int $formfield_id the formfield_id that the record must have
      * @return mixed object containing the plugin instance record or false
      */
-    private function get_plugin_record($tablename, $formfield_id) {
+    public function get_plugin_record($tablename, $formfield_id) {
         return $this->dbc->get_record($tablename, array('formfield_id' => $formfield_id));
     }
 
@@ -780,7 +693,7 @@ class form_db extends form_logging {
      * if yes set mutliple to true
      * @return mixed object the entry record or false
      */
-    private function get_form_element_entry($tablename, $entry_id, $formfield_id, $multiple = false) {
+    public function get_form_element_entry($tablename, $entry_id, $formfield_id, $multiple = false) {
         global $CFG;
 
         $entrytable = "{$CFG->prefix}{$tablename}_ent";
@@ -803,9 +716,11 @@ class form_db extends form_logging {
     /**
      * Create a plugin entry in the table given
      *
+     * @param $tablename
+     * @param $pluginentry
      * @return mixed int id of new reocrd or false
      */
-    private function create_formelement_entry($tablename, $pluginentry) {
+    public function create_formelement_entry($tablename, $pluginentry) {
         return $this->insert_record($tablename, $pluginentry);
     }
 
@@ -821,9 +736,11 @@ class form_db extends form_logging {
     /**
      * Update a plugin entry record in the table given
      *
+     * @param $tablename
+     * @param $pluginentry
      * @return bool true or false
      */
-    private function update_formelement_entry($tablename, $pluginentry) {
+    public function update_formelement_entry($tablename, $pluginentry) {
         return $this->update_record($tablename, $pluginentry);
     }
 
@@ -831,14 +748,19 @@ class form_db extends form_logging {
      * check if any user data has been uploaded to a particular list-type reportfield
      * if it has then admin should not be allowed to delete any existing
      * options
-     * @param string tablename
-     * @param int formfield_id
-     * @param string item_table - use this item_table if item_table name is not simply $tablename . "_items"
-     * @param string item_key - use this foreign key if specific item_table has been sent as arg. Send empty string to simply get all rows from the item table
-     * @param string item_value_field - field from the item table to use as the value submitted to the user entry table
+     * @param $tablename
+     * @param $formfield_id
+     * @param bool $item_table
+     * @param bool $item_key
+     * @param bool $item_value_field
+     * @internal param \tablename $string
+     * @internal param \formfield_id $int
+     * @internal param \item_table $string - use this item_table if item_table name is not simply $tablename . "_items"
+     * @internal param \item_key $string - use this foreign key if specific item_table has been sent as arg. Send empty string to simply get all rows from the item table
+     * @internal param \item_value_field $string - field from the item table to use as the value submitted to the user entry table
      * @return mixed array of objects or false
      */
-    private function form_element_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
+    public function form_element_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
                                                    $item_value_field = false) {
         global $CFG;
 
@@ -878,7 +800,7 @@ class form_db extends form_logging {
      * @param    array $extraparams   containing data to put in the logs
      * @return boolean true or false
      */
-    private function delete_element_listitems($tablename, $formfield_id, $extraparams = array()) {
+    public function delete_element_listitems($tablename, $formfield_id, $extraparams = array()) {
         global $CFG;
         $real_tablename = $CFG->prefix.$tablename;
         $element_table = $tablename;
@@ -894,13 +816,15 @@ class form_db extends form_logging {
     /**
      * delete option items for a plugin list-type element referenced by element_id (parent_id) instead of formfield_id
      * $tablename is the element table eg block_ilp_plu_category
-     * @param string $tablename
+     * @param $tablename
      * @param $parent_id
      * @param array $extraparams
+     * @internal param \tablename $string
+     * @internal param \formfield_id $int
      *
      * @return boolean true or false
      */
-    private function delete_element_listitems_by_parent_id($tablename, $parent_id, $extraparams = array()) {
+    public function delete_element_listitems_by_parent_id($tablename, $parent_id, $extraparams = array()) {
         global $CFG;
         $real_tablename = $CFG->prefix.$tablename;
         $element_table = $tablename;
@@ -920,7 +844,7 @@ class form_db extends form_logging {
      *
      * @return int or false
      */
-    private function get_element_id_from_formfield_id($tablename, $formfield_id) {
+    public function get_element_id_from_formfield_id($tablename, $formfield_id) {
         $element_record = array_shift($this->dbc->get_records($tablename, array('formfield_id' => $formfield_id)));
 
         if (!empty($element_record)) {
@@ -936,11 +860,12 @@ class form_db extends form_logging {
      * the full data from listelement_item_exists is used by ilp_element_plugin_status::get_option_list(),
      * so please do not change the return type
      *
-     * @param string $item_tablename     the name of the
+     * @param $item_tablename
      * @param array  $conditionlist array containing conditions
+     * @internal param string $tablename the name of the
      * @return array of objects
      */
-    private function listelement_item_exists($item_tablename, $conditionlist) {
+    public function listelement_item_exists($item_tablename, $conditionlist) {
         return $this->dbc->get_records($item_tablename, $conditionlist);
     }
 
@@ -950,7 +875,7 @@ class form_db extends form_logging {
      * @param string $tablename the tablename of the element
      * @return int
      */
-    private function element_type_exists($form_id, $tablename) {
+    public function element_type_exists($form_id, $tablename) {
         $sql = "
             SELECT COUNT( frm.id ) n
             FROM {ulcc_form_lib_form} frm
@@ -973,7 +898,7 @@ class form_db extends form_logging {
      * @param string $tablename the tablename of the element
      * @return array
      */
-    private function element_occurances($form_id, $tablename) {
+    public function element_occurances($form_id, $tablename) {
         $sql = "
             SELECT frmfd.*
             FROM {ulcc_form_lib_form} frm
@@ -997,7 +922,7 @@ class form_db extends form_logging {
      * @param bool $field Field to get as well as id, value, name
      * @return array of objects
      */
-    private function get_optionlist($formfield_id, $tablename, $field = false) {
+    public function get_optionlist($formfield_id, $tablename, $field = false) {
         global $CFG;
         $tablename = $CFG->prefix.$tablename;
         $item_table = $tablename."_items";
@@ -1027,15 +952,19 @@ class form_db extends form_logging {
      * check if any user data has been uploaded to a particular list-type formfield
      * if it has then admin should not be allowed to delete any existing
      * options
-     * @param string $tablename
-     * @param int $formfield_id
-     * @param bool|string $item_table use this item_table if item_table name is not simply $tablename . "_items"
-     * @param bool|string $item_key use this foreign key if specific item_table has been sent as arg. Send empty string to
-     * simply get all rows from the item table
-     * @param string|bool $item_value_field field from the item table to use as the value submitted to the user entry table
+     * @param $tablename
+     * @param $formfield_id
+     * @param bool $item_table
+     * @param bool $item_key
+     * @param bool $item_value_field
+     * @internal param \tablename $string
+     * @internal param \formfield_id $int
+     * @internal param \item_table $string - use this item_table if item_table name is not simply $tablename . "_items"
+     * @internal param \item_key $string - use this foreign key if specific item_table has been sent as arg. Send empty string to simply get all rows from the item table
+     * @internal param \item_value_field $string - field from the item table to use as the value submitted to the user entry table
      * @return mixed array of objects or false
      */
-    private function plugin_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
+    public function plugin_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
                                              $item_value_field = false) {
         global $CFG;
 
@@ -1076,7 +1005,7 @@ class form_db extends form_logging {
      *
      * @return mixed array containing form objects or bool false
      */
-    private function is_plugin_form($name, $type, $formid) {
+    public function is_plugin_form($name, $type, $formid) {
 
         $sqlparams = array('name' => $name,
                            'type' => $type,
@@ -1101,7 +1030,7 @@ class form_db extends form_logging {
      *
      * @return mixed int the id of the entry or false
      */
-    private function create_entry($entry) {
+    public function create_entry($entry) {
         return $this->insert_record("ulcc_form_lib_entry", $entry);
     }
 
@@ -1112,7 +1041,7 @@ class form_db extends form_logging {
      *
      * @return bool true or false
      */
-    private function update_entry($entry) {
+    public function update_entry($entry) {
         return $this->update_record("ulcc_form_lib_entry", $entry);
     }
 
@@ -1120,13 +1049,17 @@ class form_db extends form_logging {
      * Returns the id of the item with the given value
      *
      * @param $tablename
+     * @param $tablename
      * @param    int $parent_id    the id of the state item record that is the parent of the item
      * @param    int $itemvalue the actual value of the field
      * @param    string $keyfield field from $itemtable to use as key
      * @param bool|string $itemtable name of item table to use if this element type does not follow the '_items' naming convention
+     * @param bool|string $itemtable name of item table to use if this element type does not follow the '_items' naming convention
      *
      * @return    mixed object or false
      */
+    public function get_state_item_id($tablename, $parent_id, $itemvalue, $keyfield = 'id', $itemtable = false) {
+        global $CFG;
     private function get_state_item_id($tablename, $parent_id, $itemvalue, $keyfield = 'id', $itemtable = false) {
 
         $tablename = (!empty($itemtable)) ? $itemtable : $tablename."_items";
@@ -1147,7 +1080,7 @@ class form_db extends form_logging {
      *
      * @return mixed int the id of the data that's been saved or bool false
      */
-    private function save_temp_data($data) {
+    public function save_temp_data($data) {
         $serialiseddata = serialize($data);
 
         $tempdata = new stdClass();
@@ -1162,9 +1095,11 @@ class form_db extends form_logging {
      * @param int $tempid the id of the record to be updated
      * @param mixed $data the data that will be saved
      *
+     * return bool true if successful false is not
+     * @return mixed
      * @return bool true if successful false is not
      */
-    private function update_temp_data($tempid, $data) {
+    public function update_temp_data($tempid, $data) {
 
         $serialiseddata = serialize($data);
 
@@ -1181,7 +1116,7 @@ class form_db extends form_logging {
      * @param int $id the id of the data that is being retrieved
      * @return mixed the data that was saved
      */
-    private function get_temp_data($id) {
+    public function get_temp_data($id) {
         $tempdata = $this->dbc->get_record('ulcc_form_lib_temp', array('id' => $id));
 
         return (!empty($tempdata)) ? unserialize($tempdata->data) : false;
@@ -1204,7 +1139,7 @@ class form_db extends form_logging {
      *
      * @return mixed object the entry or false
      */
-    private function get_form_entry($entry_id) {
+    public function get_form_entry($entry_id) {
         return $this->dbc->get_record('ulcc_form_lib_entry', array('id' => $entry_id));
     }
 
@@ -1238,7 +1173,7 @@ class form_db extends form_logging {
      * @param string $elementname
      * @return mixed object form element record or bool false
      */
-    private function get_form_element_by_name($elementname) {
+    public function get_form_element_by_name($elementname) {
         return $this->dbc->get_record('ulcc_form_lib_form_element', array('name' => $elementname));
     }
 
@@ -1256,12 +1191,14 @@ class form_db extends form_logging {
         return $this->delete_records($tablename, array('id' => $id), $extraparams);
     }
 
+
     /**
      * Generic delete function used to delete items from the items table
      *
      * @param string $tablename the table that you want to delete the record from
      * @param int $parent_id the parent_id that all fields to be deleted should have
      *
+     * @param array $extraparams
      * @param array $extraparams
      * @return bool true or false
      */
@@ -1276,8 +1213,8 @@ class form_db extends form_logging {
      * @return array  of items for the given element
      */
 
-    private function get_form_element_item_records($itemtable, $id) {
-    return $this->dbc->get_records($itemtable, array('parent_id' => $id));
+    public function get_form_element_item_records($itemtable, $id) {
+        return $this->dbc->get_records($itemtable, array('parent_id' => $id));
 
 }
 
@@ -1287,7 +1224,7 @@ class form_db extends form_logging {
      * @param object $formitemelementrecord  duplicated item to be inserted
      * @return mixed id of new entry or false
      */
-    private function create_form_element_item_record($itemtable, $formitemelementrecord) {
+    public function create_form_element_item_record($itemtable, $formitemelementrecord) {
         return $this->insert_record($itemtable, $formitemelementrecord);
     }
 
