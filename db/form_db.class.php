@@ -45,7 +45,7 @@ class form_db extends form_logging {
 
     }
 
-   /**
+    /**
      * finds and returns a block record from the db using the blocks name
      *
      * @param string $name - the name of the block
@@ -494,30 +494,28 @@ class form_db extends form_logging {
         return $this->dbc->get_record("ulcc_form_lib_form_field", array("id" => $formfield_id));
     }
 
-
-
     /**
      * Returns fields of the the given report
      *
      * @param int    $form_id the id of the report
      * @return mixed array of objects
      */
-    public function get_form_fields_by_form_id($form_id){
+    public function get_form_fields_by_form_id($form_id) {
         return $this->dbc->get_records("ulcc_form_lib_form_field", array("form_id" => $form_id));
     }
 
     /** Returns latest position of the report in the table
      * @return mixed object
      */
-    public function get_form_latest_position(){
+    public function get_form_latest_position() {
 
-        $sql =  "SELECT *
+        $sql = "SELECT *
                 FROM {ulcc_form_lib_form}
                 ORDER BY position DESC
                 LIMIT 1";
 
         return $this->dbc->get_record_sql($sql);
-}
+    }
 
     /**
      * Gets the record with id matching the given formelement_id
@@ -724,14 +722,12 @@ class form_db extends form_logging {
         return $this->insert_record($tablename, $pluginentry);
     }
 
-
     /** Create status element entry
      *
      */
-    function create_statusfield($statusfield)	{
+    function create_statusfield($statusfield) {
         $this->insert_record('ulcc_form_plg_sts', $statusfield);
     }
-
 
     /**
      * Update a plugin entry record in the table given
@@ -761,7 +757,7 @@ class form_db extends form_logging {
      * @return mixed array of objects or false
      */
     public function form_element_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
-                                                   $item_value_field = false) {
+                                                  $item_value_field = false) {
         global $CFG;
 
         $tablename = $CFG->prefix.$tablename;
@@ -965,7 +961,7 @@ class form_db extends form_logging {
      * @return mixed array of objects or false
      */
     public function plugin_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
-                                             $item_value_field = false) {
+                                            $item_value_field = false) {
         global $CFG;
 
         $tablename = $CFG->prefix.$tablename;
@@ -1188,7 +1184,6 @@ class form_db extends form_logging {
         return $this->delete_records($tablename, array('id' => $id), $extraparams);
     }
 
-
     /**
      * Generic delete function used to delete items from the items table
      *
@@ -1199,10 +1194,9 @@ class form_db extends form_logging {
      * @param array $extraparams
      * @return bool true or false
      */
-    public function delete_items($tablename, $parent_id, $extraparams=array() ) {
-        return $this->delete_records( $tablename, array('parent_id' => $parent_id), $extraparams );
+    public function delete_items($tablename, $parent_id, $extraparams = array()) {
+        return $this->delete_records($tablename, array('parent_id' => $parent_id), $extraparams);
     }
-
 
     /** * Get the form element items by the id of element
      * @param string $itemtable name of the table holding items
@@ -1212,9 +1206,7 @@ class form_db extends form_logging {
 
     public function get_form_element_item_records($itemtable, $id) {
         return $this->dbc->get_records($itemtable, array('parent_id' => $id));
-
     }
-
 
     /** Creates a new record in the _items table for the given plugin
      * @param string $itemtable  name of the table holding items
@@ -1224,8 +1216,4 @@ class form_db extends form_logging {
     public function create_form_element_item_record($itemtable, $formitemelementrecord) {
         return $this->insert_record($itemtable, $formitemelementrecord);
     }
-
-
-
-
 }
