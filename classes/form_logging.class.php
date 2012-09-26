@@ -27,6 +27,9 @@
 
 class form_logging {
 
+    /**
+     * @var moodle_database
+     */
     public $dbc;
 
     /**
@@ -249,10 +252,10 @@ class form_logging {
 	                $log->newvalue = ($action != ILP_LOG_DELETE ) ? $newobject->$key : NULL;
 	                $log->timecreated = $now;
 	                $log->timemodified = $now;
-	
+
 	                $id = $this->dbc->insert_record('block_ilp_log',$log);
-	
-	
+
+
 	            }
 	        }
         }

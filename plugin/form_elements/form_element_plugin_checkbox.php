@@ -67,7 +67,6 @@ class form_element_plugin_checkbox extends form_element_plugin_itemlist {
             false
         );
 
-
         if (!empty($this->req)) $mform->addRule($fieldname, null, 'required', null, 'client');
 
         $mform->setType($fieldname, PARAM_RAW);

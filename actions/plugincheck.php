@@ -32,8 +32,8 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 // Get the type of the plugin that is currently invoking the form library.
-$moodleplugintype = $PARSER->optional_param('moodleplugintype', false, PARAM_RAW);
-$moodlepluginname = $PARSER->optional_param('moodlepluginname', false, PARAM_RAW);
+$moodleplugintype = $PARSER->optional_param('moodleplugintype', false, PARAM_ALPHAEXT);
+$moodlepluginname = $PARSER->optional_param('moodlepluginname', false, PARAM_ALPHAEXT);
 
 // Instantiate the db class.
 $dbc = new form_db();

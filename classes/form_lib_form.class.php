@@ -33,8 +33,14 @@ require_once($CFG->libdir.'/formslib.php');
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/db/form_db.class.php');
 
+/**
+ * Abstract class that really only has one implementation, so should really be merged with form_entry_mform
+ */
 abstract class form_lib_form extends moodleform {
 
+    /**
+     * @var int
+     */
     public $form_id;
 
     /**
@@ -42,7 +48,15 @@ abstract class form_lib_form extends moodleform {
      */
     public $dbc;
 
+    /**
+     * @var stdClass
+     */
     public $formdata;
+
+    /**
+     * @var int
+     */
+    protected $currentpage;
 
     /**
      * Returns data submitted from previous pages on the current form.
@@ -50,9 +64,9 @@ abstract class form_lib_form extends moodleform {
      *
      * @param int $form_id the id of the mutlipage form that we want to get submitted data for
      *
-     * @return mixed array or null if not data is found
+     * @return mixed stdClass or null if not data is found
      */
-    function get_multipage_data($form_id) {
+    public function get_multipage_data($form_id) {
 
         $normdata = $this->get_submitted_data();
 
@@ -99,118 +113,119 @@ abstract class form_lib_form extends moodleform {
         return null;
     }
 
-    function next($form_id, $currentpage) {
-
-        global $SESSION;
+    /**
+     * Find out if the next button was pressed and act on it if necessary.
+     *
+     * @param $form_id
+     * @param $currentpage
+     * @return bool
+     */
+    public function next($form_id, $currentpage) {
 
         $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
 
-        // Was the next button pressed.
+        // Was the next button pressed?
         if (isset($this->formdata->nextbutton)) {
 
-            $cformdata = $this->formdata;
+            $this->save_current_page_data();
 
-            // We do not want any of the following data to be saved as it stop the pagination features from working.
-            if (isset($cformdata->current_page)) {
-                unset($cformdata->current_page);
-            }
-            if (isset($cformdata->previousbutton)) {
-                unset($cformdata->previousbutton);
-            }
-            if (isset($cformdata->nextbutton)) {
-                unset($cformdata->nextbutton);
-            }
+            return true;
+        }
 
-            // Save all data submitted from last page.
+        return false;
+    }
 
-            // Check if the page data array has been created in the session.
-            if (!isset($SESSION->pagedata)) {
-                $SESSION->pagedata = array();
-            }
+    /**
+     * Saves the data from the current page. Used if the next or previous button has been pressed.
+     */
+    protected function save_current_page_data() {
 
-            // Create a array to hold the page temp_data.
-            if (!isset($SESSION->pagedata[$form_id])) {
-                $SESSION->pagedata[$form_id] = array();
-            }
+        global $SESSION;
 
-            if (!isset($SESSION->pagedata[$form_id][$currentpage - 1])) {
-                // If no data has been saved for the current page save the data to the dd
-                // and save the key.
-                $SESSION->pagedata[$form_id][$currentpage - 1] = $this->dbc->save_temp_data($cformdata);
-            } else {
-                // If data for this page has already been saved get the key and update the record.
-                $tempid = $SESSION->pagedata[$form_id][$currentpage - 1];
-                $this->dbc->update_temp_data($tempid, $cformdata);
-            }
+        $cformdata = $this->formdata;
 
-            // Set the data in the page to what it equaled before.
-            if (isset($SESSION->pagedata[$form_id][$currentpage])) {
-                $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$form_id][$currentpage]);
+        // We do not want any of the following data to be saved as it stop the pagination features from working.
+        if (isset($cformdata->current_page)) {
+            unset($cformdata->current_page);
+        }
+        if (isset($cformdata->previousbutton)) {
+            unset($cformdata->previousbutton);
+        }
+        if (isset($cformdata->nextbutton)) {
+            unset($cformdata->nextbutton);
+        }
 
-                $this->set_data($tempdata);
-            }
+        // Save all data submitted from last page.
+
+        // Check if the page data array has been created in the session.
+        if (!isset($SESSION->pagedata)) {
+            $SESSION->pagedata = array();
+        }
+
+        // Create an array to hold the page temp_data.
+        if (!isset($SESSION->pagedata[$this->form_id])) {
+            $SESSION->pagedata[$this->form_id] = array();
+        }
+
+        if (!isset($SESSION->pagedata[$this->form_id][$this->currentpage])) {
+            // If no data has been saved for the current page save the data to the dd
+            // and save the key.
+            $SESSION->pagedata[$this->form_id][$this->currentpage] = $this->dbc->save_temp_data($cformdata);
+        } else {
+            // If data for this page has already been saved get the key and update the record.
+            $tempid = $SESSION->pagedata[$this->form_id][$this->currentpage];
+            $this->dbc->update_temp_data($tempid, $cformdata);
         }
     }
 
     /**
-     * Carrys out operations necessary if the form is a multipage form and the previous button has been pressed
+     * Carries out operations necessary if the form is a multipage form and the previous button has been pressed
+     *
+     * @param int $form_id
+     * @param int $currentpage
+     * @return bool
      */
     public function previous($form_id, $currentpage) {
-        global $SESSION;
 
         $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($form_id) : $this->formdata;
 
         if (isset($this->formdata->previousbutton)) {
 
-            $cformdata = $this->formdata;
+            $this->save_current_page_data();
 
-            // We do not want any of the following data to be saved as it stop the pagination features from working.
-            if (isset($cformdata->current_page)) {
-                unset($cformdata->current_page);
-            }
-            if (isset($cformdata->previousbutton)) {
-                unset($cformdata->previousbutton);
-            }
-            if (isset($cformdata->nextbutton)) {
-                unset($cformdata->nextbutton);
-            }
-
-            if (!isset($SESSION->pagedata[$form_id][$currentpage + 1])) {
-                // If no data has been saved for the current page save the data to the dd
-                // and save the key..
-                $SESSION->pagedata[$form_id][$currentpage + 1] = $this->dbc->save_temp_data($cformdata);
-            } else {
-                // If data for this page has already been saved get the key and update the record.
-                $tempid = $SESSION->pagedata[$form_id][$currentpage + 1];
-                $this->dbc->update_temp_data($tempid, $cformdata);
-            }
-
-            // Set the data in the page to what it equaled before.
-            if (isset($SESSION->pagedata[$form_id][$currentpage])) {
-                $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$form_id][$currentpage]);
-                $this->set_data($tempdata);
-            }
+            return true;
         }
+
+        return false;
     }
 
     /**
-     * @param $form_id
-     * @return mixed
+     * Submits all data from all form pages to the database.
+     *
+     * @return int id of the form entry record
      */
-    public function submit($form_id) {
+    public function submit() {
 
         global $SESSION;
+
+        $form_id = $this->form_id;
 
         // Get all of the submitted data.
         $this->formdata = $this->get_multipage_data($form_id);
         $darray = array();
 
+        // The session contains a list of ids in the temp data table.
         if (!empty($SESSION->pagedata[$form_id])) {
             foreach ($SESSION->pagedata[$form_id] as $tempid) {
                 $tempdata = $this->dbc->get_temp_data($tempid);
                 $tempdata = (is_array($tempdata)) ? $tempdata : (array)$tempdata;
                 $darray = array_merge($darray, $tempdata);
+                $this->dbc->delete_temp_data($tempid);
             }
+
+            // Important in case someone else changes the data, then the user goes back to the form - it'll
+            // reload their old stuff from the session.
+            unset($SESSION->pagedata[$form_id]);
         }
 
         $formdata = (is_array($this->formdata)) ? $this->formdata : (array)$this->formdata;
@@ -225,7 +240,7 @@ abstract class form_lib_form extends moodleform {
      */
     public function load_entry($entry_id = false) {
 
-        global $CFG;
+        global $CFG, $SESSION;
 
         if (!empty($entry_id)) {
 
@@ -257,7 +272,7 @@ abstract class form_lib_form extends moodleform {
                         print_error('noclassforplugin', 'local_ulcc_form_library', '', $pluginrecord->name);
                     }
 
-                    // Instantiate the plugin class.
+                    /* @var form_element_plugin $pluginclass */
                     $pluginclass = new $classname();
 
                     $pluginclass->load($field->id);
@@ -275,9 +290,22 @@ abstract class form_lib_form extends moodleform {
                 $this->set_data($entry_data);
             }
         }
+
+        // If we have data from previous pages (next/previous buttons used on multi page form), load it here.
+        // Set the data in the page to what it equalled before.
+        if (isset($SESSION->pagedata[$this->form_id][$this->currentpage])) {
+            $tempdata = $this->dbc->get_temp_data($SESSION->pagedata[$this->form_id][$this->currentpage]);
+            $this->set_data($tempdata);
+        }
     }
 
-    function return_entry($entry_id = false, $labels = false, $dontreturn = array()) {
+    /**
+     * @param bool $entry_id
+     * @param bool $labels
+     * @param array $dontreturn
+     * @return bool|stdClass
+     */
+    public function return_entry($entry_id = false, $labels = false, $dontreturn = array()) {
 
         global $CFG;
 

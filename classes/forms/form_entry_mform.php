@@ -20,16 +20,45 @@ require_once($CFG->dirroot . '/local/ulcc_form_library/db/form_db.class.php');
 require_once($CFG->dirroot . '/local/ulcc_form_library/classes/form_lib_form.class.php');
 require_once("{$CFG->dirroot}/local/ulcc_form_library/lib.php");
 
-class form_entry_mform extends form_lib_form
-{
+/**
+ * Form that is used to display the dynamically generated elements to the user for data entry.
+ */
+class form_entry_mform extends form_lib_form {
 
+    /**
+     * @var int
+     */
     public $course_id;
+
+    /**
+     * @var int
+     */
     public $form_id;
+
+    /**
+     * @var int
+     */
     public $entry_id;
-    public $currentpage;
+
+    /**
+     * @var string e.g. block, mod
+     */
     public $plugintype;
+
+    /**
+     * @var string e.g. coursework, ilp
+     */
     public $pluginname;
+
+    /**
+     * @var form_db
+     */
     public $dbc;
+
+    /**
+     * @var bool have we already saved the page data and moved to the next page?
+     */
+    private $pagessaved = false;
 
     /**
      *
@@ -52,7 +81,7 @@ class form_entry_mform extends form_lib_form
      * TODO comment this
      */
     public function definition() {
-        global $USER, $CFG;
+        global $CFG;
 
         $mform =& $this->_form;
 
@@ -80,7 +109,8 @@ class form_entry_mform extends form_lib_form
         $mform->addElement('hidden', 'page_data', 1);
         $mform->setType('page_data', PARAM_INT);
 
-        if ($count = $this->dbc->element_type_exists($this->form_id, 'ulcc_form_plg_pb')) {
+        $count = $this->dbc->element_type_exists($this->form_id, 'ulcc_form_plg_pb');
+        if ($count) {
             $pagebreakcount = $count;
         }
 
@@ -122,7 +152,7 @@ class form_entry_mform extends form_lib_form
                         print_error('noclassforplugin', 'local_ulcc_form_library', '', $formelementrecord->name);
                     }
 
-                    // Instantiate the plugin class.
+                    /* @var form_element_plugin $formelementclass */
                     $formelementclass = new $classname();
 
                     $formelementclass->load($field->id);
@@ -164,7 +194,8 @@ class form_entry_mform extends form_lib_form
 
     /**
      * @param $data
-     * @return bool|int|mixed Record id or false if there's a problem.
+     * @throws coding_exception
+     * @return int Record id or false if there's a problem.
      */
     protected function process_data($data) {
 
@@ -177,8 +208,7 @@ class form_entry_mform extends form_lib_form
         $form_id = $data->form_id;
 
         // Get the id of the entry  if known.
-        $entry_id = $data->entry_id;
-        $result = false;
+        $entryid = $data->entry_id;
 
         if (empty($entry_id)) {
             // Create the entry.
@@ -186,9 +216,8 @@ class form_entry_mform extends form_lib_form
             $entry->form_id = $form_id;
             $entry->creator_id = $USER->id;
 
-            $entry_id = $this->dbc->create_entry($entry);
+            $entryid = $this->dbc->create_entry($entry);
 
-            $result = $entry_id;
         } else {
             // Update the entry.
             // As there is nothing to update but we want the entries timemodifed
@@ -197,9 +226,7 @@ class form_entry_mform extends form_lib_form
             $entry->id = $entry_id;
             $entry->form_id = $form_id;
 
-            if ($this->dbc->update_entry($entry)) {
-                $result = $entry->id; // For consistency - always return the record id or false.
-            }
+            $this->dbc->update_entry($entry); // Will throw exception if there's a problem.
         }
 
         // Get all of the fields in the current report, they will be returned in order as
@@ -222,6 +249,7 @@ class form_entry_mform extends form_lib_form
             }
 
             // Instantiate the plugin class.
+            /* @var form_element_plugin $pluginclass */
             $pluginclass = new $classname();
 
             $pluginclass->load($field->id);
@@ -229,20 +257,15 @@ class form_entry_mform extends form_lib_form
             // Call the plugins entry_form function which will add an instance of the plugin
             // to the form.
             if ($pluginclass->is_processable()) {
-                if (!$pluginclass->entry_process_data($field->id, $entry_id, $data)) {
-                    $result = false;
+                if (!$pluginclass->entry_process_data($field->id, $entryid, $data)) {
+                    throw new coding_exception('Problem saving form plugin data');
                 }
             }
         }
 
-        return $result;
+        return $entryid;
     }
 
-    /**
-     * TODO comment this
-     */
-    function definition_after_data() {
-    }
 
     /**
      * Sets the current page to the given number, this must be less than or equal to number of page breaks in
@@ -250,7 +273,22 @@ class form_entry_mform extends form_lib_form
      *
      * @param $page
      */
-    function set_current_page($page) {
-        // $this->currentpage  =   $page;
+    public function set_current_page($page) {
+        $this->currentpage = $page;
     }
+
+    /**
+     * Checks whether the next button was pressed and adjusts things.
+     */
+    public function next() {
+        return parent::next($this->form_id, $this->currentpage);
+    }
+
+    /**
+     * Checks whether the previous biutton was pressed and adjusts things.
+     */
+    public function previous() {
+        return parent::previous($this->form_id, $this->currentpage);
+    }
+
 }

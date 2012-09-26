@@ -57,6 +57,7 @@ class form_db extends form_logging {
     public function __call($method, $params) {
 
         // Sanitise everything coming into the database here.
+        // TODO find all places that need this and sanitise the data using optional/required_param.
         $params = $this->encode($params);
 
         if (method_exists($this, $method)) {
@@ -75,25 +76,25 @@ class form_db extends form_logging {
      * @param mixed $data The unencoded object/array/string/etc
      * @return mixed The encoded version
      */
-    static function encode(&$data) {
+    protected static function encode(&$data) {
         if (is_object($data) || is_array($data)) {
-            // skip the ilp_flexible_table
+            // Skip the ilp_flexible_table.
             if (!is_a($data, 'ilp_flexible_table')) {
                 foreach ($data as $index => &$datum) {
 
-                    //we will skip any index with the prefix binary
+                    // We will skip any index with the prefix binary.
                     if (substr($index, 0, 7) != 'binary_') {
-                        $datum = form_db::encode($datum);
+                        $datum = self::encode($datum);
                     }
                 }
             }
             return $data;
         } else {
 
-            // decode any special characters prevent malicious code slipping through
-            $data = form_db::decode_htmlchars($data, ENT_QUOTES);
+            // Decode any special characters prevent malicious code slipping through.
+            $data = self::decode_htmlchars($data, ENT_QUOTES);
 
-            // purify all data (e.g. validate html, remove js and other bad stuff)
+            // Purify all data (e.g. validate html, remove js and other bad stuff).
 
             //I have had to remove the purify call as it was causing pages to timeout in 1.9
             //this should be put back in once the ilp is moodle 2.0 only
@@ -893,8 +894,9 @@ class form_db extends form_logging {
     /**
      * delete option items for a plugin list-type element referenced by element_id (parent_id) instead of formfield_id
      * $tablename is the element table eg block_ilp_plu_category
-     * @param string tablename
-     * @param int formfield_id
+     * @param string $tablename
+     * @param $parent_id
+     * @param array $extraparams
      *
      * @return boolean true or false
      */
@@ -905,7 +907,7 @@ class form_db extends form_logging {
         $item_table = $tablename."_items";
         $entry_table = $tablename."_ent";
 
-        //get parent_id
+        // Get parent_id.
         //return $this->dbc->delete_records( $item_table, array( 'parent_id' => $parent_id ) , $extraparams );
         return $this->delete_records($item_table, array('parent_id' => $parent_id), $extraparams);
     }
@@ -934,7 +936,7 @@ class form_db extends form_logging {
      * the full data from listelement_item_exists is used by ilp_element_plugin_status::get_option_list(),
      * so please do not change the return type
      *
-     * @param string $tablename     the name of the
+     * @param string $item_tablename     the name of the
      * @param array  $conditionlist array containing conditions
      * @return array of objects
      */
@@ -1025,11 +1027,12 @@ class form_db extends form_logging {
      * check if any user data has been uploaded to a particular list-type formfield
      * if it has then admin should not be allowed to delete any existing
      * options
-     * @param string tablename
-     * @param int formfield_id
-     * @param string item_table - use this item_table if item_table name is not simply $tablename . "_items"
-     * @param string item_key - use this foreign key if specific item_table has been sent as arg. Send empty string to simply get all rows from the item table
-     * @param string item_value_field - field from the item table to use as the value submitted to the user entry table
+     * @param string $tablename
+     * @param int $formfield_id
+     * @param bool|string $item_table use this item_table if item_table name is not simply $tablename . "_items"
+     * @param bool|string $item_key use this foreign key if specific item_table has been sent as arg. Send empty string to
+     * simply get all rows from the item table
+     * @param string|bool $item_value_field field from the item table to use as the value submitted to the user entry table
      * @return mixed array of objects or false
      */
     private function plugin_data_item_exists($tablename, $formfield_id, $item_table = false, $item_key = false,
@@ -1105,7 +1108,7 @@ class form_db extends form_logging {
     /**
      * Updates an entry record
      *
-     * @param object entry the object that we want to update
+     * @param object $entry the object that we want to update
      *
      * @return bool true or false
      */
@@ -1116,15 +1119,15 @@ class form_db extends form_logging {
     /**
      * Returns the id of the item with the given value
      *
+     * @param $tablename
      * @param    int $parent_id    the id of the state item record that is the parent of the item
      * @param    int $itemvalue the actual value of the field
      * @param    string $keyfield field from $itemtable to use as key
-     * @param    string $itemtable name of item table to use if this element type does not follow the '_items' naming convention
+     * @param bool|string $itemtable name of item table to use if this element type does not follow the '_items' naming convention
      *
      * @return    mixed object or false
      */
     private function get_state_item_id($tablename, $parent_id, $itemvalue, $keyfield = 'id', $itemtable = false) {
-        global $CFG;
 
         $tablename = (!empty($itemtable)) ? $itemtable : $tablename."_items";
         $params[$keyfield] = $itemvalue;
@@ -1140,9 +1143,9 @@ class form_db extends form_logging {
      * Saves temp data into the ulcc_form_lib_temp table data stored using this function is serialised. It should be
      * noted that only temp data should be stored using this function as the ulcc_form_lib_temp table can be purged
      *
-     * @param $data the data to be serialized and saved into the temp table
+     * @param stdClass $data the data to be serialized and saved into the temp table
      *
-     * @return mixed int the id of the data thats been saved or bool false
+     * @return mixed int the id of the data that's been saved or bool false
      */
     private function save_temp_data($data) {
         $serialiseddata = serialize($data);
@@ -1159,7 +1162,7 @@ class form_db extends form_logging {
      * @param int $tempid the id of the record to be updated
      * @param mixed $data the data that will be saved
      *
-     * return bool true if successful false is not
+     * @return bool true if successful false is not
      */
     private function update_temp_data($tempid, $data) {
 
@@ -1185,6 +1188,16 @@ class form_db extends form_logging {
     }
 
     /**
+     * Deletes the temp data record with the given id
+     *
+     * @param int $id the id of the data that is being retrieved
+     * @return mixed the data that was saved
+     */
+    public function delete_temp_data($id) {
+        return $this->dbc->delete_records('ulcc_form_lib_temp', array('id' => $id));
+    }
+
+    /**
      * Returns the form entry with the id that matches the one given
      *
      * @param int $entry_id the id of the entry that you want to return
@@ -1202,8 +1215,7 @@ class form_db extends form_logging {
      * @param string $name the name of the plugin that the forms will be counted for
      * @return int the new forms position number
      */
-
-    function get_new_form_position($type, $name) {
+    public function get_new_form_position($type, $name) {
 
         $from = "FROM 		{ulcc_form_lib_form} as f,
                                 {ulcc_form_lib_plugin} as p ";
@@ -1212,7 +1224,7 @@ class form_db extends form_logging {
                      AND        p.type     =    :ptype
                      AND        p.id       =    f.plugin_id";
 
-        // get a count of all the records
+        // Get a count of all the records.
         $position = $this->dbc->count_records_sql('SELECT COUNT(*) '.$from.$where,
                                                   array('pname' => $name,
                                                         'ptype' => $type));
@@ -1237,14 +1249,12 @@ class form_db extends form_logging {
      * will be deleted form
      * @param    int $id the id of the record you will be deleting
      *
+     * @param array $extraparams
      * @return mixed true or false
      */
-    function delete_element_record_by_id($tablename, $id, $extraparams = array()) {
+    public function delete_element_record_by_id($tablename, $id, $extraparams = array()) {
         return $this->delete_records($tablename, array('id' => $id), $extraparams);
     }
-
-
-
 
     /**
      * Generic delete function used to delete items from the items table
@@ -1252,9 +1262,10 @@ class form_db extends form_logging {
      * @param string $tablename the table that you want to delete the record from
      * @param int $parent_id the parent_id that all fields to be deleted should have
      *
+     * @param array $extraparams
      * @return bool true or false
      */
-    function delete_items($tablename,$parent_id, $extraparams=array() ) {
+    public function delete_items($tablename, $parent_id, $extraparams=array() ) {
         return $this->delete_records( $tablename, array('parent_id' => $parent_id), $extraparams );
     }
 

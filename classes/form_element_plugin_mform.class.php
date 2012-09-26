@@ -43,7 +43,7 @@ abstract class form_element_plugin_mform extends moodleform {
      */
     protected $errors;
 
-    function __construct($form_id, $formelement_id, $creator_id, $moodleplugintype, $moodlepluginname, $context_id,
+    public function __construct($form_id, $formelement_id, $creator_id, $moodleplugintype, $moodlepluginname, $context_id,
                          $formfield_id = null) {
         global $CFG;
 
@@ -56,12 +56,13 @@ abstract class form_element_plugin_mform extends moodleform {
         $this->context_id = $context_id;
         $this->dbc = new form_db();
 
-        parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_field.php?formelement_id={$formelement_id}
-        &form_id={$form_id}&moodleplugintype={$moodleplugintype}&moodlepluginname={$moodlepluginname}");
+        parent::__construct("{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_field.php?formelement_id=".
+                            "{$formelement_id}&form_id={$form_id}&moodleplugintype={$moodleplugintype}".
+                            "&moodlepluginname={$moodlepluginname}");
 
     }
 
-    function definition() {
+    public function definition() {
         global $USER, $CFG;
 
         // Get the plugin type by getting the plugin name.
@@ -130,12 +131,12 @@ abstract class form_element_plugin_mform extends moodleform {
 
         // The moodle plugin type of the form.
         $mform->addElement('hidden', 'moodlepluginname');
-        $mform->setType('moodlepluginname', PARAM_RAW);
+        $mform->setType('moodlepluginname', PARAM_ALPHAEXT);
         $mform->setDefault('moodlepluginname', $this->moodlepluginname);
 
         // The moodle context_id.
         $mform->addElement('hidden', 'context_id');
-        $mform->setType('context_id', PARAM_RAW);
+        $mform->setType('context_id', PARAM_INT);
         $mform->setDefault('context_id', $this->context_id);
 
         // The id of the form element creator.
@@ -154,7 +155,7 @@ abstract class form_element_plugin_mform extends moodleform {
 
         $mform->addRule('label', null, 'maxlength', 255, 'client', array('size' => '10'));
         $mform->addRule('label', null, 'required', null, 'client');
-        $mform->setType('label', PARAM_RAW);
+        $mform->setType('label', PARAM_TEXT);
 
         // Text field for element description.
         $mform->addElement(
