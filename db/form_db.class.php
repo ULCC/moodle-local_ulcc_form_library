@@ -165,8 +165,8 @@ class form_db extends form_logging {
     public function get_form_element_plugins() {
         global $DB;
 
-        //this must be done to prevent errors when the plugin is being installed
-        //as the table will not exist
+        // This must be done to prevent errors when the plugin is being installed
+        // as the table will not exist.
         $tableexists = in_array('ulcc_form_lib_form_element', $DB->get_tables());
 
         return (!empty($tableexists)) ? $this->dbc->get_records('ulcc_form_lib_form_element') : false;
@@ -183,7 +183,6 @@ class form_db extends form_logging {
      * @return mixed object containing report records or false
      */
     public function get_forms_table($flextable, $pluginname, $type, $deleted = false) {
-        global $CFG;
 
         $select = "SELECT		f.* ";
 
@@ -197,14 +196,6 @@ class form_db extends form_logging {
         $where .= (empty($deleted)) ? " AND   deleted != 1 " : "";
 
         $order = " ORDER BY 	position";
-
-        // get a count of all the records for the pagination links
-        $count = $this->dbc->count_records_sql('SELECT COUNT(*) '.$from.$where,
-                                               array('pname' => $pluginname,
-                                                     'ptype' => $type));
-
-        // tell the table how many pages it needs
-        //$flextable->totalrows($count);
 
         $data = $this->dbc->get_records_sql(
             $select.$from.$where.$order,
@@ -262,9 +253,9 @@ class form_db extends form_logging {
         global $CFG;
 
         if (stripos($CFG->release, "2.") !== false) {
-            $courses = enrol_get_users_courses($user_id, false, NULL, 'fullname DESC');
+            $courses = enrol_get_users_courses($user_id, false, null, 'fullname DESC');
         } else {
-            $courses = get_my_courses($user_id);
+            $courses = enrol_get_users_courses($user_id);
         }
 
         return $courses;
@@ -304,7 +295,7 @@ class form_db extends form_logging {
     /**
      * Get the data entry record with the id given
      *
-     * @param string tablename the name of the table that will be interrogated
+     * @param string $tablename the name of the table that will be interrogated
      * @param int     $entry_id the entry id of the records that will be returned
      * @param int     $formfield_id the id of the form field
      * @param bool     $multiple is there a chance multiple records will be return
@@ -359,14 +350,13 @@ class form_db extends form_logging {
      * @return mixed object containing the plugin record or false
      */
     public function get_forms_by_position($mplugname, $mplugtype, $position = null, $type = null, $disabled = true) {
-        global $CFG;
 
         $positionsql = "";
 
         $params = array('name' => $mplugname,
                         'type' => $mplugtype);
 
-        //the operand that will be used
+        // The operand that will be used.
         if (!empty($position)) {
             $params['otherfield'] = (!empty($type)) ? $position - 1 : $position + 1;
             $positionsql = "AND (position = {$position} ||  position = :otherfield";
@@ -414,7 +404,7 @@ class form_db extends form_logging {
         $type->name = $name;
         $type->tablename = $tablename;
 
-        //TODO: should form element be enabled by default?
+        // TODO should form element be enabled by default?
         $type->status = 1;
 
         return $this->insert_record('ulcc_form_lib_form_element', $type);
@@ -448,7 +438,7 @@ class form_db extends form_logging {
 
         $positionsql = "";
 
-        //the operand that will be used
+        // The operand that will be used.
         if (!empty($position)) {
             $otherfield = (!empty($type)) ? $position - 1 : $position + 1;
             $positionsql = "AND (position = {$position} ||  position = {$otherfield})";
@@ -578,9 +568,9 @@ class form_db extends form_logging {
 
         $label = mysql_real_escape_string($label);
 
-        //this code is needed due to a substr_count in the
-        //moodle_database.php file (line 666 :-( ) it causes
-        //an error whenever a label has an ? in it
+        // This code is needed due to a substr_count in the
+        // moodle_database.php file (line 666 :-( ) it causes
+        // an error whenever a label has an ? in it.
         $label = str_replace('?', '.', $label);
 
         $params = array('label' => $label,
@@ -684,7 +674,7 @@ class form_db extends form_logging {
     /**
      * get the data entry record with the id given
      *
-     * @param string tablename the name of the table that will be interrogated
+     * @param string $tablename the name of the table that will be interrogated
      * @param int     $entry_id the entry id of the records that will be returned
      * @param int     $formfield_id the id of the report field
      * @param bool     $multiple is there a chance multiple records will be return
@@ -714,18 +704,18 @@ class form_db extends form_logging {
     /**
      * Create a plugin entry in the table given
      *
-     * @param $tablename
-     * @param $pluginentry
-     * @return mixed int id of new reocrd or false
+     * @param string $tablename
+     * @param stdClass $pluginentry
+     * @return mixed int id of new record or false
      */
     public function create_formelement_entry($tablename, $pluginentry) {
         return $this->insert_record($tablename, $pluginentry);
     }
 
-    /** Create status element entry
-     *
+    /**
+     * Create status element entry.
      */
-    function create_statusfield($statusfield) {
+    public function create_statusfield($statusfield) {
         $this->insert_record('ulcc_form_plg_sts', $statusfield);
     }
 
@@ -752,7 +742,8 @@ class form_db extends form_logging {
      * @internal param \tablename $string
      * @internal param \formfield_id $int
      * @internal param \item_table $string - use this item_table if item_table name is not simply $tablename . "_items"
-     * @internal param \item_key $string - use this foreign key if specific item_table has been sent as arg. Send empty string to simply get all rows from the item table
+     * @internal param \item_key $string - use this foreign key if specific item_table has been sent as arg. Send empty string to
+     * simply get all rows from the item table.
      * @internal param \item_value_field $string - field from the item table to use as the value submitted to the user entry table
      * @return mixed array of objects or false
      */
@@ -797,13 +788,10 @@ class form_db extends form_logging {
      * @return boolean true or false
      */
     public function delete_element_listitems($tablename, $formfield_id, $extraparams = array()) {
-        global $CFG;
-        $real_tablename = $CFG->prefix.$tablename;
-        $element_table = $tablename;
-        $item_table = $tablename."_items";
-        $entry_table = $tablename."_ent";
 
-        //get parent_id
+        $item_table = $tablename."_items";
+
+        // Get parent_id.
         $parent_id = $this->get_element_id_from_formfield_id($tablename, $formfield_id);
 
         return $this->dbc->delete_records($item_table, array('parent_id' => $parent_id), $extraparams);
@@ -812,23 +800,16 @@ class form_db extends form_logging {
     /**
      * delete option items for a plugin list-type element referenced by element_id (parent_id) instead of formfield_id
      * $tablename is the element table eg block_ilp_plu_category
-     * @param $tablename
-     * @param $parent_id
+     * @param string $tablename
+     * @param int $parent_id
      * @param array $extraparams
-     * @internal param \tablename $string
-     * @internal param \formfield_id $int
      *
      * @return boolean true or false
      */
     public function delete_element_listitems_by_parent_id($tablename, $parent_id, $extraparams = array()) {
-        global $CFG;
-        $real_tablename = $CFG->prefix.$tablename;
-        $element_table = $tablename;
-        $item_table = $tablename."_items";
-        $entry_table = $tablename."_ent";
 
-        // Get parent_id.
-        //return $this->dbc->delete_records( $item_table, array( 'parent_id' => $parent_id ) , $extraparams );
+        $item_table = $tablename."_items";
+
         return $this->delete_records($item_table, array('parent_id' => $parent_id), $extraparams);
     }
 
@@ -930,10 +911,6 @@ class form_db extends form_logging {
         if ($field) {
             $fieldlist[] = $field;
         }
-
-        $whereandlist = array(
-            "$plugin_table.formfield_id = $formfield_id"
-        );
 
         $sql = "SELECT ".implode(',', $fieldlist)."
                 FROM  	{ulcc_form_lib_form_field} frmf
