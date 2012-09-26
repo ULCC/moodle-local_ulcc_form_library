@@ -201,7 +201,7 @@ class form_element_plugin_grade extends form_element_plugin {
 
         // Retrieve max value entered by the user.
         $plugrecord= $this->dbc->get_form_element_by_formfield($this->tablename, $this->formfield_id);
-        $maxgrade = $plugrecord->maxgrade;
+        $maxgrade = empty($plugrecord->maxgrade) ? 0 : $plugrecord->maxgrade;
         $gradelist = array();
         // Create list of grades.
         $gradelist[''] = get_string('form_element_plugin_grade_select_value', 'local_ulcc_form_library');
