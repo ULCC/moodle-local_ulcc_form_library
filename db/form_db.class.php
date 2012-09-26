@@ -378,15 +378,15 @@ class form_db extends form_logging {
         }
 
         $sql = "SELECT		*
-					 FROM		{ulcc_form_lib_form} as f
-					            {ulcc_form_lib_plugin} as p
-					 WHERE      name  = :name
-					 AND        type  = :type
-					 AND        p.id  = f.plugin_id
-					 AND        deleted = 0
+                     FROM		{ulcc_form_lib_form} as f
+                                {ulcc_form_lib_plugin} as p
+                     WHERE      name  = :name
+                     AND        type  = :type
+                     AND        p.id  = f.plugin_id
+                     AND        deleted = 0
                      {$disabledsql}
-					 {$positionsql}
-					 ORDER BY 	position";
+                     {$positionsql}
+                     ORDER BY 	position";
 
         return $this->dbc->get_records_sql($sql, $params);
     }
@@ -455,10 +455,10 @@ class form_db extends form_logging {
         }
 
         $sql = "SELECT		*
-					 FROM		{ulcc_form_lib_form_field}
-					 WHERE		form_id	=	{$form_id}
-					{$positionsql}
-					 ORDER BY 	position";
+                     FROM		{ulcc_form_lib_form_field}
+                     WHERE		form_id	=	{$form_id}
+                    {$positionsql}
+                     ORDER BY 	position";
 
         return $this->dbc->get_records_sql($sql);
     }
@@ -512,9 +512,9 @@ class form_db extends form_logging {
     public function get_form_latest_position(){
 
         $sql =  "SELECT *
-				FROM {ulcc_form_lib_form}
-				ORDER BY position DESC
-				LIMIT 1";
+                FROM {ulcc_form_lib_form}
+                ORDER BY position DESC
+                LIMIT 1";
 
         return $this->dbc->get_record_sql($sql);
 }
@@ -596,9 +596,9 @@ class form_db extends form_logging {
         }
 
         $sql = 'SELECT		*
-  					 FROM		{ulcc_form_lib_form_field}
-  					 WHERE		label		=	:label
-  					 AND		form_id	=	:formid '
+                     FROM		{ulcc_form_lib_form_field}
+                     WHERE		label		=	:label
+                     AND		form_id	=	:formid '
             .$currentfieldsql;
 
         return $this->dbc->get_records_sql($sql, $params);
@@ -703,12 +703,12 @@ class form_db extends form_logging {
         $where = (!empty($multiple)) ? "e.parent_id	=	i.id AND i.parent_id	=	p.id" : "e.parent_id	=	p.id";
 
         $sql = "SELECT		*
-					 FROM 		{$parenttable} as p,
-					 			{$itemtable}
-					 			{$entrytable} as e
-					 WHERE 		{$where}
-					 AND		e.entry_id	=	{$entry_id}
-					 AND		p.formfield_id	=	{$formfield_id}";
+                     FROM 		{$parenttable} as p,
+                                {$itemtable}
+                                {$entrytable} as e
+                     WHERE 		{$where}
+                     AND		e.entry_id	=	{$entry_id}
+                     AND		p.formfield_id	=	{$formfield_id}";
 
         return (empty($multiple)) ? $this->dbc->get_record_sql($sql) : $this->dbc->get_records_sql($sql);
     }
@@ -783,11 +783,11 @@ class form_db extends form_logging {
         }
 
         $sql = "SELECT *
-				FROM {$tablename} ele
-				JOIN {$item_table} item  $item_on_clause
-				JOIN {$entry_table} entry ON entry.value = item.$item_value_field
-				WHERE ele.formfield_id = {$formfield_id}
-				";
+                FROM {$tablename} ele
+                JOIN {$item_table} item  $item_on_clause
+                JOIN {$entry_table} entry ON entry.value = item.$item_value_field
+                WHERE ele.formfield_id = {$formfield_id}
+                ";
 
         return $this->dbc->get_records_sql($sql);
     }
@@ -940,11 +940,11 @@ class form_db extends form_logging {
         );
 
         $sql = "SELECT ".implode(',', $fieldlist)."
-				FROM  	{ulcc_form_lib_form_field} frmf
-				JOIN 	$plugin_table ON $plugin_table.formfield_id = frmf.id
-				JOIN 	$item_table ON $item_table.parent_id = $plugin_table.id
-				WHERE 	$plugin_table.formfield_id = $formfield_id
-		";
+                FROM  	{ulcc_form_lib_form_field} frmf
+                JOIN 	$plugin_table ON $plugin_table.formfield_id = frmf.id
+                JOIN 	$item_table ON $item_table.parent_id = $plugin_table.id
+                WHERE 	$plugin_table.formfield_id = $formfield_id
+        ";
         return $this->dbc->get_records_sql($sql);
     }
 
@@ -987,11 +987,11 @@ class form_db extends form_logging {
         }
 
         $sql = "SELECT *
-				FROM {$tablename} ele
-				JOIN {$item_table} item  $item_on_clause
-				JOIN {$entry_table} entry ON entry.value = item.$item_value_field
-				WHERE ele.formfield_id = {$formfield_id}
-				";
+                FROM {$tablename} ele
+                JOIN {$item_table} item  $item_on_clause
+                JOIN {$entry_table} entry ON entry.value = item.$item_value_field
+                WHERE ele.formfield_id = {$formfield_id}
+                ";
 
         return $this->dbc->get_records_sql($sql);
     }
