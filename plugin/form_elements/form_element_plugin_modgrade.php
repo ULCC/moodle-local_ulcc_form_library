@@ -263,7 +263,8 @@ class form_element_plugin_modgrade extends form_element_plugin {
         }
 
         // Get the module table record. We assume that this element has only been allowed in a module context.
-        $coursemodule = $PAGE->cm;
+        if($coursemodule = $PAGE->cm){
+
         $modulename = $DB->get_field('modules', 'name', array('id' => $coursemodule->module));
 
         // Different modules have different names for the grade field.
@@ -294,6 +295,7 @@ class form_element_plugin_modgrade extends form_element_plugin {
                            $fieldname,
                            "$this->label",
                            $grademenu);
+        }
 
         if (!empty($this->required)) {
             $mform->addRule($fieldname, null, 'required', null, 'client');
