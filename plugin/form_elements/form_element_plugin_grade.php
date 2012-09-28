@@ -41,7 +41,7 @@ class form_element_plugin_grade extends form_element_plugin {
                 $this->label = $formfield->label;
                 $this->description = $formfield->description;
                 $this->required = $formfield->required;
-                $this->maxgrade = !empty($pluginrecord->maxgrade) ? $plugrecord->maxgrade : 0;
+                $this->maxgrade = !empty($pluginrecord->maxgrade) ? $pluginrecord->maxgrade : 0;
                 $this->position = $formfield->position;
                 $this->audit_type = $this->audit_type();
                 return true;
