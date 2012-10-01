@@ -263,38 +263,39 @@ class form_element_plugin_modgrade extends form_element_plugin {
         }
 
         // Get the module table record. We assume that this element has only been allowed in a module context.
-        if($coursemodule = $PAGE->cm){
+        $coursemodule = $PAGE->cm;
+        if ($PAGE->cm) {
 
-        $modulename = $DB->get_field('modules', 'name', array('id' => $coursemodule->module));
+            $modulename = $DB->get_field('modules', 'name', array('id' => $coursemodule->module));
 
-        // Different modules have different names for the grade field.
-        switch ($modulename) {
+            // Different modules have different names for the grade field.
+            switch ($modulename) {
 
-            case 'coursework':
-                $gradefield = 'grade';
-                break;
+                case 'coursework':
+                    $gradefield = 'grade';
+                    break;
 
-            default:
-                $gradefield = 'grade';
-        }
+                default:
+                    $gradefield = 'grade';
+            }
 
-        $grade = $DB->get_field($modulename, $gradefield, array('id' => $coursemodule->instance));
+            $grade = $DB->get_field($modulename, $gradefield, array('id' => $coursemodule->instance));
 
-        // Might be a scale...
-        if ($grade < 0) {
-            $scale = $DB->get_record('scale', array('id' => $grade));
-            $grademenu = make_menu_from_list($scale->scale);
-        } else {
-            // If a record with a grade has been found then populate gradesmenu with this.
-            $grademenu = make_grades_menu($grade);
-        }
+            // Might be a scale...
+            if ($grade < 0) {
+                $scale = $DB->get_record('scale', array('id' => $grade));
+                $grademenu = make_menu_from_list($scale->scale);
+            } else {
+                // If a record with a grade has been found then populate gradesmenu with this.
+                $grademenu = make_grades_menu($grade);
+            }
 
-        $grademenu['-1'] = get_string('nograde');
+            $grademenu['-1'] = get_string('nograde');
 
-        $mform->addElement('select',
-                           $fieldname,
-                           "$this->label",
-                           $grademenu);
+            $mform->addElement('select',
+                $fieldname,
+                "$this->label",
+                $grademenu);
         }
 
         if (!empty($this->required)) {
