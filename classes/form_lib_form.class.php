@@ -120,7 +120,7 @@ abstract class form_lib_form extends moodleform {
      */
     public function next() {
 
-        $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($this->form_idform_id) : $this->formdata;
+        $this->formdata = (empty($this->formdata)) ? $this->get_multipage_data($this->form_id) : $this->formdata;
 
         // Was the next button pressed?
         if (isset($this->formdata->nextbutton)) {
