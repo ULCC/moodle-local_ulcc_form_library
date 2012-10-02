@@ -171,10 +171,15 @@ class form_element_plugin {
 
         // Get the form field record.
         $formfield = $this->dbc->get_form_field_data($formfield_id);
-        $editorrecord = $formfield->description;
-        $formfield->description = array(
-            'text' => $editorrecord, 'format' => FORMAT_MOODLE
-        );
+
+        if (!$formfield) {
+            $formfield = new stdClass();
+        } else {
+            $editorrecord = $formfield->description;
+            $formfield->description = array(
+                'text' => $editorrecord, 'format' => FORMAT_MOODLE
+            );
+        }
         // Include the moodle form library.
         require_once($CFG->libdir.'/formslib.php');
 
