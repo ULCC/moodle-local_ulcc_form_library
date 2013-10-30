@@ -566,8 +566,6 @@ class form_db extends form_logging {
      */
     public function label_exists($label, $form_id, $field_id) {
 
-        $label = mysql_real_escape_string($label);
-
         // This code is needed due to a substr_count in the
         // moodle_database.php file (line 666 :-( ) it causes
         // an error whenever a label has an ? in it.
