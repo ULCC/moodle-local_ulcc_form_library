@@ -43,28 +43,28 @@ class form_element_plugin_comment_editor_mform extends form_element_plugin_mform
         // Disabled until http://tracker.moodle.org/browse/MDL-35402 is fixed.
 
         // Set the maximum length of the field default to 255.
-//        $mform->addElement(
-//            'text',
-//            'minimumlength',
-//            get_string('form_element_plugin_comment_editor_minimumlength', 'local_ulcc_form_library'),
-//            array('class' => 'form_input')
-//        );
-//
-//        $mform->addRule('minimumlength', null, 'maxlength', 3, 'client');
-//        // $mform->addRule('minimumlength', null, 'required', null, 'client');
-//        $mform->setType('minimumlength', PARAM_INT);
-//
-//        // Set the maximum length of the field default to 255.
-//        $mform->addElement(
-//            'text',
-//            'maximumlength',
-//            get_string('form_element_plugin_comment_editor_maximumlength', 'local_ulcc_form_library'),
-//            array('class' => 'form_input')
-//        );
-//
-//        $mform->addRule('maximumlength', null, 'maxlength', 4, 'client');
-//        // $mform->addRule('maximumlength', null, 'required', null, 'client');
-//        $mform->setType('maximumlength', PARAM_INT);
+        $mform->addElement(
+            'text',
+            'minimumlength',
+            get_string('form_element_plugin_comment_editor_minimumlength', 'local_ulcc_form_library'),
+            array('class' => 'form_input')
+        );
+
+        $mform->addRule('minimumlength', null, 'maxlength', 3, 'client');
+        // $mform->addRule('minimumlength', null, 'required', null, 'client');
+        $mform->setType('minimumlength', PARAM_INT);
+
+        // Set the maximum length of the field default to 255.
+        $mform->addElement(
+            'text',
+            'maximumlength',
+            get_string('form_element_plugin_comment_editor_maximumlength', 'local_ulcc_form_library'),
+            array('class' => 'form_input')
+        );
+
+        $mform->addRule('maximumlength', null, 'maxlength', 4, 'client');
+        // $mform->addRule('maximumlength', null, 'required', null, 'client');
+        $mform->setType('maximumlength', PARAM_INT);
     }
 
     /**
