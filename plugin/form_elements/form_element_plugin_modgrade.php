@@ -263,8 +263,12 @@ class form_element_plugin_modgrade extends form_element_plugin {
         }
 
         // Get the module table record. We assume that this element has only been allowed in a module context.
+        // Bug! This fails when in preview mode.
         $coursemodule = $PAGE->cm;
-        $modulename = $DB->get_field('modules', 'name', array('id' => $coursemodule->module));
+        $modulename = 'coursework'; // Should only be needed for preview.
+        if ($coursemodule) {
+            $modulename = $DB->get_field('modules', 'name', array('id' => $coursemodule->module));
+        }
 
         // Different modules have different names for the grade field.
         switch ($modulename) {
