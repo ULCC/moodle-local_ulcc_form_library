@@ -40,8 +40,6 @@ class form_element_plugin_comment_editor_mform extends form_element_plugin_mform
      */
     protected function specific_definition(MoodleQuickForm $mform) {
 
-        // Disabled until http://tracker.moodle.org/browse/MDL-35402 is fixed.
-
         // Set the maximum length of the field default to 255.
         $mform->addElement(
             'text',
