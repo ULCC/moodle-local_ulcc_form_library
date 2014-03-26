@@ -13,17 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * Cache version details
- *
- * @copyright &copy; 2011 University of London Computer Centre
- * @author http://www.ulcc.ac.uk, http://moodle.ulcc.ac.uk
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package ULCC_Cache
- * @version 1.0
- */
-defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2014032600; // The (date) version of this plugin
-$plugin->requires = 2010021900; // Requires this Moodle version.
+defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
+
+require_once($CFG->dirroot . '/local/ulcc_form_library/classes/form_element_plugin.class.php');
+
+function xmldb_local_ulcc_form_library_install() {
+    form_element_plugin::install_new_plugins();
+}
