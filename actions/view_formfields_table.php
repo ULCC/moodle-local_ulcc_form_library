@@ -105,6 +105,10 @@ if (!empty($formfields)) {
 
         $plugin = $dbc->get_form_element_plugin($row->formelement_id);
 
+        if (!$plugin) {
+            throw new coding_exception('No plugin found for '.$row->formelement_id);
+        }
+
         // Use the plugin name param to get the type field.
         $plugintype = $plugin->name."_type";
 
@@ -170,7 +174,7 @@ if (!empty($formfields)) {
         }
 
 
-        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_field.php?formfield_id={$row->id}&{$querystr}'>
+        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_field.php?formfield_id={$row->id}&{$querystr}' class='delete-field' id='delete_field_{$row->id}'>
 									<img class='delete' src='".$OUTPUT->pix_url("/t/delete")."' alt='".get_string('delete').
             "' title='".get_string('delete')."' />
 								 </a>";
