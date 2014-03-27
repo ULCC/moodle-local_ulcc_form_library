@@ -141,13 +141,13 @@ if (!empty($forms)) {
 
 
         // Set the edit form link.
-        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$row->id}&{$querystr}'>
+        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_form.php?form_id={$row->id}&{$querystr}'  id='edit-form-{$row->id}'>
                                     <img class='edit' src='".$OUTPUT->pix_url("/i/edit")."' alt='".get_string('edit')
             ."' title='".get_string('edit')."' />
                                  </a>";
 
         // Set the edit form fields link.
-        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_formfields.php?form_id={$row->id}&{$querystr}'>
+        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/edit_formfields.php?form_id={$row->id}&{$querystr}'  id='edit-form-fields-{$row->id}'>
                                     <img class='prompt' src='".$OUTPUT->pix_url('i/questions')."' alt='".get_string('editfields',
             'local_ulcc_form_library')."' title='".get_string('editfields', 'local_ulcc_form_library')."' />
                                  </a>";

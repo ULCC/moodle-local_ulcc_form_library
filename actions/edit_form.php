@@ -42,6 +42,8 @@ $context_id = $PARSER->required_param('context_id', PARAM_INT);
 
 require_login();
 
+$PAGE->set_url('/local/ulcc_form_library/actions/edit_form.php', $PARSER->get_params());
+
 $dbc = new form_db();
 
 $mform = new edit_form_mform($moodlepluginname, $moodleplugintype, $context_id, $form_id);
@@ -83,8 +85,7 @@ if ($mform->is_submitted()) {
 
         // Decide whether the user has chosen to save and exit or save or display.
         if (isset($formdata->saveanddisplaybutton)) {
-            $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/edit_formfields.php?form_id='.
-                $form_id.'&'.$PARSER->get_params_url();
+            $return_url = $CFG->wwwroot.'/local/ulcc_form_library/actions/view_forms.php?'.$PARSER->get_params_url();
             redirect($return_url, get_string("formcreation", 'local_ulcc_form_library'), FORM_REDIRECT_DELAY);
         }
     }
@@ -113,7 +114,6 @@ $PAGE->set_title($SITE->fullname." : ".$pluginname);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_pagetype('form-configuration');
 $PAGE->set_pagelayout('admin');
-$PAGE->set_url('/local/ulcc_form_library/actions/edit_form.php', $PARSER->get_params());
 
 
 require_once($CFG->dirroot.'/local/ulcc_form_library/views/edit_form.html');
