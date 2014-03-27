@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Wrapper class for Moodleform, this class adds additional functions to aid inthe creation and usage
+ * Wrapper class for Moodleform, this class adds additional functions to aid in the creation and usage
  * of multi page forms.
  *
  * @copyright &copy; @{YEAR} University of London Computer Centre
@@ -369,6 +369,29 @@ abstract class form_lib_form extends moodleform {
         }
 
         return false;
+    }
+
+    /**
+     * This tells us whether the form is in use by a plugin and therefore should not be editable.
+     *
+     * @param $pluginname
+     * @return bool
+     */
+    public function is_in_use($pluginname) {
+        global $DB;
+
+        switch ($pluginname) {
+            case 'coursework':
+
+                if ($DB->record_exists('coursework', array('formid' => $this->form_id))) {
+                    return true;
+                }
+                break;
+
+            default:
+                return false;
+
+        }
     }
 
     /**

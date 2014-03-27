@@ -33,6 +33,7 @@ global $CFG, $USER, $DB, $PARSER, $OUTPUT;
 
 // Include the tablelib.php file.
 require_once($CFG->libdir.'/tablelib.php');
+require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/form_entry_mform.php');
 
 // The id of the form must be provided.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
@@ -93,6 +94,7 @@ $flextable->setup();
 
 // Get the data on fields to be used in the table.
 $formfields = $dbc->get_form_fields_by_position($form_id);
+$form = new form_entry_mform($form_id);
 $totalformfields = count($formfields);
 
 $querystr = $PARSER->get_params_url();
@@ -174,11 +176,13 @@ if (!empty($formfields)) {
         }
 
 
-        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_field.php?formfield_id={$row->id}&{$querystr}' class='delete-field' id='delete_field_{$row->id}'>
-									<img class='delete' src='".$OUTPUT->pix_url("/t/delete")."' alt='".get_string('delete').
-            "' title='".get_string('delete')."' />
-								 </a>";
+        if (!$form->is_in_use($moodlepluginname)) {
+            $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_field.php?formfield_id={$row->id}&{$querystr}' class='delete-field' id='delete_field_{$row->id}'>
+                                        <img class='delete' src='".$OUTPUT->pix_url("/t/delete")."' alt='".get_string('delete').
+                "' title='".get_string('delete')."' />
+                                     </a>";
 
+        }
         $flextable->add_data($data);
 
     }
