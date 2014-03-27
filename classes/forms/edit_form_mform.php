@@ -153,6 +153,7 @@ class edit_form_mform extends moodleform {
             get_string('identifier', 'local_ulcc_form_library'),
             array('class' => 'form_input')
         );
+        $mform->setType('identifier', PARAM_TEXT);
 
         $buttonarray[] = $mform->createElement('submit', 'saveanddisplaybutton', get_string('submit'));
         $buttonarray[] = &$mform->createElement('cancel');
