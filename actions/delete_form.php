@@ -49,7 +49,12 @@ if (empty($form)) {
     print_error('formnotfound', 'local_ulcc_form_library');
 }
 
-// If the report satatus is currently disabled (0) set it to enabled (1).
+$form_object = new form_entry_mform($form_id);
+if ($form_object->is_in_use($moodlepluginname)) {
+    print_error('forminuse', 'local_ulcc_form_library');
+}
+
+// If the report status is currently disabled (0) set it to enabled (1).
 $res = $dbc->set_form_status($form_id, 0);
 $res = $dbc->delete_form($form_id, 1);
 

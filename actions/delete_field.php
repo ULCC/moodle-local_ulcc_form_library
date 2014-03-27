@@ -60,6 +60,11 @@ if (!empty($formfield)) {
         print_error('noclassforplugin', 'local_ulcc_form_library', '', $formelementrecord->name);
     }
 
+    $form_object = new form_entry_mform($form_id);
+    if ($form_object->is_in_use($moodlepluginname)) {
+        print_error('forminuse', 'local_ulcc_form_library');
+    }
+
     $pluginclass = new $classname();
     $deletedposition = $formfield->position;
 
