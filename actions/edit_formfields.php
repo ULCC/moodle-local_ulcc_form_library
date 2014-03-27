@@ -35,6 +35,7 @@ require_once($CFG->dirroot.'/local/ulcc_form_library/classes/forms/add_field_mfo
 // Add the breadcrumbs.
 require_once($CFG->dirroot.'/local/ulcc_form_library/breadcrumbs.php');
 require_once($CFG->dirroot.'/local/ulcc_form_library/lib.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/classes/forms/form_entry_mform.php');
 
 // The id of the form must be provided.
 $form_id = $PARSER->required_param('form_id', PARAM_INT);
@@ -45,6 +46,8 @@ $context_id = $PARSER->required_param('context_id', PARAM_INT);
 
 // Instantiate the db.
 $dbc = new form_db();
+
+$form = new form_entry_mform($form_id);
 
 // Add section name to nav bar.
 
