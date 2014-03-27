@@ -33,6 +33,7 @@ global $CFG, $USER, $DB, $PARSER, $PAGE, $OUTPUT;
 
 require_once($CFG->dirroot . '/local/ulcc_form_library/lib.php');
 require_once($CFG->libdir.'/tablelib.php');
+require_once($CFG->dirroot . '/local/ulcc_form_library/classes/forms/form_entry_mform.php');
 
 // Create the filed table.
 
@@ -98,6 +99,8 @@ if (!empty($forms)) {
     foreach ($forms as $row) {
         $data = array();
 
+        $row_form = new form_entry_mform($row->id);
+
         $data[] = $row->name;
 
         if ($row->position != 1) {
@@ -161,13 +164,18 @@ if (!empty($forms)) {
 
 
         // Set the delete field this is not enabled at the moment.
-        $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_form.php?form_id={$row->id}&{$querystr}'>
+        if (!$row_form->is_in_use($moodlepluginname)) {
+
+            $data[] = "<a href='{$CFG->wwwroot}/local/ulcc_form_library/actions/delete_form.php?form_id={$row->id}&{$querystr}' class='delete-form' id='delete_form_{$row->id}'>
                                     <img class='delete' src='".$OUTPUT->pix_url("/t/delete")."' alt='".get_string('delete')
             ."' title='".get_string('delete')."' />
                                  </a>";
+        } else {
+            $data[] = '';
+        }
 
 
-        $flextable->add_data($data);
+        $flextable->add_data($data, "form-row form-row-{$row->id}");
 
     }
 

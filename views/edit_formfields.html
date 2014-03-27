@@ -5,9 +5,9 @@ echo $OUTPUT->header();
     <?php
 echo $OUTPUT->heading(get_string('formfields', 'local_ulcc_form_library'));
 
-    if (!$form->is_in_use($moodlepluginname)) { ?>
+    if (!$form->is_in_use($moodlepluginname)) {
         $fieldmform->display();
-    <?php }
+    }
     ?>
 
 
