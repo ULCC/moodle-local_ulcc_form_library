@@ -60,6 +60,4 @@ if (empty($context)) {
 }
 
 // Make sure that the user has the ability to manipulate forms if not throw an error.
-if (!has_capability('local/ulcc_form_library:formadmin', $context) ) {
-    print_error('not_form_admin', 'local_ulcc_form_library');
-}
+require_capability('local/ulcc_form_library:formadmin', $context);
